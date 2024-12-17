@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nUSA Legal - FRCP/FRCMP</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body onload="showFRCP()">
+    <header>
+        <div class="header-container">
+            <h1>nUSA Legal</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="courts.html">Courts</a></li>
+                    <li><a href="congress.html">Congress</a></li>
+                    <li><a href="frcp-frcmp.html">FRCP/FRCMP</a></li>
+                    <li><a href="laws.html">Laws</a></li>
+                    <li><a href="constitution.html">Constitution</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="frcp-frcmp-container">
+            <div class="frcp-frcmp-left">
+                <button onclick="showFRCP()">FRCP</button>
+                <button onclick="showFRCMP()">FRCMP</button>
+            </div>
+            <div class="frcp-frcmp-right">
+                <h2 id="section-title" class="centered-title">FRCP</h2>
+                <div id="frcp-content" class="section-container" style="display: flex;">
+                    <section>
+                        <h3>FRCP Section 1</h3>
+                        <p>Description for FRCP Section 1.</p>
+                    </section>
+                    <section>
+                        <h3>FRCP Section 2</h3>
+                        <p>Description for FRCP Section 2.</p>
+                    </section>
+                    <!-- Add more FRCP sections as needed -->
+                </div>
+                <div id="frcmp-content" class="section-container" style="display: none;">
+                    <section>
+                        <h3>FRCMP Section 1</h3>
+                        <p>Description for FRCMP Section 1.</p>
+                    </section>
+                    <section>
+                        <h3>FRCMP Section 2</h3>
+                        <p>Description for FRCMP Section 2.</p>
+                    </section>
+                    <!-- Add more FRCMP sections as needed -->
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 nUSA Legal</p>
+    </footer>
+</html>

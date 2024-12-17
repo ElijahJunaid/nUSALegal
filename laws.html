@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nUSA Legal - Laws</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body onload="showFederal()">
+    <header>
+        <div class="header-container">
+            <h1>nUSA Legal</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="courts.html">Courts</a></li>
+                    <li><a href="congress.html">Congress</a></li>
+                    <li><a href="frcp-frcmp.html">FRCP/FRCMP</a></li>
+                    <li><a href="laws.html">Laws</a></li>
+                    <li><a href="constitution.html">Constitution</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="laws-container">
+            <div class="laws-left">
+                <button onclick="showFederal()">Federal</button>
+                <button onclick="showMunicipal()">Municipal</button>
+            </div>
+            <div class="laws-right">
+                <h2 id="section-title" class="centered-title">Federal</h2>
+                <div id="federal-content" class="section-container" style="display: flex;">
+                    <section>
+                        <h3>Federal Section 1</h3>
+                        <p>Description for Federal Section 1.</p>
+                    </section>
+                    <section>
+                        <h3>Federal Section 2</h3>
+                        <p>Description for Federal Section 2.</p>
+                    </section>
+                    <!-- Add more Federal sections as needed -->
+                </div>
+                <div id="municipal-content" class="section-container" style="display: none;">
+                    <section>
+                        <h3>Municipal Section 1</h3>
+                        <p>Description for Municipal Section 1.</p>
+                    </section>
+                    <section>
+                        <h3>Municipal Section 2</h3>
+                        <p>Description for Municipal Section 2.</p>
+                    </section>
+                    <!-- Add more Municipal sections as needed -->
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 nUSA Legal</p>
+    </footer>
+</html>
