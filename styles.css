@@ -25,6 +25,17 @@ header h1, .center-header h1 {
     align-items: center;
 }
 
+/* Style for the "nUSA Legal" link */
+.header-container h1 a, .center-header h1 a {
+    color: white; /* Makes the text color white */
+    text-decoration: none; /* Removes the underline */
+}
+
+.header-container h1 a:hover, .center-header h1 a:hover {
+    color: white; /* Ensures the text stays white on hover */
+    text-decoration: underline; /* Optional: adds underline on hover */
+}
+
 nav {
     text-align: right;
 }
@@ -107,14 +118,12 @@ main {
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    transition: transform 0.3s, box-shadow 0.3s; /* Add transition effects */
 }
 
-.case h3 {
-    margin-top: 0;
-}
-
-.case p {
-    margin: 10px 0;
+.case:hover {
+    transform: translateY(-5px); /* Lift the box slightly on hover */
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2); /* Add a deeper shadow on hover */
 }
 
 .input-box-middle {
@@ -200,5 +209,75 @@ hr {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* Style for the new separate box */
+.separate-box {
+    background-color: #1e90ff; /* Blue background color */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    margin: 40px auto; /* Center alignment with margin */
+    color: white; /* White text color */
+    transition: transform 0.3s, box-shadow 0.3s; /* Add transition effects */
+}
+
+.separate-box a {
+    text-decoration: none;
+    color: white; /* White text color */
+}
+
+.separate-box a:hover {
+    color: lightgray; /* Light gray text color on hover */
+}
+
+.separate-box:hover {
+    transform: translateY(-5px); /* Lift the box slightly on hover */
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2); /* Add a deeper shadow on hover */
+}
+
+/* Add hover effects for sections in Courts and Congress pages */
+.case {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.case:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles for tablets and smaller devices */
+@media (max-width: 768px) {
+    header, .center-header {
+        padding: 1em;
+        text-align: center;
+    }
+    .header-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .nav-links {
+        flex-direction: column;
+        text-align: center;
+    }
+    .section-container {
+        flex-direction: column;
+    }
+    .laws-left, .frcp-frcmp-left {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+}
+
+/* Styles for mobile devices */
+@media (max-width: 480px) {
+    header h1, .center-header h1 {
+        font-size: 1.8em;
+    }
+    .nav-links a {
+        font-size: 1em;
     }
 }
