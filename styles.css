@@ -25,12 +25,12 @@ header h1, .center-header h1 {
     align-items: center;
 }
 
-.header-container h1 a, .center-header h1 a {
+.header-container h1 a, .center-header h1 a, .nav-links a {
     color: white;
     text-decoration: none;
 }
 
-.header-container h1 a:hover, .center-header h1 a:hover {
+.header-container h1 a:hover, .center-header h1 a:hover, .nav-links a:hover {
     color: white;
     text-decoration: underline;
 }
@@ -45,10 +45,6 @@ nav {
     margin: 0;
     display: flex;
     gap: 1em;
-}
-
-.nav-links li {
-    display: inline;
 }
 
 .nav-links a {
@@ -72,7 +68,7 @@ main {
     animation: fadeInUp 1s ease-in-out;
 }
 
-.laws-container, .frcp-frcmp-container {
+.laws-container, .frcp-frcmp-container, .constitution-container {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
@@ -80,7 +76,7 @@ main {
     margin-top: 50px;
 }
 
-.laws-left, .frcp-frcmp-left {
+.laws-left, .frcp-frcmp-left, .constitution-left {
     flex: 1;
     background-color: #fff;
     padding: 10px;
@@ -94,7 +90,22 @@ main {
     gap: 10px;
 }
 
-.laws-right, .frcp-frcmp-right {
+.laws-left button, .frcp-frcmp-left button, .constitution-left button {
+    background-color: #f0f0f0; /* Light gray background */
+    color: #333;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.laws-left button:hover, .frcp-frcmp-left button:hover, .constitution-left button:hover {
+    background-color: #e0e0e0; /* Slightly darker gray on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.laws-right, .frcp-frcmp-right, .constitution-right {
     flex: 3;
     text-align: left;
     text-align: center;
@@ -117,7 +128,7 @@ main {
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.case:hover {
+.case:hover, section:hover, .separate-box:hover {
     transform: translateY(-5px);
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
 }
@@ -139,6 +150,12 @@ main {
     flex-wrap: wrap;
 }
 
+#constitution-content, #amendment-content {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
 section {
     flex: 1;
     min-width: 300px;
@@ -150,12 +167,7 @@ section {
     text-align: center;
 }
 
-section:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-}
-
-section a {
+section a, .separate-box a {
     text-decoration: none;
     color: #333;
     font-size: 1.5em;
@@ -226,23 +238,10 @@ hr {
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.separate-box a {
-    text-decoration: none;
-    color: white;
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
 .separate-box a:hover {
     color: lightgray;
 }
 
-.separate-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-}
-
-/* Add hover effects for sections in Courts and Congress pages */
 .case {
     transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -283,7 +282,7 @@ hr {
         flex-direction: column;
     }
 
-    .laws-left, .frcp-frcmp-left {
+    .laws-left, .frcp-frcmp-left, .constitution-left {
         max-width: 100%;
         margin: 0 auto;
     }
@@ -299,8 +298,28 @@ hr {
         font-size: 1em;
     }
 
-    .laws-container, .frcp-frcmp-container {
+    .laws-container, .frcp-frcmp-container, .constitution-container {
+        flex-direction: column;
         margin-left: 0;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .laws-left, .frcp-frcmp-left, .constitution-left {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto 20px auto;
+    }
+
+    .laws-right, .frcp-frcmp-right, .constitution-right {
+        width: 100%;
+        text-align: center;
+    }
+
+    .laws-left button, .frcp-frcmp-left button, .constitution-left button {
+        width: 100%;
+        margin-bottom: 10px;
+        font-size: 1em;
     }
 
     .section-container {
