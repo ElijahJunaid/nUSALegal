@@ -68,7 +68,7 @@ main {
     animation: fadeInUp 1s ease-in-out;
 }
 
-.laws-container, .frcp-frcmp-container, .constitution-container {
+.laws-container, .test-container, .frcp-frcmp-container, .constitution-container {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
@@ -76,7 +76,7 @@ main {
     margin-top: 50px;
 }
 
-.laws-left, .frcp-frcmp-left, .constitution-left {
+.laws-left, .test-left, .frcp-frcmp-left, .constitution-left {
     flex: 1;
     background-color: #fff;
     padding: 10px;
@@ -90,7 +90,7 @@ main {
     gap: 10px;
 }
 
-.laws-left button, .frcp-frcmp-left button, .constitution-left button {
+.laws-left button, .test-left button, .frcp-frcmp-left button, .constitution-left button {
     background-color: #f0f0f0; /* Light gray background */
     color: #333;
     border: none;
@@ -100,14 +100,13 @@ main {
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.laws-left button:hover, .frcp-frcmp-left button:hover, .constitution-left button:hover {
+.laws-left button:hover, .test-left button:hover, .frcp-frcmp-left button:hover, .constitution-left button:hover {
     background-color: #e0e0e0; /* Slightly darker gray on hover */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.laws-right, .frcp-frcmp-right, .constitution-right {
+.laws-right, .test-right, .frcp-frcmp-right, .constitution-right {
     flex: 3;
-    text-align: left;
     text-align: center;
 }
 
@@ -150,7 +149,7 @@ main {
     flex-wrap: wrap;
 }
 
-#constitution-content, #amendment-content {
+#definition-content, #file-content, #constitution-content, #amendment-content {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
@@ -280,11 +279,22 @@ hr {
 
     .section-container {
         flex-direction: column;
+        padding: 0 10px; /* Adjust padding for smaller screens */
     }
 
-    .laws-left, .frcp-frcmp-left, .constitution-left {
+    .section-container section {
+        width: 100%; /* Make sections take full width */
+        margin-bottom: 10px; /* Add spacing between sections */
+    }
+
+    .laws-left, .test-left, .frcp-frcmp-left, .constitution-left {
         max-width: 100%;
         margin: 0 auto;
+    }
+
+    .separate-box {
+        padding: 20px;
+        margin: 20px auto;
     }
 }
 
@@ -298,25 +308,34 @@ hr {
         font-size: 1em;
     }
 
-    .laws-container, .frcp-frcmp-container, .constitution-container {
+    .section-container {
+        padding: 0 10px; /* Adjust padding for even smaller screens */
+    }
+
+    .section-container section {
+        width: 100%; /* Ensure sections take full width */
+        margin-bottom: 10px; /* Add spacing between sections */
+    }
+
+    .laws-container, .test-container, .frcp-frcmp-container, .constitution-container {
         flex-direction: column;
         margin-left: 0;
         align-items: center;
         padding: 10px;
     }
 
-    .laws-left, .frcp-frcmp-left, .constitution-left {
+    .laws-left, .test-left, .frcp-frcmp-left, .constitution-left {
         max-width: 100%;
         width: 100%;
         margin: 0 auto 20px auto;
     }
 
-    .laws-right, .frcp-frcmp-right, .constitution-right {
+    .laws-right, .test-right, .frcp-frcmp-right, .constitution-right {
         width: 100%;
         text-align: center;
     }
 
-    .laws-left button, .frcp-frcmp-left button, .constitution-left button {
+    .laws-left button, .test-left button, .frcp-frcmp-left button, .constitution-left button {
         width: 100%;
         margin-bottom: 10px;
         font-size: 1em;
