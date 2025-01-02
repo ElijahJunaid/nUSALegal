@@ -33,3 +33,15 @@ function showAmendments() {
     document.getElementById('constitution-content').style.display = 'none';
     document.getElementById('amendment-content').style.display = 'flex';
 }
+
+function showDefinition() {
+    document.getElementById('section-title').innerText = 'Definitions';
+    document.getElementById('definition-content').style.display = 'flex';
+    document.getElementById('file-content').style.display = 'none';
+}
+
+function showFile() {
+    document.getElementById('section-title').innerText = 'Files';
+    document.getElementById('definition-content').style.display = 'none';
+    document.getElementById('file-content').style.display = 'flex';
+}
