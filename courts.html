@@ -10,8 +10,9 @@
     <meta property="og:url" content="https://nusalegal.com">
     <meta property="og:image" content="https://nusalegal.com/thumbnail.jpg">
     <meta property="og:type" content="website">
+    <script src="script.js" defer></script>
 </head>
-<body>
+<body onload="showBoard2()">
     <header>
         <div class="header-container">
             <h1><a href="https://nusalegal.com">nUSA Legal</a></h1>
@@ -27,24 +28,1321 @@
         </div>
     </header>
     <main>
-        <div class="content">
-            <h2 class="centered-title">Supreme Court</h2>
-            <div class="case-details">
-                <div class="case">
-                    <h3>Supreme Court Title</h3>
-                    <p>Case Information</p>
+        <div class="board-container">
+            <div class="board-left">
+                <button onclick="showBoard2()">Volume 2</button>
+                <button onclick="showBoard3()">Volume 3</button>
+                <button onclick="showBoard4()">Volume 4</button>
+                <button onclick="showBoard5()">Volume 5</button>
+                <button onclick="showBoard6()">Volume 6</button>
+                <button onclick="showBoard7()">Volume 7</button>
+                <button onclick="showBoard8()">Volume 8</button>
+                <button onclick="showBoard9()">Volume 9</button>
+                <button onclick="showBoard10()">Volume 10</button>
+                <button onclick="showBoard11()">Volume 11</button>
+                <button onclick="showBoard12()">Volume 12</button>
+                <button onclick="showBoard13()">Volume 13</button>
+                <button onclick="showBoard14()">Volume 14</button>
+                <button onclick="showBoard15()">Volume 15</button>
+                <button onclick="showBoard16()">Volume 16</button>
+                <button onclick="showBoard17()">Volume 17</button>
+            </div>
+            <div class="board-right">
+                <h2 id="section-title" class="centered-title">Supreme Court Board Volume 2</h2>
+                <div id="board2-content" class="section-container" style="display: flex;">
+                    <section class="case-summary">
+                        <h1>JedBartlett v. Federal Elections Commission</h1>
+                        <p>A motion by the FEC is only bias if it is prejudicial or non-uniform.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>38HT1</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 1 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>United States v. Las Vegas</h1>
+                        <p>The Tow Truck Service is under the jurisdiction of the City.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>38G17</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 4 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>HHPrinceGeorge v. Capitalized</h1>
+                        <p>House of Representatives cannot ordain resolutions that are unconstitutional.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>1-10</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 8 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Qolio v. United States</h1>
+                        <p>Regulating speech based on content is unconstitutional and other 1st Amend. issues.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>2-3</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 11 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>CodyGamer100 v. United States</h1>
+                        <p>A plea entered under a joinder is not representative of all those charged under the joinder.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>2-4</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 18 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>United States v. Las Vegas</h1>
+                        <p>The Las Vegas City Council could not legislate ordinances under the previous Constitution.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>2-5</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 24 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Ryan_Revan v. United States</h1>
+                        <p>Congress cannot delegate an unconstitutional amount of authority to the Municipality[ies].</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>2-7</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 34 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Bob561 v. Mindy_Lahiri</h1>
+                        <p>A hearing is not required for Contempt of Court (18 U.S.C. 401) and other COC issues.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>2-9</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 44 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>DonaldJTrump v. United States</h1>
+                        <p>No Court may act without a "case or controversy" nor issue orders without due process applied.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>2-10</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 57 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Likeanub v. United States</h1>
+                        <p>A trial in absentia may only occur with notice and other due process rights.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>2-11</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 60 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Zeyad567ALT v. SteffJonez</h1>
+                        <p>A Judge may not issue contempt for intra legem issues and other COC issues.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>2-12</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 70 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Sudden v. Helleoh</h1>
+                        <p>Reaffirming George v. Capitalized, 2 U.S. 8 (2016).</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>2-16</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 86 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>AdamStratton v. Technozo</h1>
+                        <p>Nomination and approval of Respondent is unconstitutional and violates the Ineligiblity Clause of Article 1.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>2-17</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>2. US. 88 (2016)</p>
+                            </div>
+                        </div>                  
+                    </section>
                 </div>
-                <hr>
-                <div class="case">
-                    <h3>Supreme Court Title</h3>
-                    <p>Case Information.</p>
+                <div id="board3-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>Norman_Paperman v. U.S. Military</h1>
+                        <p>Case remanded to District Court per All Writs Act.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>3-1</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>3. US. 1 (2017)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>SigmaHD v. U.S. Marshals Service</h1>
+                        <p>Government cannot fire employees for conduct or speech off team without substantial interest.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>3-4</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>3. US. 2 (2017)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Idiotic_Leader v. Las Vegas</h1>
+                        <p>Reaffirming United States v. Las Vegas, 2 U.S. 24 (2017).</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>3-5</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>3. US. 18 (2017)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>MythicOne v. National Security Agency </h1>
+                        <p>Second amendment protects right to bear arms, not an unlimited right to bear in any manner.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>3-6</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>3. US. 28 (2017)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>British2004 v. Ozzymen</h1>
+                        <p>Speaker of the House cannot vote except in cases of tiebreaking votes (OLD CONST.).</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>3-7</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>3. US. 60 (2017)</p>
+                            </div>
+                        </div>                  
+                    </section>
                 </div>
-                <hr>
-                <div class="case">
-                    <h3>Supreme Court Title</h3>
-                    <p>Case Information</p>
+                <div id="board4-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>United States v. Las Vegas</h1>
+                        <p>Courts should not issue a ruling without an injury to be redressed, thus violating the C&C Clause.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>4-2</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>4. US. 1 (2017)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Seaborn v. Lukassie</h1>
+                        <p>No Judge may issue contempt in cases which they do not preside in and other COC issues.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>4-8</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>4. US. 5 (2017)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>12904 v. Khemists</h1>
+                        <p>At-will employment is constitutional, Fourteenth Amendment issues and other employee rights.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>4-3</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>4. US. 11 (2017)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Snowbleed v. Nevada Highway Patrol</h1>
+                        <p>Lower Court Affirmed in equally divided Court.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>4-26</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>4. US. 20 (2017)</p>
+                            </div>
+                        </div>                  
+                    </section>
                 </div>
-                <hr>
+                <div id="board5-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>In Re United States</h1>
+                        <p>Application for Group Warrant.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>Civil</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-14</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 1 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>RoExplo v. United States</h1>
+                        <p>A five month imprisonment sentence did not violate the 8th Amendment.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-7</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 7 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>United States v. TPR</h1>
+                        <p>Application for Group Warrant, the size of the group should be a considered factor and necessity.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-22</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 36 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Code_Rager v. United States</h1>
+                        <p>A pardon vacates a sentence and in turn vacates any possibility of review of the vacated sentence.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-25</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 58 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Kirkman v. Nevada Highway Patrol</h1>
+                        <p>Suits cannot occur for injuries not relevant to the pursued jurisdiction.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>Civil</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-33</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 62 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>George v. United States</h1>
+                        <p>Rules of mootness apply to Anytime Review cases.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>Civil</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-35</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 66 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Ex Parte United States</h1>
+                        <p>Prosecutions by the District of Columbia Gov. stayed in Federal Court pending SCOTUS case.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-43</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 72 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Nuinik v. United States</h1>
+                        <p>Compulsory Process Clause is a right and the right to call witnesses is imperative to a fair trial.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-27</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 80 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Heave v. United States</h1>
+                        <p>Writ dismissed for mootness.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>Civil</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-41</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 85 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>George v. Troyan</h1>
+                        <p>Courts shall follow mandatory language regarding procedure in statutes .</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>Civil</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-49</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 91 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Dominator v. United States</h1>
+                        <p>Upholding George v. Troyan, 5 U.S. 91 (2018) and vacating the lower Court judgement.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-55</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 94 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>United States v. District of Columbia</h1>
+                        <p>Municipalities may prosecute city crimes in Federal Court and cannot create their own Courts.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>Civil</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-43</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 95 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Kirkman v. United States </h1>
+                        <p>No person shall be held in contempt without intent or for issues out of their managable control.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>Civil</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-63</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>5. US. 110 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board6-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>Technozo v. United States</h1>
+                        <p>Clan Managers and their entities are immune from suit when acting in their official capacities.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>6-64</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>6. US. 5 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Ultiman v. United States</h1>
+                        <p>Mootness doctrine embraced and Writ dismissed.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-72</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>6. US. 19 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Benda v. United States</h1>
+                        <p>Congress cannot overly deligate Article III powers to a non-Article III Court.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-75</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>6. US. 20 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Federal Election Commission v. AcidRaps</h1>
+                        <p>Only SCOTUS may overturn its precedents and how the Court responds to election issues.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>5-77</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>6. US. 42 (2018)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Kirkman v. Bank of America</h1>
+                        <p>Upholding the 'Enhancing the Judiciary Act's provisions on dismissals with prejudice.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>6-20</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>6. U.S. 49 (2019)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board7-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>Kirkman v. State of Columbia</h1>
+                        <p>State of Columbia (Nevada and DC combined) is unconstitutional and other bill severability issues.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>7-1 & 7-2</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>7. US. 1 (2019)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Cursive v. United States</h1>
+                        <p>Political question doctrine is "judicial policy" and due process does not apply to impeachment[s].</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>7-5</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>7. US. 9 (2019)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>In Re Haven</h1>
+                        <p>Mootness doctrine applied.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>7-6</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>7. US. 42 (2019)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>In Re Giordano</h1>
+                        <p>Expulsion of judges and the Fourteenth Amendment.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>7-13</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>7. US. 46 (2019)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Party v. Board of Law Examiners</h1>
+                        <p>Separation of powers issues and the trias politica doctrine and EB control of a Federal Bar exam.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>7-18</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>7. US. 50 (2019)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Lydxia v. House of Representatives</h1>
+                        <p>Congressional subpoenas and mootness.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>7-26</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>7. US. 56 (2019)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board8-content" class="section-container" style="display: none;">
+                    <section>
+                        <h3>NOTHING WAS RELEASED, U HIGH SUPREME COURT BACK THEN?</h3>
+                </div>
+                <div id="board9-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>Reset v. United States</h1>
+                        <p>Definition of "high crimes and misdemeanors" and impeachment issues (removal overturned).</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-13</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 1 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Caldwell v. Dream</h1>
+                        <p>Court ordered apologies are constitutional, may only be a secondary relief.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-14</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 73 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Monkey v. United States</h1>
+                        <p>Utilisation of the suspension rule 62 in FRCRMP must be proper and constitutional issues.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-21</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 77 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Caldwell v. United States</h1>
+                        <p>Congress lacks the authority to issue arrest warrants and AOS outside an Article III Court.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-15</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 85 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Kolibob v. United States</h1>
+                        <p>Requirements to issue a stay order.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CRIMINAL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-35</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 104 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Tools v. United States</h1>
+                        <p>Due process must be applied to EBB's, President cannot terminate those he doesn't appoint.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-17</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 113 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Reset v. United States II</h1>
+                        <p>Requirements to issue a stay order and reaffirming Kolibob and Procursive.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-45</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 144 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>United States v. Max</h1>
+                        <p>Default judgement cannot be issued if both parties intend to participate and other DJ issues.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-33</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 152 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>In Re Beatle</h1>
+                        <p>Each count of a crime must be supported by probable cause.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-26</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 155 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Loftus v. Yada</h1>
+                        <p>Judges must defend their orders or they shall not be considered defendable.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-38</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 158 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>In Re Ratification of Ridgeway Courts Amendt.</h1>
+                        <p>Ridgeway is a territory of the United States and hence not subject to Constitutional prohibition.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-MO14</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 173 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Luxciety v. Raps</h1>
+                        <p>Once a pardon is accepted it cannot be revoked, pardons carry an admission of guilt.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-53</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 194 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>In Re Four Circuit Judges</h1>
+                        <p>Standing issues, reaffirming Benda and principles of the judiciary/justice.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-56</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 197 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Hamilton v. United States</h1>
+                        <p>Congress cannot legislate on municipal issues and other Tenth Amendt. issues.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-47</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 202 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>Blue v. United States</h1>
+                        <p>Congress cannot legislate on municipal issues and reaffirming Hamilton.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-46</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 216 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                    <section class="case-summary">
+                        <h1>In Re Gobies</h1>
+                        <p>Interpreting the Judicial Restructuring Act and authorities over the USDC and reaffirming Benda.</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>CIVIL</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>9-52</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>9. U.S. 220 (2020)</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board10-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>SUPREME COURT TITLE</h1>
+                        <p>DESCRIPTION</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>TYPE</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>NUMBER</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>CITATION</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board11-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>SUPREME COURT TITLE</h1>
+                        <p>DESCRIPTION</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>TYPE</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>NUMBER</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>CITATION</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board12-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>SUPREME COURT TITLE</h1>
+                        <p>DESCRIPTION</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>TYPE</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>NUMBER</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>CITATION</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board13-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>SUPREME COURT TITLE</h1>
+                        <p>DESCRIPTION</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>TYPE</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>NUMBER</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>CITATION</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board14-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>SUPREME COURT TITLE</h1>
+                        <p>DESCRIPTION</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>TYPE</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>NUMBER</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>CITATION</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board15-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>SUPREME COURT TITLE</h1>
+                        <p>DESCRIPTION</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>TYPE</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>NUMBER</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>CITATION</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board16-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>SUPREME COURT TITLE</h1>
+                        <p>DESCRIPTION</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>TYPE</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>NUMBER</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>CITATION</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
+                <div id="board17-content" class="section-container" style="display: none;">
+                    <section class="case-summary">
+                        <h1>SUPREME COURT TITLE</h1>
+                        <p>DESCRIPTION</p>
+                        <div class="case-details">
+                            <div class="case-item">
+                                <span>TYPE: </span>
+                                <p>TYPE</p>
+                            </div>
+                            <div class="case-item">
+                                <span>DOCKET # </span>
+                                <p>NUMBER</p>
+                            </div>
+                            <div class="case-item">
+                                <span>CITATION</span>
+                                <p>CITATION</p>
+                            </div>
+                        </div>                  
+                    </section>
+                </div>
             </div>
         </div>
     </main>
