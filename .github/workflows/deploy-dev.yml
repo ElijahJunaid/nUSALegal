@@ -1,0 +1,50 @@
+name: Deploy to Develop
+
+on:
+    push:
+        branches:
+            - develop
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Setup Deno
+              uses: denoland/setup-deno@v1
+              with:
+                  deno-version: v1.x
+
+            - name: Set up SSH
+              uses: webfactory/ssh-agent@v0.7.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+            - name: Deploy via SSH
+              run: |
+                  ssh -o StrictHostKeyChecking=no deploy@${{ secrets.VPS_HOST }} "
+                    cd /opt/putera/nUSALegal && \
+                    git config --global --add safe.directory /opt/putera/nUSALegal && \
+
+                    git fetch origin --tags && \
+                    git checkout develop && \
+
+                    git reset --hard origin/develop && \
+
+                    # Extract version from package.json using grep and sed
+                    VERSION=\$(grep -o '\"version\"[[:space:]]*:[[:space:]]*\"[^\"]*\"' package.json | sed 's/.*\"\([^\"]*\)\"/\1/') && \
+                    COMMIT_HASH=\$(git rev-parse HEAD | cut -c1-7) && \
+                    IMAGE_TAG=dev-nusalegal:\$VERSION-dev-\$COMMIT_HASH && \
+
+                    echo Building image = \$IMAGE_TAG && \
+
+                    docker compose build --no-cache && \
+                    docker tag dev-nusalegal:latest \$IMAGE_TAG && \
+                    docker compose down && \
+                    docker compose up -d && \
+
+                    docker image prune -f --filter \"until=168h\"
+                  "

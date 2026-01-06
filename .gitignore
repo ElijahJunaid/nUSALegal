@@ -1,0 +1,43 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Generated Prisma
+/app/generated/prisma
+
+# Database backups
+backups/
+scripts/backups/
+*.sql
+*.sql.gz
+*.sql.zip
+*.db.backup
+
+# Database
+*.db
+*.db-journal
+prisma/migrations/
+# Local Netlify folder
+.netlify
+next-server

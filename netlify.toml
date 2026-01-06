@@ -1,0 +1,88 @@
+# Netlify Configuration for Nuxt 3 Deployment
+# Documentation: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+# Build command for Nuxt with Prisma
+command = "npm run build"
+
+# Publish directory (Nuxt outputs to .output/public)
+publish = "dist"
+
+# Functions directory for Nuxt server routes (production only)
+functions = ".netlify/functions-internal/server"
+
+[build.environment]
+# Node version for build
+NODE_VERSION = "24"
+
+# Enable Node.js modules
+NODE_OPTIONS = "--max-old-space-size=4096"
+
+# Database URL for SQLite (ponto para o arquivo criado durante o build)
+DATABASE_URL = "file:./prisma/dev.db"
+
+# Netlify Dev (local development)
+[dev]
+framework = "nuxt"
+port = 8888
+targetPort = 3001
+autoLaunch = false
+
+# Headers for security and performance
+[[headers]]
+for = "/*"
+[headers.values]
+# Security headers
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+X-XSS-Protection = "1; mode=block"
+Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache control for static assets
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "*.html"
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
+
+
+# Redirects (if needed)
+# Uncomment and modify as needed
+
+# Redirect API routes to Nuxt server functions
+# [[redirects]]
+#   from = "/api/*"
+#   to = "/.netlify/functions/:splat"
+#   status = 200
+
+# Redirect old routes (example)
+# [[redirects]]
+#   from = "/old-path"
+#   to = "/new-path"
+#   status = 301
+
+# SPA fallback for client-side routing
+# Only applies in production (not in dev mode)
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+force = false
+
+[functions]
+# Environment variables
+
+# Required environment variables (examples):
+# TOKEN_SECRET=<generate-with-crypto>
+# OPENAI_API_KEY=sk-proj-...
+# TAVILY_API_KEY=tvly-...
+# TRELLO_API_KEY=...
+# TRELLO_TOKEN=...
+# NUSA_API_KEY=...
+# VECTOR_STORE_ID=vs_...
+# ASSISTANT_ID=asst_...
+
+# Optional:
+# NUXT_PUBLIC_IS_SHUTDOWN=false
+# ALLOWED_ORIGINS=https://nusalegal.com
