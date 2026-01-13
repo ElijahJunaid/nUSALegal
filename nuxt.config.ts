@@ -14,6 +14,12 @@ export default defineNuxtConfig({
         devServer: {
             watch: [],
         },
+        serverAssets: [
+            {
+                baseName: "prisma",
+                dir: "prisma",
+            },
+        ],
     },
 
         app: {

@@ -32,15 +32,14 @@ autoLaunch = false
 [[headers]]
 for = "/*"
 [headers.values]
+# Security headers
 X-Frame-Options = "DENY"
 X-Content-Type-Options = "nosniff"
 X-XSS-Protection = "1; mode=block"
 Referrer-Policy = "strict-origin-when-cross-origin"
 
-Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://p.trellocdn.com blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https: ws: wss: https://o4510700106416128.ingest.us.sentry.io https://*.ingest.sentry.io; worker-src 'self' blob:; cache-bust-20250112-2207"
-
 # Cache control for static assets
-Cache-Control = "public, max-age=300"
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
 for = "*.html"
