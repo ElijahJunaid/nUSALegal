@@ -43,7 +43,7 @@ script-src 'self' 'unsafe-inline' 'unsafe-eval' https://p.trellocdn.com;
 style-src 'self' 'unsafe-inline';
 img-src 'self' data: blob:;
 font-src 'self' data:;
-connect-src 'self' https: ws: wss: https://o4510700106416128.ingest.us.sentry.io;
+connect-src 'self' https: ws: wss: https://o4510700106416128.ingest.us.sentry.io https://*.ingest.sentry.io;
 worker-src 'self' blob:;
 """
 
