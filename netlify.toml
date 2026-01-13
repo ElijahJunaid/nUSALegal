@@ -37,13 +37,13 @@ X-Content-Type-Options = "nosniff"
 X-XSS-Protection = "1; mode=block"
 Referrer-Policy = "strict-origin-when-cross-origin"
 
-Content-Security-Policy = """
+Content-Security-Policy-Report-Only = """
 default-src 'self';
-script-src 'self' 'unsafe-inline' 'unsafe-eval';
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://p.trellocdn.com;
 style-src 'self' 'unsafe-inline';
 img-src 'self' data: blob:;
 font-src 'self' data:;
-connect-src 'self' https:;
+connect-src 'self' https: ws: wss: https://o4510700106416128.ingest.us.sentry.io;
 worker-src 'self' blob:;
 """
 
@@ -80,17 +80,6 @@ status = 200
 force = false
 
 [functions]
-# Environment variables
-
-# Required environment variables (examples):
-# TOKEN_SECRET=<generate-with-crypto>
-# OPENAI_API_KEY=sk-proj-...
-# TAVILY_API_KEY=tvly-...
-# TRELLO_API_KEY=...
-# TRELLO_TOKEN=...
-# NUSA_API_KEY=...
-# VECTOR_STORE_ID=vs_...
-# ASSISTANT_ID=asst_...
 
 # Optional:
 # NUXT_PUBLIC_IS_SHUTDOWN=false
