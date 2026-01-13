@@ -47,8 +47,8 @@ connect-src 'self' https: ws: wss: https://o4510700106416128.ingest.us.sentry.io
 worker-src 'self' blob:;
 """
 
-# Override CSP cache for security headers
-Cache-Control = "no-cache, must-revalidate"
+# Cache control for static assets
+Cache-Control = "public, max-age=300"
 
 [[headers]]
 for = "*.html"
