@@ -16,21 +16,7 @@ export default defineNuxtConfig({
         },
     },
 
-    app: {
-        head: {
-            meta: [
-                {
-                    "http-equiv": "X-Content-Type-Options",
-                    content: "nosniff",
-                },
-                {
-                    "http-equiv": "X-XSS-Protection",
-                    content: "1; mode=block",
-                },
-            ],
-        },
-    },
-    runtimeConfig: {
+        runtimeConfig: {
         tokenSecret: process.env.TOKEN_SECRET || "",
         tokenExpiry: process.env.TOKEN_EXPIRY || "5",
         allowedOrigins: process.env.ALLOWED_ORIGINS || "",
