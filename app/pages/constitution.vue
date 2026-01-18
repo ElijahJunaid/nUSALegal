@@ -151,12 +151,28 @@ const isLoadingArticle = ref<boolean>(false);
 const articlePage = ref<number>(1);
 
 const articleContent = computed<ConstitutionArticleSection | null>(() => {
-    if (!article.value || !article.value.sections || !article.value.sections.length) return null;
+    if (!article.value) {
+        console.log('No article value');
+        return null;
+    }
+    if (!article.value.sections || !Array.isArray(article.value.sections)) {
+        console.log('No sections or not array:', article.value.sections);
+        return null;
+    }
+    if (article.value.sections.length === 0) {
+        console.log('Empty sections array');
+        return null;
+    }
     
     const pageIndex = articlePage.value - 1;
-    if (pageIndex < 0 || pageIndex >= article.value.sections.length) return null;
+    if (pageIndex < 0 || pageIndex >= article.value.sections.length) {
+        console.log('Page index out of bounds:', pageIndex, 'length:', article.value.sections.length);
+        return null;
+    }
 
-    return article.value.sections[pageIndex] as ConstitutionArticleSection
+    const result = article.value.sections[pageIndex] as ConstitutionArticleSection;
+    console.log('Article content result:', result);
+    return result;
 })
 
 const handleClick = async () => {
@@ -178,6 +194,7 @@ const handleClick = async () => {
             });
 
             article.value = response;
+            console.log('Article loaded:', article.value); // Debug log
         } catch (error) {
 
         } finally {
