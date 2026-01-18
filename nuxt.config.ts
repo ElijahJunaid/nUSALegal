@@ -1,4 +1,5 @@
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
 
 export default defineNuxtConfig({
     compatibilityDate: "2025-07-15",
@@ -7,7 +8,11 @@ export default defineNuxtConfig({
     srcDir: "app/",
     css: ["~/assets/css/main.css"],
     vite: {
-        plugins: [tailwindcss()],
+        css: {
+            postcss: {
+                plugins: [tailwindcss, autoprefixer],
+            },
+        },
     },
     nitro: {
         preset: "netlify",
