@@ -15,14 +15,14 @@
 
         <div v-else class="grid">
             <div v-for="(bill, index) in filteredDCBills" :key="index" class="card">
-                <div class="card-body">
+                <div class="card-body text-center">
                     <div>
-                        <h3>{{ bill.title }}</h3>
+                        <h3 class="text-center">{{ bill.title }}</h3>
                         <button @click="$emit('open-pdf', bill.pdfPath)" class="btn hover:text-primary-focus">
                             [View Bill Text]
                         </button>
                     </div>
-                    <p><strong>Description:</strong> {{ bill.description }}</p>
+                    <p class="text-center"><strong>Description:</strong> {{ bill.description }}</p>
                 </div>
             </div>
         </div>

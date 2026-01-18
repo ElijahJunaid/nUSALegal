@@ -15,12 +15,12 @@
 
         <div v-else>
             <div class="card">
-                <div class="card-body">
-                    <table class="table">
+                <div class="card-body text-center">
+                    <table class="table text-center">
                         <tbody>
                             <tr v-for="(dt, index) in filteredData" :key="index">
-                                <th>{{ dt.title }}</th>
-                                <td>{{ dt.description }}</td>
+                                <th class="text-center">{{ dt.title }}</th>
+                                <td class="text-center">{{ dt.description }}</td>
                             </tr>
                         </tbody>
                     </table>

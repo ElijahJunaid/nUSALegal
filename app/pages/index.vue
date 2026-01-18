@@ -24,8 +24,8 @@
 
                 <div class="card shadow-lg bg-base-100">
                     <div class="card-body p-8 text-center">
-                        <p class="text-sm">As of August 4th, 2025 (before april)<br />Total Website Cost: $995.13</p>
-                        <p class="text-xs mt-4">&copy; 2024 nUSA Legal<br />THIS IS NOT REAL LIFE!</p>
+                        <p class="text-sm text-center">As of August 4th, 2025 (before april)<br />Total Website Cost: $995.13</p>
+                        <p class="text-xs mt-4 text-center">&copy; 2024 nUSA Legal<br />THIS IS NOT REAL LIFE!</p>
                     </div>
                 </div>
             </div>

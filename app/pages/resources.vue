@@ -78,7 +78,7 @@
                             </button>
                         </div>
 
-                        <h2 class="section-title capitalize">
+                        <h2 class="section-title capitalize text-center">
                             {{ selected }}
                         </h2>
 

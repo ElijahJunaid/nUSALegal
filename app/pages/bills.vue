@@ -41,7 +41,7 @@
                             </button>
                         </div>
 
-                        <h2 class="section-title">
+                        <h2 class="section-title text-center">
                             {{ selectedSection === 'congress' ? 'Congress' : 'City Council' }}
                         </h2>
 

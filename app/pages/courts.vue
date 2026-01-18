@@ -63,14 +63,14 @@
 
                         <div v-else class="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                             <div v-for="(courtCase, index) in courtsStore.filteredCases" :key="index" class="card bg-base-100 shadow-md hover:shadow-xl transition-shadow duration-300">
-                                <div class="card-body p-4">
-                                    <h3 class="card-title text-lg">{{ courtCase.title }}</h3>
-                                    <p class="text-sm text-gray-600 mb-4">{{ courtCase.description }}</p>
+                                <div class="card-body p-4 text-center">
+                                    <h3 class="card-title text-lg text-center">{{ courtCase.title }}</h3>
+                                    <p class="text-sm text-gray-600 mb-4 text-center">{{ courtCase.description }}</p>
 
                                     <div class="space-y-2">
-                                        <div class="flex items-start">
+                                        <div class="flex items-start justify-center">
                                             <span class="font-semibold text-sm w-24">TYPE:</span>
-                                            <p class="text-sm">
+                                            <p class="text-sm text-center">
                                                 <span :class="{
                                                     'badge-error': courtCase.type === 'CRIMINAL',
                                                     'badge-info': courtCase.type === 'CIVIL' || courtCase.type === 'Civil'
@@ -80,14 +80,14 @@
                                             </p>
                                         </div>
 
-                                        <div class="flex items-start">
+                                        <div class="flex items-start justify-center">
                                             <span class="font-semibold text-sm w-24">DOCKET #:</span>
-                                            <p class="text-sm">{{ courtCase.docket }}</p>
+                                            <p class="text-sm text-center">{{ courtCase.docket }}</p>
                                         </div>
 
-                                        <div class="flex items-start">
+                                        <div class="flex items-start justify-center">
                                             <span class="font-semibold text-sm w-24">CITATION:</span>
-                                            <p class="text-sm">{{ courtCase.citation }}</p>
+                                            <p class="text-sm text-center">{{ courtCase.citation }}</p>
                                         </div>
                                     </div>
                                 </div>

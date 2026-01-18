@@ -16,14 +16,14 @@
         <div v-else class="grid">
             <template v-for="(data, index) in filteredMunicipal" :key="index">
                 <div class="data-group">
-                    <div>
-                        <h3>{{ data.label }}</h3>
+                    <div class="text-center">
+                        <h3 class="text-center">{{ data.label }}</h3>
                     </div>
                 </div>
                 <div v-for="(dt, index) in data.data" :key="index" @click="$emit('show-detail', dt)" class="data-list">
-                    <div>
-                        <h3>{{ dt.title }}</h3>
-                        <p>{{ dt.excerp }}</p>
+                    <div class="text-center">
+                        <h3 class="text-center">{{ dt.title }}</h3>
+                        <p class="text-center">{{ dt.excerp }}</p>
                     </div>
                 </div>
             </template>

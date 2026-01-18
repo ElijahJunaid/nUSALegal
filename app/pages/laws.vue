@@ -54,7 +54,7 @@
                             </button>
                         </div>
 
-                        <h2 class="section-title">
+                        <h2 class="section-title text-center">
                             {{ title }}
                         </h2>
 

@@ -16,9 +16,9 @@
         <div v-else class="grid">
             <template v-for="(dt, index) in filteredLaws" :key="index">
                 <div @click="$emit('show-detail', dt)" class="card">
-                    <div class="card-body ">
-                        <h3>{{ dt.title }}</h3>
-                        <p>{{ dt.excerp }}</p>
+                    <div class="card-body text-center">
+                        <h3 class="text-center">{{ dt.title }}</h3>
+                        <p class="text-center">{{ dt.excerp }}</p>
                     </div>
                 </div>
             </template>

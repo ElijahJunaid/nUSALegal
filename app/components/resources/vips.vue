@@ -34,16 +34,16 @@
                         </div>
                     </div>
                 </figure>
-                <div class="card-body">
-                    <div v-if="vip.isLoading" class="skeleton h-8 w-32 mb-2"></div>
-                    <h2 v-else class="card-title text-xl">{{ vip.user.username }}</h2>
+                <div class="card-body text-center">
+                    <div v-if="vip.isLoading" class="skeleton h-8 w-32 mb-2 mx-auto"></div>
+                    <h2 v-else class="card-title text-xl text-center">{{ vip.user.username }}</h2>
 
-                    <p class="vip-name">ID: {{ vip.userId }}</p>
+                    <p class="vip-name text-center">ID: {{ vip.userId }}</p>
                     <div class="divider my-2"></div>
-                    <div>{{ vip.title }}</div>
-                    <p class="vip-reason">{{ vip.reason }}</p>
+                    <div class="text-center">{{ vip.title }}</div>
+                    <p class="vip-reason text-center">{{ vip.reason }}</p>
 
-                    <div v-if="vip.hasError && !vip.isLoading" class="badge">
+                    <div v-if="vip.hasError && !vip.isLoading" class="badge mx-auto">
                         Limited info available
                     </div>
 
