@@ -155,24 +155,27 @@ const articleContent = computed<ConstitutionArticleSection | null>(() => {
         console.log('No article value');
         return null;
     }
-    if (!article.value.sections || !Array.isArray(article.value.sections)) {
-        console.log('No sections or not array:', article.value.sections);
-        return null;
-    }
-    if (article.value.sections.length === 0) {
-        console.log('Empty sections array');
-        return null;
+    
+    // Check if article has sections (original structure)
+    if (article.value.sections && Array.isArray(article.value.sections) && article.value.sections.length > 0) {
+        const pageIndex = articlePage.value - 1;
+        if (pageIndex >= 0 && pageIndex < article.value.sections.length) {
+            console.log('Using article sections');
+            return article.value.sections[pageIndex] as ConstitutionArticleSection;
+        }
     }
     
-    const pageIndex = articlePage.value - 1;
-    if (pageIndex < 0 || pageIndex >= article.value.sections.length) {
-        console.log('Page index out of bounds:', pageIndex, 'length:', article.value.sections.length);
-        return null;
+    // Check if article has direct content (new structure)
+    if ((article.value as any).content) {
+        console.log('Using article content directly');
+        return {
+            content: (article.value as any).content,
+            title: article.value.title || 'Content'
+        } as ConstitutionArticleSection;
     }
-
-    const result = article.value.sections[pageIndex] as ConstitutionArticleSection;
-    console.log('Article content result:', result);
-    return result;
+    
+    console.log('No content or sections found in article');
+    return null;
 })
 
 const handleClick = async () => {
