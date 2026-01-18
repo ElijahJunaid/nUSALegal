@@ -15,7 +15,7 @@
 
         <div v-else class="grid gap-4">
             <template v-for="(dt, index) in filteredLaws" :key="index">
-                <div @click="$emit('show-detail', dt)" class="card border border-base-300">
+                <div @click="$emit('show-detail', dt)" class="card border border-base-300 h-fit">
                     <div class="card-body text-center">
                         <h3 class="text-center font-bold text-xl">{{ dt.title }}</h3>
                         <p class="text-center" v-html="dt.excerp.replace(/&lt;br&gt;/g, '<br>').replace(/&amp;lt;br&amp;gt;/g, '<br>').replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>')"></p>
