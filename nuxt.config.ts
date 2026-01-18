@@ -13,6 +13,9 @@ export default defineNuxtConfig({
                 plugins: [tailwindcss, autoprefixer],
             },
         },
+        define: {
+            'process.env.ROLLUP_NATIVE': 'false'
+        }
     },
     nitro: {
         preset: "netlify",

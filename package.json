@@ -47,10 +47,6 @@
         "ts-node": "^10.9.2",
         "word-wrap": "^1.2.4"
     },
-    "optionalDependencies": {
-        "@oxc-parser/binding-linux-x64-gnu": "^0.108.0",
-        "@oxc-parser/binding-win32-x64-msvc": "^0.108.0"
-    },
     "overrides": {
         "word-wrap": "^1.2.4",
         "diff": "^8.0.3",
