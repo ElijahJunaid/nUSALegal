@@ -95,7 +95,7 @@
                         dataDetail.title + (articleContent ? ` | ${articleContent.title}` : '')
                     }}
                     </h3>
-                    <p v-if="dataDetail.content" class="text-center" v-html="dataDetail.content"></p>
+                    <p v-if="dataDetail.content" class="text-center" v-html="dataDetail.content.replace(/&lt;br&gt;/g, '<br>')"></p>
 
                     <template v-if="dataDetail.hasArticle">
                         <div v-if="isLoadingArticle" class="flex justify-center">
