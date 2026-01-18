@@ -115,12 +115,18 @@ const dataDetail = ref<Law | null>(null);
 const processedContent = computed(() => {
     if (!dataDetail.value?.content) return '';
     
-    return dataDetail.value.content
+    const original = dataDetail.value.content;
+    console.log('Original content:', original);
+    
+    const processed = original
         .replace(/&lt;br&gt;/g, '<br>')  // Handle &lt;br&gt;
         .replace(/&amp;lt;br&amp;gt;/g, '<br>')  // Handle double-escaped &amp;lt;br&amp;gt;
         .replace(/\n\n/g, '<br><br>')  // Handle double newlines
         .replace(/\n/g, '<br>')  // Handle single newlines
         .replace(/<br><br>/g, '<br><br>');  // Ensure existing br tags work
+        
+    console.log('Processed content:', processed);
+    return processed;
 });
 
 const title = computed<string>(() => {
