@@ -13,8 +13,8 @@
             <span>No bills found matching your search.</span>
         </div>
 
-        <div v-else class="grid">
-            <div v-for="(bill, index) in filteredCongressBills" :key="index" class="card">
+        <div v-else class="grid gap-4">
+            <div v-for="(bill, index) in filteredCongressBills" :key="index" class="card border border-base-300">
                 <div class="card-body text-center">
                     <div>
                         <h3 class="text-center">{{ bill.number }}</h3>

@@ -81,18 +81,18 @@
                                 <span>No data found matching your search.</span>
                             </div>
 
-                            <div v-else class="data-grid">
+                            <div v-else class="data-grid gap-4">
                                 <template v-for="(data, index) in filteredFederalRules" :key="index">
                                     <div class="data-group">
-                                        <div>
-                                            <h3>{{ data.label }}</h3>
+                                        <div class="text-center">
+                                            <h3 class="text-center">{{ data.label }}</h3>
                                         </div>
                                     </div>
                                     <div v-for="(dt, index) in data.data" :key="index"
-                                        @click="showDetail = true; dataDetail = dt" class="card">
-                                        <div class="card-body">
-                                            <h3>{{ dt.title }}</h3>
-                                            <p>{{ dt.excerp }}</p>
+                                        @click="showDetail = true; dataDetail = dt" class="card border border-base-300">
+                                        <div class="card-body text-center">
+                                            <h3 class="text-center">{{ dt.title }}</h3>
+                                            <p class="text-center">{{ dt.excerp }}</p>
                                         </div>
                                     </div>
                                 </template>

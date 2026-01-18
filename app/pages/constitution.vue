@@ -69,14 +69,14 @@
                                 <span>No data found matching your search.</span>
                             </div>
 
-                            <div v-else class="grid">
+                            <div v-else class="grid gap-4">
                                 <div v-for="(dt, index) in filteredData" :key="index"
-                                    @click="dataDetail = dt; handleClick()" class="card">
-                                    <div class="card-body">
-                                        <div>
-                                            <h3>{{ dt.title }}</h3>
-                                            <div>
-                                                <p><strong>Description:</strong> {{ dt.description }}</p>
+                                    @click="dataDetail = dt; handleClick()" class="card border border-base-300">
+                                    <div class="card-body text-center">
+                                        <div class="text-center">
+                                            <h3 class="text-center">{{ dt.title }}</h3>
+                                            <div class="text-center">
+                                                <p class="text-center"><strong>Description:</strong> {{ dt.description }}</p>
                                             </div>
                                             <button v-if="dt.hasArticle" class="btn">Read Article</button>
                                         </div>

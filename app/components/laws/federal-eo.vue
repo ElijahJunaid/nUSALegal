@@ -13,9 +13,9 @@
             <span>No data found matching your search.</span>
         </div>
 
-        <div v-else class="grid">
+        <div v-else class="grid gap-4">
             <template v-for="(dt, index) in filteredLaws" :key="index">
-                <div @click="$emit('show-detail', dt)" class="card">
+                <div @click="$emit('show-detail', dt)" class="card border border-base-300">
                     <div class="card-body text-center">
                         <h3 class="text-center">{{ dt.title }}</h3>
                         <p class="text-center">{{ dt.excerp }}</p>

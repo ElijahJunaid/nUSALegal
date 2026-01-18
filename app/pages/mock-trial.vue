@@ -1049,7 +1049,7 @@ onMounted(() => {
   --hover-shadow: rgba(0, 0, 0, 0.2);
   --accent-blue: #0066cc;
   --accent-light: #e3f2fd;
-  --border-color: #ddd;
+  --border-color: #ccc;
   --selected-bg: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
 }
 

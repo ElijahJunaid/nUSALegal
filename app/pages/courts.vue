@@ -67,27 +67,25 @@
                                     <h3 class="card-title text-lg text-center">{{ courtCase.title }}</h3>
                                     <p class="text-sm text-gray-600 mb-4 text-center">{{ courtCase.description }}</p>
 
-                                    <div class="space-y-2">
-                                        <div class="flex items-start justify-center">
-                                            <span class="font-semibold text-sm w-24">TYPE:</span>
-                                            <p class="text-sm text-center">
-                                                <span :class="{
-                                                    'badge-error': courtCase.type === 'CRIMINAL',
-                                                    'badge-info': courtCase.type === 'CIVIL' || courtCase.type === 'Civil'
-                                                }">
-                                                    {{ courtCase.type }}
-                                                </span>
-                                            </p>
+                                    <div class="space-y-2 text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <span class="font-semibold text-sm">TYPE:</span>
+                                            <span :class="{
+                                                'badge-error': courtCase.type === 'CRIMINAL',
+                                                'badge-info': courtCase.type === 'CIVIL' || courtCase.type === 'Civil'
+                                            }">
+                                                {{ courtCase.type }}
+                                            </span>
                                         </div>
 
-                                        <div class="flex items-start justify-center">
-                                            <span class="font-semibold text-sm w-24">DOCKET #:</span>
-                                            <p class="text-sm text-center">{{ courtCase.docket }}</p>
+                                        <div class="flex items-center justify-center gap-2">
+                                            <span class="font-semibold text-sm">DOCKET #:</span>
+                                            <span>{{ courtCase.docket }}</span>
                                         </div>
 
-                                        <div class="flex items-start justify-center">
-                                            <span class="font-semibold text-sm w-24">CITATION:</span>
-                                            <p class="text-sm text-center">{{ courtCase.citation }}</p>
+                                        <div class="flex items-center justify-center gap-2">
+                                            <span class="font-semibold text-sm">CITATION:</span>
+                                            <span>{{ courtCase.citation }}</span>
                                         </div>
                                     </div>
                                 </div>

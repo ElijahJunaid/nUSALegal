@@ -13,14 +13,14 @@
             <span>No data found matching your search.</span>
         </div>
 
-        <div v-else class="grid">
+        <div v-else class="grid gap-4">
             <template v-for="(data, index) in filteredMunicipal" :key="index">
                 <div class="data-group">
                     <div class="text-center">
                         <h3 class="text-center">{{ data.label }}</h3>
                     </div>
                 </div>
-                <div v-for="(dt, index) in data.data" :key="index" @click="$emit('show-detail', dt)" class="data-list">
+                <div v-for="(dt, index) in data.data" :key="index" @click="$emit('show-detail', dt)" class="data-list border border-base-300">
                     <div class="text-center">
                         <h3 class="text-center">{{ dt.title }}</h3>
                         <p class="text-center">{{ dt.excerp }}</p>
