@@ -523,3 +523,16 @@ section > .card {
 [data-theme='dark'] .text-base-content\/60 {
     color: rgba(224, 224, 224, 0.6) !important;
 }
+
+/* Fix line breaks in modal content */
+.data-detail p,
+.detail-modal p {
+    white-space: pre-wrap;
+}
+
+.data-detail br,
+.detail-modal br {
+    display: block;
+    margin-bottom: 0.5em;
+    content: "";
+}
