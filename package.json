@@ -9,7 +9,7 @@
         "dev": "set NODE_OPTIONS=--dns-result-order=ipv4first && nuxt dev --host 127.0.0.1",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
-        "postinstall": "is-ci || nuxt prepare"
+        "postinstall": "if [ \"$CI\" = \"true\" ]; then echo 'Skipping nuxt prepare in CI'; else nuxt prepare; fi"
     },
     "dependencies": {
         "@netlify/blobs": "^10.4.1",
