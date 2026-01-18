@@ -89,7 +89,7 @@
                 <div class="data-detail text-center">
                     <h3 class="text-center font-bold text-xl">{{ dataDetail.title }}</h3>
                     <p class="font-bold text-center">{{ dataDetail.subtitle }}</p>
-                    <p class="text-sm text-center" v-html="processedContent"></p>
+                    <p class="text-sm text-center" v-html="dataDetail.content"></p>
                 </div>
             </LazyModal>
         </template>
@@ -110,24 +110,6 @@ onMounted(fetchFederal)
 
 const showDetail = ref<boolean>(false);
 const dataDetail = ref<Law | null>(null);
-
-// Process content to handle line breaks
-const processedContent = computed(() => {
-    if (!dataDetail.value?.content) return '';
-    
-    const original = dataDetail.value.content;
-    console.log('Original content:', original);
-    
-    const processed = original
-        .replace(/&lt;br&gt;/g, '<br>')  // Handle &lt;br&gt;
-        .replace(/&amp;lt;br&amp;gt;/g, '<br>')  // Handle double-escaped &amp;lt;br&amp;gt;
-        .replace(/\n\n/g, '<br><br>')  // Handle double newlines
-        .replace(/\n/g, '<br>')  // Handle single newlines
-        .replace(/<br><br>/g, '<br><br>');  // Ensure existing br tags work
-        
-    console.log('Processed content:', processed);
-    return processed;
-});
 
 const title = computed<string>(() => {
     return selectedSection.value === 'federal'
