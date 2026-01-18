@@ -47,6 +47,7 @@
         "h3": "^1.15.5",
         "netlify-cli": "^23.13.2",
         "@oxc-project/types": "^0.108.0",
+        "@rollup/rollup-linux-x64-gnu": "^4.28.0",
         "oxc-parser": "^0.108.0",
         "oxc-transform": "^0.108.0",
         "oxc-minify": "^0.108.0",
