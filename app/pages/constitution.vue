@@ -174,6 +174,15 @@ const articleContent = computed<ConstitutionArticleSection | null>(() => {
         } as ConstitutionArticleSection;
     }
     
+    // Check if article has summary (fallback structure)
+    if ((article.value as any).summary) {
+        console.log('Using article summary as content');
+        return {
+            content: (article.value as any).summary,
+            title: article.value.title || 'Summary'
+        } as ConstitutionArticleSection;
+    }
+    
     console.log('No content or sections found in article');
     return null;
 })
