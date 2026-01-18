@@ -151,9 +151,12 @@ const isLoadingArticle = ref<boolean>(false);
 const articlePage = ref<number>(1);
 
 const articleContent = computed<ConstitutionArticleSection | null>(() => {
-    if (!article.value) return null;
+    if (!article.value || !article.value.sections || !article.value.sections.length) return null;
+    
+    const pageIndex = articlePage.value - 1;
+    if (pageIndex < 0 || pageIndex >= article.value.sections.length) return null;
 
-    return article.value.sections[articlePage.value - 1] as ConstitutionArticleSection
+    return article.value.sections[pageIndex] as ConstitutionArticleSection
 })
 
 const handleClick = async () => {
