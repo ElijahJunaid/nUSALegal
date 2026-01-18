@@ -14,7 +14,8 @@ export default defineNuxtConfig({
             },
         },
         define: {
-            'process.env.ROLLUP_NATIVE': 'false'
+            'process.env.ROLLUP_NATIVE': 'false',
+            'process.env.OXC_PARSER_NATIVE': 'false'
         }
     },
     nitro: {
