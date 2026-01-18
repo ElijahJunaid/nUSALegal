@@ -17,7 +17,7 @@ export default <Config>{
     themes: [
       {
         light: {
-          ...require("daisyui/src/theming/themes")?.["light"] || {},
+          ...require("daisyui/src/theming/themes.js")?.["light"] || {},
           primary: "#8a63ff",
           "primary-focus": "#7c52e6",
           "primary-content": "#ffffff",
