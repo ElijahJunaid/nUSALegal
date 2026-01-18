@@ -74,7 +74,7 @@
                                     @click="dataDetail = dt; handleClick()" class="card border border-base-300">
                                     <div class="card-body text-center">
                                         <div class="text-center">
-                                            <h3 class="text-center">{{ dt.title }}</h3>
+                                            <h3 class="text-center font-bold text-xl">{{ dt.title }}</h3>
                                             <div class="text-center">
                                                 <p class="text-center"><strong>Description:</strong> {{ dt.description }}</p>
                                             </div>
@@ -90,20 +90,20 @@
 
             <LazyModal v-if="showDetail && (dataDetail != null)" :show="showDetail" max-width="max-w-3xl"
                 @close="showDetail = false; dataDetail = null">
-                <div class="detail-modal" :class="{ 'min-h-[75vh]': dataDetail.hasArticle }">
-                    <h3>{{
+                <div class="detail-modal text-center" :class="{ 'min-h-[75vh]': dataDetail.hasArticle }">
+                    <h3 class="text-center font-bold text-xl">{{
                         dataDetail.title + (articleContent ? ` | ${articleContent.title}` : '')
                     }}
                     </h3>
-                    <p v-if="dataDetail.content" v-html="dataDetail.content"></p>
+                    <p v-if="dataDetail.content" class="text-center" v-html="dataDetail.content"></p>
 
                     <template v-if="dataDetail.hasArticle">
                         <div v-if="isLoadingArticle" class="flex justify-center">
                             <span class="loading"></span>
                         </div>
                         <template v-else-if="articleContent">
-                            <div class="flex-1">
-                                <p class="text-sm" v-html="articleContent.content"></p>
+                            <div class="flex-1 text-center">
+                                <p class="text-sm text-center" v-html="articleContent.content"></p>
                             </div>
                             <div class="join">
                                 <button class="join-item btn" :disabled="articlePage == 1"

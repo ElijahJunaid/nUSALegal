@@ -22,7 +22,7 @@
                 </div>
                 <div v-for="(dt, index) in data.data" :key="index" @click="$emit('show-detail', dt)" class="data-list border border-base-300">
                     <div class="text-center">
-                        <h3 class="text-center">{{ dt.title }}</h3>
+                        <h3 class="text-center font-bold text-xl">{{ dt.title }}</h3>
                         <p class="text-center">{{ dt.excerp }}</p>
                     </div>
                 </div>

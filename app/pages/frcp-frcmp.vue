@@ -86,7 +86,7 @@
                                     <div v-for="(dt, index) in data.data" :key="index"
                                         @click="showDetail = true; dataDetail = dt" class="card border border-base-300">
                                         <div class="card-body text-center">
-                                            <h3 class="text-center">{{ dt.title }}</h3>
+                                            <h3 class="text-center font-bold text-xl">{{ dt.title }}</h3>
                                             <p class="text-center">{{ dt.excerp }}</p>
                                         </div>
                                     </div>
@@ -99,10 +99,10 @@
 
             <LazyModal v-if="showDetail && (dataDetail != null)" :show="showDetail" max-width="max-w-3xl"
                 @close="showDetail = false; dataDetail = null">
-                <div class="data-detail">
-                    <h3>{{ dataDetail.title }}</h3>
-                    <p class="font-bold">{{ dataDetail.subtitle }}</p>
-                    <p class="text-sm" v-html="dataDetail.content"></p>
+                <div class="data-detail text-center">
+                    <h3 class="text-center font-bold text-xl">{{ dataDetail.title }}</h3>
+                    <p class="font-bold text-center">{{ dataDetail.subtitle }}</p>
+                    <p class="text-sm text-center" v-html="dataDetail.content"></p>
                 </div>
             </LazyModal>
 

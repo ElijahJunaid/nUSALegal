@@ -86,10 +86,10 @@
 
             <LazyModal v-if="showDetail && (dataDetail != null)" :show="showDetail" max-width="max-w-3xl"
                 @close="showDetail = false; dataDetail = null">
-                <div class="data-detail">
-                    <h3>{{ dataDetail.title }}</h3>
-                    <p class="font-bold">{{ dataDetail.subtitle }}</p>
-                    <p class="text-sm" v-html="dataDetail.content"></p>
+                <div class="data-detail text-center">
+                    <h3 class="text-center font-bold text-xl">{{ dataDetail.title }}</h3>
+                    <p class="font-bold text-center">{{ dataDetail.subtitle }}</p>
+                    <p class="text-sm text-center" v-html="dataDetail.content"></p>
                 </div>
             </LazyModal>
         </template>

@@ -64,7 +64,7 @@
                         <div v-else class="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                             <div v-for="(courtCase, index) in courtsStore.filteredCases" :key="index" class="card bg-base-100 shadow-md hover:shadow-xl transition-shadow duration-300">
                                 <div class="card-body p-4 text-center">
-                                    <h3 class="card-title text-lg text-center" style="text-align: center;">{{ courtCase.title }}</h3>
+                                    <h3 class="text-lg font-bold text-center" style="text-align: center;">{{ courtCase.title }}</h3>
                                     <p class="text-sm mb-4 text-center text-base-content">{{ courtCase.description }}</p>
 
                                     <div class="space-y-2 text-center">
