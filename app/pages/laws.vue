@@ -89,7 +89,7 @@
                 <div class="data-detail text-center">
                     <h3 class="text-center font-bold text-xl">{{ dataDetail.title }}</h3>
                     <p class="font-bold text-center">{{ dataDetail.subtitle }}</p>
-                    <p class="text-sm text-center" v-html="dataDetail.content"></p>
+                    <p class="text-sm text-center" style="white-space: pre-wrap;" v-html="dataDetail.content"></p>
                 </div>
             </LazyModal>
         </template>

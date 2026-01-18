@@ -95,7 +95,7 @@
                         dataDetail.title + (articleContent ? ` | ${articleContent.title}` : '')
                     }}
                     </h3>
-                    <p v-if="dataDetail.content" class="text-center" v-html="dataDetail.content"></p>
+                    <p v-if="dataDetail.content" class="text-center" style="white-space: pre-wrap;" v-html="dataDetail.content"></p>
 
                     <template v-if="dataDetail.hasArticle">
                         <div v-if="isLoadingArticle" class="flex justify-center">
@@ -103,7 +103,7 @@
                         </div>
                         <template v-else-if="articleContent">
                             <div class="flex-1 text-center">
-                                <p class="text-sm text-center" v-html="articleContent.content"></p>
+                                <p class="text-sm text-center" style="white-space: pre-wrap;" v-html="articleContent.content"></p>
                             </div>
                             <div class="join">
                                 <button class="join-item btn" :disabled="articlePage == 1"
