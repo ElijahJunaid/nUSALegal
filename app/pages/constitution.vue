@@ -109,10 +109,11 @@
                                 <button class="join-item btn" :disabled="articlePage == 1"
                                     @click="--articlePage">«</button>
                                 <button class="join-item btn">
-                                    Section {{ articlePage }} of {{ article?.sections.length }}
+                                    {{ articleContent?.title || 'Content' }}
                                 </button>
-                                <button class="join-item btn" :disabled="articlePage == article?.sections.length"
-                                    @click="++articlePage">»</button>
+                                <button class="join-item btn" :disabled="true">
+                                    »
+                                </button>
                             </div>
                         </template>
                     </template>
