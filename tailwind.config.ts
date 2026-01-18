@@ -12,12 +12,12 @@ export default <Config>{
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("daisyui")],
   daisyui: {
     themes: [
       {
         light: {
-          ...require("daisyui/src/theming/themes")["light"],
+          ...require("daisyui/src/theming/themes")?.["light"] || {},
           primary: "#8a63ff",
           "primary-focus": "#7c52e6",
           "primary-content": "#ffffff",
@@ -44,7 +44,7 @@ export default <Config>{
           "error-content": "#ffffff",
         },
         dark: {
-          ...require("daisyui/src/theming/themes")["dark"],
+          ...require("daisyui/src/theming/themes")?.["dark"] || {},
           primary: "#8a63ff",
           "primary-focus": "#9b7fff",
           "primary-content": "#ffffff",
