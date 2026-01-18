@@ -17,7 +17,7 @@
             <div v-for="(bill, index) in filteredDCBills" :key="index" class="card border border-base-300">
                 <div class="card-body text-center">
                     <div>
-                        <h3 class="text-center">{{ bill.title }}</h3>
+                        <h3 class="text-center font-bold text-lg">{{ bill.title || 'No Title' }}</h3>
                         <button @click="$emit('open-pdf', bill.pdfPath)" class="btn hover:text-primary-focus">
                             [View Bill Text]
                         </button>

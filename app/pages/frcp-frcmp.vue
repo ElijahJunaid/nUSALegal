@@ -83,11 +83,6 @@
 
                             <div v-else class="data-grid gap-4">
                                 <template v-for="(data, index) in filteredFederalRules" :key="index">
-                                    <div class="data-group">
-                                        <div class="text-center">
-                                            <h3 class="text-center">{{ data.label }}</h3>
-                                        </div>
-                                    </div>
                                     <div v-for="(dt, index) in data.data" :key="index"
                                         @click="showDetail = true; dataDetail = dt" class="card border border-base-300">
                                         <div class="card-body text-center">
