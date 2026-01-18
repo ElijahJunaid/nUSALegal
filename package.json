@@ -39,8 +39,26 @@
     },
     "devDependencies": {
         "@types/node": "^24.7.2",
+        "@mapbox/node-pre-gyp": "^1.0.11",
+        "@vercel/nft": "^0.30.4",
+        "diff": "^8.0.3",
         "dotenv-cli": "^10.0.0",
-        "netlify-cli": "^23.11.1",
-        "tsx": "^4.20.6"
+        "h3": "^1.15.5",
+        "netlify-cli": "^23.13.2",
+        "semver": "^7.5.4",
+        "tar": "^6.2.0",
+        "tmp": "^0.2.3",
+        "tsx": "^4.20.6",
+        "ts-node": "^10.9.2",
+        "word-wrap": "^1.2.4"
+    },
+    "overrides": {
+        "word-wrap": "^1.2.4",
+        "tar": "^6.2.0",
+        "tmp": "^0.2.3",
+        "diff": "^8.0.3",
+        "h3": "^1.15.5",
+        "tmp-promise": "^3.0.3",
+        "semver": "^7.5.4"
     }
 }
