@@ -28,6 +28,7 @@
         "daisyui": "^5.2.3",
         "dotenv": "^17.2.3",
         "lucide-vue-next": "^0.562.0",
+        "nitropack": "^2.13.1",
         "noblox.js": "^6.2.0",
         "nuxt": "^4.2.2",
         "openai": "^6.16.0",
@@ -37,12 +38,12 @@
         "winston": "^3.19.0"
     },
     "devDependencies": {
-        "@types/node": "^25.0.9",
         "@mapbox/node-pre-gyp": "^2.0.3",
+        "@types/node": "^25.0.9",
         "netlify-cli": "^23.13.4",
         "semver": "^7.7.3",
-        "tsx": "^4.21.0",
         "ts-node": "^10.9.2",
+        "tsx": "^4.21.0",
         "word-wrap": "^1.2.5"
     },
     "optionalDependencies": {
@@ -60,10 +61,6 @@
         "tmp-promise": "^3.0.3",
         "semver": "^7.7.3",
         "ipx": "^4.0.0-alpha.1",
-        "nitro": "^3.0.1-alpha.1",
-        "@nuxt/nitro-server": {
-            "h3": "^2.0.1-rc.8"
-        },
         "@oxc-parser/binding-linux-x64-gnu": "^0.108.0",
         "@oxc-parser/binding-linux-x64-musl": "^0.108.0",
         "@oxc-parser/binding-darwin-x64-64": "^0.108.0",

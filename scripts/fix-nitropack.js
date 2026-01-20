@@ -1,14 +1,5 @@
-#!/usr/bin/env node
-
-import { execSync } from 'child_process';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const isCI = process.env.CI === 'true';
+const fs = require('fs');
+const path = require('path');
 
 // Fix the h3 import issue in nitropack
 const nitropackCorePath = path.join(__dirname, '../node_modules/nitropack/dist/core/index.mjs');
@@ -24,17 +15,4 @@ if (fs.existsSync(nitropackCorePath)) {
   
   fs.writeFileSync(nitropackCorePath, content);
   console.log('Fixed h3 import in nitropack');
-}
-
-if (isCI) {
-  console.log('Skipping nuxt prepare in CI');
-} else {
-  console.log('Running nuxt prepare...');
-  try {
-    execSync('nuxt prepare', { stdio: 'inherit' });
-    console.log('Nuxt prepare completed successfully');
-  } catch (error) {
-    console.error('Nuxt prepare failed:', error.message);
-    process.exit(1);
-  }
 }

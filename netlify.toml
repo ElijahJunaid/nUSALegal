@@ -2,8 +2,12 @@
 # Documentation: https://docs.netlify.com/configure-builds/file-based-configuration/
 
 [build]
-# Build command for Nuxt with Prisma
-command = "npm run build"
+# Build command for Nuxt with nitropack compilation
+command = """
+    npm install -g pnpm &&
+    npm install &&
+    npm run build
+"""
 
 # Publish directory (Nuxt outputs to .output/public)
 publish = "dist"
