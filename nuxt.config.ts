@@ -8,6 +8,9 @@ export default defineNuxtConfig({
     css: ["~/assets/css/main.css"],
     vite: {
         plugins: [tailwindcss()],
+        build: {
+            sourcemap: false,
+        },
     },
     nitro: {
         preset: "netlify",
@@ -20,13 +23,6 @@ export default defineNuxtConfig({
                 dir: "prisma",
             },
         ],
-        routeRules: {
-            "/**": {
-                headers: {
-                    "Content-Security-Policy": "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://p.trellocdn.com; connect-src 'self' ws: wss: https://o4510700106416128.ingest.us.sentry.io; worker-src 'self' blob:; default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; frame-src 'self' https: data:; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
-                }
-            }
-        }
     },
 
         app: {

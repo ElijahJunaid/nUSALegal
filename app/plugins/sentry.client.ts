@@ -24,10 +24,10 @@ export default defineNuxtPlugin((nuxtApp) => {
       replaysOnErrorSampleRate: 1.0,
       
       integrations: [
-        new Sentry.BrowserTracing({
-          routingInstrumentation: Sentry.vueRouterInstrumentation(nuxtApp.$router as any),
+        Sentry.browserTracingIntegration({
+          router: nuxtApp.$router as any,
         }),
-        new Sentry.Replay({
+        Sentry.replayIntegration({
           maskAllText: true,
           blockAllMedia: true,
         }),
