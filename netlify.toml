@@ -4,7 +4,6 @@
 [build]
 # Build command for Nuxt with nitropack compilation
 command = """
-    npm install -g pnpm &&
     npm install &&
     npm run build
 """
