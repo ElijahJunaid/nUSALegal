@@ -34,6 +34,11 @@ autoLaunch = false
 
 # Headers for security and performance
 [[headers]]
+for = "*.html"
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
 for = "/*"
 [headers.values]
 # Security headers
@@ -47,11 +52,6 @@ Content-Security-Policy = "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:
 
 # Cache control for static assets
 Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-for = "*.html"
-[headers.values]
-Cache-Control = "public, max-age=0, must-revalidate"
 
 
 # Redirects (if needed)
