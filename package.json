@@ -42,7 +42,6 @@
     "devDependencies": {
         "@mapbox/node-pre-gyp": "^2.0.3",
         "@types/node": "^25.0.9",
-        "netlify-cli": "^23.13.4",
         "semver": "^7.7.3",
         "ts-node": "^10.9.2",
         "tsx": "^4.21.0",
@@ -64,6 +63,9 @@
         "tmp-promise": "^3.0.3",
         "semver": "^7.7.3",
         "ipx": "^4.0.0-alpha.1",
+        "ipx@4.0.0-alpha.1": {
+            "srvx": "^0.10.1"
+        },
         "@oxc-parser/binding-linux-x64-gnu": "^0.108.0",
         "@oxc-parser/binding-linux-x64-musl": "^0.108.0",
         "@oxc-parser/binding-darwin-x64-64": "^0.108.0",
