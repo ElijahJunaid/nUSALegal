@@ -11,6 +11,11 @@ export default defineNuxtConfig({
         build: {
             sourcemap: false,
         },
+        resolve: {
+            alias: {
+                "srvx/node": "srvx/dist/adapters/node.mjs"
+            }
+        }
     },
     nitro: {
         preset: "netlify",
