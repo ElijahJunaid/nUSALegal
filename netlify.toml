@@ -31,12 +31,6 @@ port = 8888
 targetPort = 3001
 autoLaunch = false
 
-# Headers for security and performance
-[[headers]]
-for = "*.html"
-[headers.values]
-Cache-Control = "public, max-age=0, must-revalidate"
-
 [[headers]]
 for = "/*"
 [headers.values]
