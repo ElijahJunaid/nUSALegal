@@ -24,7 +24,6 @@
         "@tiptap/vue-3": "^3.15.3",
         "@upstash/redis": "^1.36.1",
         "ably": "^2.17.0",
-        "autoprefixer": "^10.4.23",
         "axios": "^1.13.2",
         "daisyui": "^5.2.3",
         "dotenv": "^17.2.3",
@@ -43,7 +42,10 @@
     "devDependencies": {
         "@mapbox/node-pre-gyp": "^2.0.3",
         "@types/node": "^25.0.9",
+        "autoprefixer": "^10.4.23",
+        "postcss": "^8.5.6",
         "semver": "^7.7.3",
+        "tailwindcss": "^3.4.19",
         "ts-node": "^10.9.2",
         "tsx": "^4.21.0",
         "word-wrap": "^1.2.5"

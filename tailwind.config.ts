@@ -1,6 +1,6 @@
-import type { Config } from 'tailwindcss'
+import daisyui from 'daisyui'
 
-export default <Config>{
+export default {
   content: [
     "./app/components/**/*.{js,vue,ts}",
     "./app/layouts/**/*.vue",
@@ -12,7 +12,7 @@ export default <Config>{
   theme: {
     extend: {},
   },
-  plugins: ["daisyui"],
+  plugins: [daisyui],
   daisyui: {
     themes: [
       {

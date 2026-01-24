@@ -1,9 +1,15 @@
 import { defaultRateLimiter, strictRateLimiter } from '../utils/rateLimit';
-import { eventHandler } from 'h3';
+import { eventHandler, getRequestURL } from 'h3';
 
 export default eventHandler(async (event) => {
   try {
-    const url = getRequestURL(event);
+    let url;
+    try {
+      url = getRequestURL(event);
+    } catch (urlError) {
+      url = { pathname: event.node?.req?.url || '/' };
+    }
+    
     const path = url?.pathname || event.node?.req?.url || '/';
 
     const skipPaths = [
