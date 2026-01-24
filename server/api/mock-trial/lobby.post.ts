@@ -1,15 +1,22 @@
 import { apiRateLimiter } from '../../utils/rateLimit'
 
+interface MockTrialLobbyRequestBody {
+  action: string
+  lobbyCode?: string
+  playerName?: string
+  role?: string
+}
+
 export default defineEventHandler(async (event) => {
   
   await apiRateLimiter.middleware()(event)
-  const body = await readBody(event)
+  const body = await readBody(event) as MockTrialLobbyRequestBody
   const { action, lobbyCode, playerName, role } = body
 
   if (!action) {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'Action is required'
+      status: 400,
+      statusText: 'Action is required'
     })
   }
 
@@ -26,8 +33,8 @@ export default defineEventHandler(async (event) => {
       
       if (!lobbyCode) {
         throw createError({
-          statusCode: 400,
-          statusMessage: 'Lobby code is required'
+          status: 400,
+          statusText: 'Lobby code is required'
         })
       }
       return {
@@ -47,8 +54,8 @@ export default defineEventHandler(async (event) => {
       
       if (!role) {
         throw createError({
-          statusCode: 400,
-          statusMessage: 'Role is required'
+          status: 400,
+          statusText: 'Role is required'
         })
       }
       return {
@@ -59,8 +66,8 @@ export default defineEventHandler(async (event) => {
       
     default:
       throw createError({
-        statusCode: 400,
-        statusMessage: 'Invalid action'
+        status: 400,
+        statusText: 'Invalid action'
       })
   }
 })

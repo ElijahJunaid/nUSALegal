@@ -1,5 +1,3 @@
-
-
 export const billSelectFields = {
   id: true,
   number: true,

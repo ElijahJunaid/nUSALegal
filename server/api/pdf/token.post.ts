@@ -1,30 +1,34 @@
+interface PdfTokenRequestBody {
+  pdfPath: string
+}
+
 export default defineEventHandler(async (event) => {
     
     validateOrigin(event)
 
     setCorsHeaders(event)
 
-    const body = await readBody(event)
+    const body = await readBody(event) as PdfTokenRequestBody
     const { pdfPath } = body
 
     if (!pdfPath) {
         throw createError({
-            statusCode: 400,
-            statusMessage: 'PDF path is required'
+            status: 400,
+            statusText: 'PDF path is required'
         })
     }
 
     if (pdfPath.includes('..') || pdfPath.includes('~')) {
         throw createError({
-            statusCode: 400,
-            statusMessage: 'Invalid PDF path'
+            status: 400,
+            statusText: 'Invalid PDF path'
         })
     }
 
     if (!pdfPath.startsWith('bills/') && !pdfPath.startsWith('dcbills/')) {
         throw createError({
-            statusCode: 400,
-            statusMessage: 'Invalid PDF path'
+            status: 400,
+            statusText: 'Invalid PDF path'
         })
     }
 

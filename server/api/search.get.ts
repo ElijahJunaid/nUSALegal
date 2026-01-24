@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
         const searchLower = searchTerm.toLowerCase();
 
         if (!types.length || types.includes("bills")) {
-            // Buscar em bills do congresso
             const congressResults = congressBills
                 .filter(
                     (bill) =>
@@ -36,7 +35,6 @@ export default defineEventHandler(async (event) => {
                 }));
             results.push(...congressResults);
 
-            // Buscar em bills do city council
             const cityCouncilResults = cityCouncilBills
                 .filter(
                     (bill) =>
@@ -115,8 +113,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("Search error:", error);
         throw createError({
-            statusCode: 500,
-            message: "Search failed",
+            status: 500,
+            statusText: "Search failed",
         });
     }
 });

@@ -1,19 +1,21 @@
-
-
 import axios from 'axios'
 import { defaultRateLimiter } from '../utils/rateLimit'
+
+interface CheckNusaBansRequestBody {
+  userId: string
+}
 
 export default defineEventHandler(async (event) => {
   
   await defaultRateLimiter.middleware()(event)
 
-  const body = await readBody(event)
+  const body = await readBody(event) as CheckNusaBansRequestBody
   const { userId } = body
 
   if (!userId || typeof userId !== 'string' || !/^[0-9]+$/.test(userId) || userId.length > 32) {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+      status: 400,
+      statusText: 'Bad Request',
       message: 'Invalid user ID: must be a numeric string of 32 characters or less'
     })
   }
@@ -24,8 +26,8 @@ export default defineEventHandler(async (event) => {
   if (!apiKey || typeof apiKey !== 'string' || apiKey.trim() === '') {
     console.error('Invalid or missing NUSA_API_KEY')
     throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
+      status: 500,
+      statusText: 'Internal Server Error',
       message: 'Invalid or missing API key'
     })
   }
@@ -62,23 +64,22 @@ export default defineEventHandler(async (event) => {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         throw createError({
-          statusCode: error.response.status,
-          statusMessage: 'API Error',
-          message: 'nUSA API error',
-          data: error.response.data
-        })
+          status: error.response.status,
+          statusText: 'API Error',
+          message: 'nUSA API error'
+        }) as any
       } else if (error.request) {
         throw createError({
-          statusCode: 500,
-          statusMessage: 'Connection Error',
+          status: 500,
+          statusText: 'Connection Error',
           message: 'No response from nUSA API'
         })
       }
     }
 
     throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
+      status: 500,
+      statusText: 'Internal Server Error',
       message: 'Failed to check nUSA bans'
     })
   }

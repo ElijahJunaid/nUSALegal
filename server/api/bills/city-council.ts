@@ -1,4 +1,3 @@
-// Dados estáticos dos bills do city council
 export const cityCouncilBills = [
     {
         number: "Ordinance No. 0018",
@@ -150,8 +149,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("Error fetching city council bills:", error);
         throw createError({
-            statusCode: 500,
-            message: "Failed to fetch city council bills",
+            status: 500,
+            statusText: "Failed to fetch city council bills",
         });
     }
 });

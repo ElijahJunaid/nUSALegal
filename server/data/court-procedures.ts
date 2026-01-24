@@ -1,4 +1,3 @@
-
 export const courtProcedures = [
   { title: 'File Case', description: 'Prosecution files the case with CI and Affidavit', category: 'criminal' },
   { title: 'Summons Delivery', description: 'Court procures and delivers summons', category: 'criminal' },

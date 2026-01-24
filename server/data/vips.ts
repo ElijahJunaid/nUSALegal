@@ -1,4 +1,3 @@
-
 export const vips = [
   { userId: '731724654', title: 'Retired Justice', reason: 'Bob' },
   { userId: '25439051', title: 'Disgrace', reason: 'Bob' },

@@ -1,5 +1,3 @@
-
-
 export function sanitizeInput(input: string): string {
   if (typeof input !== 'string') return ''
   
@@ -9,7 +7,7 @@ export function sanitizeInput(input: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;')
-    .replace(/\
+    .replace(/\//g, '&#x2F;')
 }
 
 export function sanitizeObject<T extends Record<string, any>>(obj: T): T {

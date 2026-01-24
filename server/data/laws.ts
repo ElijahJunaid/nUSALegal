@@ -1,4 +1,3 @@
-
 export const federalLaws = [
   { title: "18 U.S. Code § 2", description: "This section states that anyone who commits an offense against the United States or aids, abets, counsels, commands, induces, or procures its commission is punishable as a principal.<br><br>This section establishes liability for those who assist in federal crimes.", uscode: "18 U.S. Code § 2", category: 'criminal' },
   { title: "18 U.S. Code § 3", description: "This section addresses those who assist an offender after the commission of a crime, with the intent to hinder or prevent their arrest, trial, or punishment.", uscode: "18 U.S. Code § 3", category: 'criminal' },

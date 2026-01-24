@@ -29,8 +29,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("Error fetching offices:", error);
         throw createError({
-            statusCode: 500,
-            message: "Failed to fetch offices",
+            status: 500,
+            statusText: "Failed to fetch offices",
         });
     }
 });

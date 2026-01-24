@@ -1,5 +1,3 @@
-
-
 interface GroupBanResults {
   hasSevereBans: boolean
   hasMinorBans: boolean

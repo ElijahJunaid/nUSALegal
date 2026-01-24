@@ -6,7 +6,6 @@ export default defineEventHandler(async (event) => {
   const format = (query.format as string) || 'json'
   
   try {
-    // Combinar todos os bills e ordenar por número
     const allBills = [...congressBills, ...cityCouncilBills]
       .sort((a, b) => a.number.localeCompare(b.number))
       .map((bill, index) => ({
@@ -48,8 +47,8 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     console.error('Export error:', error)
     throw createError({
-      statusCode: 500,
-      message: 'Failed to export bills'
+      status: 500,
+      statusText: 'Failed to export bills'
     })
   }
 })

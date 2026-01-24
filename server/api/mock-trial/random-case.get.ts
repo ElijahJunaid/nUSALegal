@@ -9,8 +9,8 @@ export default defineEventHandler(async (event) => {
   
   if (!caseType || !['criminal', 'civil'].includes(caseType)) {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid case type. Must be "criminal" or "civil"'
+      status: 400,
+      statusText: 'Invalid case type. Must be "criminal" or "civil"'
     })
   }
   
@@ -18,8 +18,8 @@ export default defineEventHandler(async (event) => {
   
   if (!caseData) {
     throw createError({
-      statusCode: 404,
-      statusMessage: 'No cases available for this type'
+      status: 404,
+      statusText: 'No cases available for this type'
     })
   }
   

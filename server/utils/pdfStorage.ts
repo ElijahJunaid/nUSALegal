@@ -2,17 +2,11 @@ import { promises as fs } from 'node:fs'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 
-/**
- * Interface para adaptadores de storage externo
- */
 interface StorageAdapter {
     getPdf(filePath: string): Promise<Buffer | null>
     isAvailable(): boolean
 }
 
-/**
- * Adaptador para sistema de arquivos local (desenvolvimento)
- */
 class FileSystemStorageAdapter implements StorageAdapter {
     private basePath: string
 
@@ -26,10 +20,8 @@ class FileSystemStorageAdapter implements StorageAdapter {
 
     async getPdf(filePath: string): Promise<Buffer | null> {
         try {
-            // Normalizar o filePath (remover barras duplas, prevenir path traversal)
             const normalizedPath = filePath.replace(/\/+/g, '/').replace(/^\/+/, '')
             
-            // Segurança: prevenir path traversal
             if (normalizedPath.includes('..') || normalizedPath.includes('~')) {
                 console.error('❌ [PDF Storage] Tentativa de path traversal bloqueada:', filePath)
                 return null
@@ -37,7 +29,6 @@ class FileSystemStorageAdapter implements StorageAdapter {
 
             const fullPath = join(this.basePath, normalizedPath)
             
-            // Verificar se o caminho está dentro do basePath (segurança adicional)
             if (!fullPath.startsWith(this.basePath)) {
                 console.error('❌ [PDF Storage] Caminho fora do diretório base:', filePath)
                 return null
@@ -55,9 +46,6 @@ class FileSystemStorageAdapter implements StorageAdapter {
     }
 }
 
-/**
- * Adaptador para Netlify Blobs (nativo do Netlify)
- */
 class NetlifyBlobsStorageAdapter implements StorageAdapter {
     private storeName: string
 
@@ -66,8 +54,6 @@ class NetlifyBlobsStorageAdapter implements StorageAdapter {
     }
 
     isAvailable(): boolean {
-        // Verificar se estamos no Netlify (o Blobs está sempre disponível no Netlify)
-        // Também verificar se estamos em Lambda (Netlify Functions)
         const isNetlify = process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY_DEV
         console.log('🔍 [PDF Storage] NetlifyBlobsStorageAdapter.isAvailable():', isNetlify)
         return !!isNetlify
@@ -75,7 +61,6 @@ class NetlifyBlobsStorageAdapter implements StorageAdapter {
 
     async getPdf(filePath: string): Promise<Buffer | null> {
         try {
-            // Dynamic import do Netlify Blobs SDK
             let getStore: any
             try {
                 const blobsModule = await import('@netlify/blobs')
@@ -91,7 +76,7 @@ class NetlifyBlobsStorageAdapter implements StorageAdapter {
             
             const store = getStore({
                 name: this.storeName,
-                consistency: 'strong' // Para garantir que leituras vejam as últimas escritas
+                consistency: 'strong'
             })
 
             console.log('✅ [PDF Storage] Store criado, buscando arquivo...')
@@ -111,9 +96,6 @@ class NetlifyBlobsStorageAdapter implements StorageAdapter {
     }
 }
 
-/**
- * Adaptador para S3 (AWS) - alternativa externa
- */
 class S3StorageAdapter implements StorageAdapter {
     private bucket: string
     private region: string
@@ -138,8 +120,6 @@ class S3StorageAdapter implements StorageAdapter {
 
     async getPdf(filePath: string): Promise<Buffer | null> {
         try {
-            // Dynamic import do AWS SDK para não incluir no bundle se não usado
-            // Nota: Instale @aws-sdk/client-s3 se for usar S3: npm install @aws-sdk/client-s3
             let S3Client: any, GetObjectCommand: any
             try {
                 const s3Module = await import('@aws-sdk/client-s3')
@@ -155,7 +135,7 @@ class S3StorageAdapter implements StorageAdapter {
                 credentials: this.accessKeyId && this.secretAccessKey ? {
                     accessKeyId: this.accessKeyId,
                     secretAccessKey: this.secretAccessKey,
-                } : undefined, // Usar credenciais IAM se não fornecidas
+                } : undefined,
             })
 
             const command = new GetObjectCommand({
@@ -169,7 +149,6 @@ class S3StorageAdapter implements StorageAdapter {
                 return null
             }
 
-            // Converter stream para buffer
             const chunks: Uint8Array[] = []
             const stream = response.Body as any
             
@@ -185,19 +164,12 @@ class S3StorageAdapter implements StorageAdapter {
     }
 }
 
-/**
- * Factory para criar o adaptador de storage apropriado
- */
 function createStorageAdapter(): StorageAdapter {
-    // Debug: verificar variáveis de ambiente
     console.log('🔍 [PDF Storage] Verificando ambiente...')
     console.log('🔍 [PDF Storage] NETLIFY:', process.env.NETLIFY)
     console.log('🔍 [PDF Storage] NODE_ENV:', process.env.NODE_ENV)
     console.log('🔍 [PDF Storage] AWS_LAMBDA_FUNCTION_NAME:', process.env.AWS_LAMBDA_FUNCTION_NAME)
     
-    // Prioridade 1: Netlify Blobs (nativo do Netlify)
-    // O Netlify define automaticamente NETLIFY=true no ambiente de produção
-    // Também verificar se estamos em um ambiente Lambda (Netlify Functions)
     const isNetlify = process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY_DEV
     
     if (isNetlify) {
@@ -206,7 +178,6 @@ function createStorageAdapter(): StorageAdapter {
         return new NetlifyBlobsStorageAdapter(netlifyBlobsStore)
     }
 
-    // Prioridade 2: S3 (se configurado)
     const s3Bucket = process.env.PDF_STORAGE_S3_BUCKET
     const s3Region = process.env.PDF_STORAGE_S3_REGION || 'us-east-1'
     
@@ -220,17 +191,12 @@ function createStorageAdapter(): StorageAdapter {
         })
     }
 
-    // Fallback: sistema de arquivos local (apenas desenvolvimento)
     console.log('📁 [PDF Storage] Usando sistema de arquivos local (desenvolvimento)')
     return new FileSystemStorageAdapter()
 }
 
-// Cache do adaptador para reutilização
 let storageAdapter: StorageAdapter | null = null
 
-/**
- * Obtém o adaptador de storage (com cache)
- */
 function getStorageAdapter(): StorageAdapter {
     if (!storageAdapter) {
         storageAdapter = createStorageAdapter()
@@ -238,9 +204,6 @@ function getStorageAdapter(): StorageAdapter {
     return storageAdapter
 }
 
-/**
- * Busca um PDF do storage configurado
- */
 export async function getPdfFromStorage(filePath: string): Promise<Buffer | null> {
     console.log('🔍 [PDF Storage] getPdfFromStorage chamado com filePath:', filePath)
     const adapter = getStorageAdapter()
@@ -259,4 +222,3 @@ export async function getPdfFromStorage(filePath: string): Promise<Buffer | null
     console.log('🔍 [PDF Storage] Resultado:', result ? `${result.length} bytes` : 'null')
     return result
 }
-

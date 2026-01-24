@@ -9,8 +9,8 @@ const countdown = ref(5)
 const autoRedirect = ref(false)
 
 const getErrorDetails = () => {
-    const statusCode = props.error?.statusCode || 500
-    const message = props.error?.message || 'An unexpected error occurred'
+    const statusCode = (props.error as any)?.statusCode || 500
+    const message = (props.error as any)?.message || 'An unexpected error occurred'
 
     if (statusCode === 403) {
         if (message.includes('expired token') || message.includes('Invalid or expired token')) {
@@ -84,7 +84,7 @@ const handleGoBack = () => {
                 <div class="text-6xl mb-4">{{ errorDetails.icon }}</div>
                 <h1 class="text-3xl font-bold mb-2">{{ errorDetails.title }}</h1>
                 <div class="badge badge-error badge-lg mb-4 mx-auto">
-                    Error Code: {{ error?.statusCode || 500 }}
+                    Error Code: {{ (error as any)?.statusCode || 500 }}
                 </div>
 
                 <p class="text-lg mb-2">{{ errorDetails.message }}</p>

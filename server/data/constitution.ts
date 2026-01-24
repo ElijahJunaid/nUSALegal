@@ -1,4 +1,3 @@
-
 export const constitutionArticles = [
   { 
     number: 1, 
@@ -40,9 +39,7 @@ export const constitutionAmendments = [
   { number: 5, title: 'Amendment V', content: 'No person shall be held to answer for a capital, or otherwise infamous crime, unless on a presentment or indictment of a Grand Jury, nor shall any person be subject for the same offense to be twice put in jeopardy of life or limb; nor shall be compelled in any criminal case to be a witness against himself, nor be deprived of life, liberty, or property, without due process of law; nor shall private property be taken for public use, without just compensation.', summary: 'Protects rights including indictment by grand jury, protection from double jeopardy, self-incrimination privilege, due process, and just compensation for property takings.' }
 ]
 
-// Export articles as an object indexed by key (article1, article2, etc) for the [key].ts API
 export const articles = constitutionArticles.reduce((acc, article) => {
   acc[`article${article.number}`] = article;
   return acc;
 }, {} as Record<string, typeof constitutionArticles[0]>);
-

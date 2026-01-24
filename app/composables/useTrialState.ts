@@ -57,7 +57,7 @@ export function useTrialState() {
 
             html += '<div class="role-info">';
 
-            if (roleData.objectives && roleData.objectives.length > 0) {
+            if (roleData?.objectives && roleData.objectives.length > 0) {
                 html += "<h3>Your Role Objectives:</h3><ul>";
                 roleData.objectives.forEach((obj) => {
                     html += `<li>${obj}</li>`;
@@ -65,7 +65,7 @@ export function useTrialState() {
                 html += "</ul>";
             }
 
-            if (roleData.key_arguments && roleData.key_arguments.length > 0) {
+            if (roleData?.key_arguments && roleData.key_arguments.length > 0) {
                 html += "<h3>Key Arguments:</h3><ul>";
                 roleData.key_arguments.forEach((arg) => {
                     html += `<li>${arg}</li>`;
@@ -73,7 +73,7 @@ export function useTrialState() {
                 html += "</ul>";
             }
 
-            if (roleData.key_decisions && roleData.key_decisions.length > 0) {
+            if (roleData?.key_decisions && roleData.key_decisions.length > 0) {
                 html += "<h3>Key Decisions:</h3><ul>";
                 roleData.key_decisions.forEach((dec) => {
                     html += `<li>${dec}</li>`;
@@ -129,7 +129,7 @@ export function useTrialState() {
         const turnOrder = ["judge", "prosecutor", "defense", "witness", "jury"];
         const currentIndex = turnOrder.indexOf(currentTurn.value || "");
         const nextIndex = (currentIndex + 1) % turnOrder.length;
-        currentTurn.value = turnOrder[nextIndex];
+        currentTurn.value = turnOrder[nextIndex] || null;
     }
 
     function endTrial() {

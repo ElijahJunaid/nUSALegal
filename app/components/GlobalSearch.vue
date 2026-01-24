@@ -20,7 +20,7 @@
       </button>
     </div>
 
-    <div v-if="loading" class="absolute top-full left-0 right-0 mt-2 bg-base-100 shadow-xl rounded-lg p-4 z-50">
+    <div v-if="isLoading" class="absolute top-full left-0 right-0 mt-2 bg-base-100 shadow-xl rounded-lg p-4 z-50">
       <div class="flex items-center justify-center gap-2">
         <Icon name="lucide:loader-2" class="w-5 h-5 animate-spin" />
         <span>Searching...</span>
@@ -33,7 +33,7 @@
     >
       <div 
         v-for="result in results" 
-        :key="result.id" 
+        :key="result.id || result.title" 
         class="p-3 hover:bg-base-200 cursor-pointer border-b border-base-200 last:border-b-0"
         @click="selectResult(result)"
       >
@@ -44,13 +44,13 @@
           <span class="font-medium text-sm">{{ result.title }}</span>
         </div>
         <p class="text-xs text-gray-600 mt-1 line-clamp-2">
-          {{ truncate(result.description, 120) }}
+          {{ truncate(result.description || result.content, 120) }}
         </p>
       </div>
     </div>
 
     <div 
-      v-else-if="showResults && searchQuery.length >= 2 && results.length === 0 && !loading"
+      v-else-if="showResults && searchQuery.length >= 2 && results.length === 0 && !isLoading"
       class="absolute top-full left-0 right-0 mt-2 bg-base-100 shadow-xl rounded-lg p-4 z-50 border border-base-300"
     >
       <div class="text-center text-gray-500">
@@ -62,11 +62,26 @@
 </template>
 
 <script setup lang="ts">
+interface SearchResult {
+  id?: string
+  title: string
+  subtitle?: string
+  content: string
+  description?: string
+  type: string
+  url?: string
+}
+
+interface SearchResponse {
+  results: SearchResult[]
+  total: number
+}
+
 const searchQuery = ref('')
-const results = ref<any[]>([])
+const results = ref<SearchResult[]>([])
 const showResults = ref(false)
-const loading = ref(false)
-let searchTimeout: NodeJS.Timeout
+const isLoading = ref(false)
+let searchTimeout: NodeJS.Timeout | null = null
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
@@ -84,17 +99,17 @@ const handleClickOutside = (e: MouseEvent) => {
 }
 
 const handleSearch = async () => {
-  clearTimeout(searchTimeout)
+  clearTimeout(searchTimeout!)
   
   if (searchQuery.value.length < 2) {
     results.value = []
     return
   }
   
-  loading.value = true
+  isLoading.value = true
   searchTimeout = setTimeout(async () => {
     try {
-      const response = await $fetch('/api/search', {
+      const response = await $fetch<SearchResponse>('/api/search', {
         params: { q: searchQuery.value }
       })
       results.value = response.results
@@ -102,7 +117,7 @@ const handleSearch = async () => {
       console.error('Search error:', error)
       results.value = []
     } finally {
-      loading.value = false
+      isLoading.value = false
     }
   }, 300)
 }

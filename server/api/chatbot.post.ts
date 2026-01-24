@@ -4,6 +4,11 @@ import { validateQuery, type FilterResult } from '../utils/filter'
 import { apiRateLimiter } from '../utils/rateLimit'
 import { detectConversational } from '../utils/conversational-detector'
 
+interface ChatbotRequestBody {
+  query?: string
+  thread_id?: string
+}
+
 const THREAD_ID_PATTERN = /^thread_[a-zA-Z0-9]{24,}$/
 const VECTOR_STORE_ID_PATTERN = /^vs_[a-zA-Z0-9]{24,}$/
 
@@ -47,27 +52,21 @@ export default defineEventHandler(async (event) => {
   const rateLimit = await apiRateLimiter.check(event)
   if (!rateLimit.allowed) {
     throw createError({
-      statusCode: 429,
-      statusMessage: 'Too Many Requests',
-      message: rateLimit.message,
-      data: {
-        retryAfter: rateLimit.retryAfter,
-        limit: rateLimit.limit,
-        remaining: rateLimit.remaining,
-        reset: rateLimit.resetTime
-      }
-    })
+      status: 429,
+      statusText: 'Too Many Requests',
+      message: rateLimit.message || 'Too many requests, please try again later.'
+    }) as any
   }
 
-  const body = await readBody(event)
+  const body = await readBody(event) as ChatbotRequestBody
   
   const query = sanitizeInput(body.query || '')
   let thread_id = body.thread_id
 
   if (thread_id && !THREAD_ID_PATTERN.test(thread_id)) {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+      status: 400,
+      statusText: 'Bad Request',
       message: 'Invalid thread_id format'
     })
   }
@@ -123,8 +122,8 @@ export default defineEventHandler(async (event) => {
   if (!OPENAI_API_KEY || !TAVILY_API_KEY || !VECTOR_STORE_ID || !ASSISTANT_ID) {
     console.error('[Chatbot] Missing required environment variables')
     throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
+      status: 500,
+      statusText: 'Internal Server Error',
       message: 'Missing required environment variables'
     })
   }
@@ -132,8 +131,8 @@ export default defineEventHandler(async (event) => {
   if (!VECTOR_STORE_ID_PATTERN.test(VECTOR_STORE_ID)) {
     console.error('[Chatbot] Invalid vectorStoreId format')
     throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
+      status: 500,
+      statusText: 'Internal Server Error',
       message: 'Invalid configuration'
     })
   }
@@ -207,10 +206,21 @@ export default defineEventHandler(async (event) => {
       )
 
       run = await withTimeout(
-        openai.beta.threads.runs.submitToolOutputsAndPoll(
-          activeThreadId,
+        openai.beta.threads.runs.submitToolOutputs(
           run.id,
-          { tool_outputs }
+          {
+            tool_outputs,
+            thread_id: activeThreadId
+          }
+        ),
+        45000,
+        'OpenAI API request timed out'
+      ) as any
+      
+      run = await withTimeout(
+        (openai.beta.threads.runs.retrieve as any)(
+          activeThreadId,
+          run.id
         ),
         45000,
         'OpenAI API request timed out'
@@ -223,13 +233,13 @@ export default defineEventHandler(async (event) => {
     if (assistantMessages.length === 0) {
       console.error('[Chatbot] No response from assistant')
       throw createError({
-        statusCode: 500,
-        statusMessage: 'Internal Server Error',
+        status: 500,
+        statusText: 'Internal Server Error',
         message: 'No response from assistant'
       })
     }
 
-    let assistantResponse = (assistantMessages[0].content[0] as any).text.value
+    let assistantResponse = (assistantMessages[0]?.content?.[0] as any)?.text?.value || ''
     assistantResponse = removeCitations(assistantResponse)
 
     return {
@@ -239,8 +249,8 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     console.error('[Chatbot] Unhandled error:', error)
     throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
+      status: 500,
+      statusText: 'Internal Server Error',
       message: error.message || 'An unexpected error occurred'
     })
   }

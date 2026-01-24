@@ -28,10 +28,9 @@ export default defineEventHandler(async (event) => {
 
     if (health.status === "unhealthy") {
         throw createError({
-            statusCode: 503,
-            statusMessage: "Service Unavailable",
-            data: health,
-        });
+            status: 503,
+            statusText: "Service Unavailable"
+        }) as any;
     }
 
     return health;

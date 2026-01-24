@@ -572,8 +572,8 @@ export default defineEventHandler((event) => {
 
     if (!volumeData) {
         throw createError({
-            statusCode: 404,
-            statusMessage: `Volume ${volume} not found`
+            status: 404,
+            statusText: `Volume ${volume} not found`
         })
     }
 

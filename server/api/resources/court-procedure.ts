@@ -8,8 +8,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("Error fetching court procedures:", error);
         throw createError({
-            statusCode: 500,
-            message: "Failed to fetch court procedures",
+            status: 500,
+            statusText: "Failed to fetch court procedures",
         });
     }
 });

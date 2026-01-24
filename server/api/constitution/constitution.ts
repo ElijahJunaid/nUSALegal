@@ -1,4 +1,3 @@
-// Importar dados diretamente de server/data
 import { constitutionArticles } from "../../data/constitution";
 
 export default defineEventHandler(async (event) => {
@@ -11,7 +10,6 @@ export default defineEventHandler(async (event) => {
         validateApiAccess(event, "constitution/constitution");
         console.log("✅ [DEBUG] API access validated");
 
-        // Formatar dados para o formato esperado pela API
         const result = constitutionArticles.map((article) => ({
             title: article.title,
             description: article.summary,
@@ -28,9 +26,9 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("❌ [ERROR] Constitution API failed:", error);
         throw createError({
-            statusCode: 500,
-            statusMessage: "Failed to fetch constitution articles",
-            cause: error.message,
+            status: 500,
+            statusText: "Failed to fetch constitution articles",
+            cause: error instanceof Error ? error.message : String(error),
         });
     }
 });

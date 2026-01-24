@@ -1,4 +1,3 @@
-
 export const offices = [
   { name: "Innocence", description: "Office of Public Defender", category: "Office of Public Defender" },
   { name: "Self Defense", description: "Office of Public Defender", category: "Office of Public Defender" },

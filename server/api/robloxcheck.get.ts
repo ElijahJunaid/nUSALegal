@@ -1,5 +1,3 @@
-
-
 import noblox from 'noblox.js'
 import { checkTrelloBoards } from '../utils/trelloConfig'
 import { checkGroupBans } from '../utils/groupConfig'
@@ -25,16 +23,16 @@ export default defineEventHandler(async (event) => {
 
   if (!username) {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+      status: 400,
+      statusText: 'Bad Request',
       message: 'Username is required'
     })
   }
 
   if (typeof username !== 'string' || username.length < 3 || !/^[a-zA-Z0-9_ ]+$/.test(username)) {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+      status: 400,
+      statusText: 'Bad Request',
       message: 'Invalid username format'
     })
   }
@@ -131,10 +129,10 @@ export default defineEventHandler(async (event) => {
     }
   } catch (error: any) {
     console.error('Roblox check error:', error)
-    const statusCode = error.message === 'User not found' ? 404 : 500
+    const status = error.message === 'User not found' ? 404 : 500
     throw createError({
-      statusCode,
-      statusMessage: statusCode === 404 ? 'Not Found' : 'Internal Server Error',
+      status,
+      statusText: status === 404 ? 'Not Found' : 'Internal Server Error',
       message: error.message || 'Failed to check user'
     })
   }

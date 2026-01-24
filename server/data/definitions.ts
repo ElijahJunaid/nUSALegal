@@ -1,4 +1,3 @@
-
 export const definitions = [
   { title: "Acquittal", description: "A verdict of \"not guilty\" by a judge or jury.", category: 'general' },
   { title: "Adjourn", description: "To postpone or suspend a court proceeding to a future time.", category: 'general' },

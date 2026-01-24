@@ -11,8 +11,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("Error fetching files:", error);
         throw createError({
-            statusCode: 500,
-            message: "Failed to fetch files",
+            status: 500,
+            statusText: "Failed to fetch files",
         });
     }
 });

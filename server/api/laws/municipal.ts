@@ -33,8 +33,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("Error fetching municipal laws:", error);
         throw createError({
-            statusCode: 500,
-            statusMessage: "Failed to fetch municipal laws",
+            status: 500,
+            statusText: "Failed to fetch municipal laws",
         });
     }
 });

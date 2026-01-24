@@ -18,8 +18,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("Error fetching FRCMP rules:", error);
         throw createError({
-            statusCode: 500,
-            message: "Failed to fetch FRCMP rules",
+            status: 500,
+            statusText: "Failed to fetch FRCMP rules",
         });
     }
 });

@@ -1,4 +1,3 @@
-
 export const frcmpRules = [
   { number: "FRCMP Rule 1", type: 'frcmp', title: "Scope and Definitions", description: "Guidelines on the scope and definitions of the rules.<br><br>This rule defines the scope of the Federal Rules of Criminal and Municipal Procedure and provides key definitions used throughout the rules." },
   { number: "FRCMP Rule 2", type: 'frcmp', title: "Purpose and Construction", description: "Guidelines on the purpose and construction of the rules to ensure simplicity, fairness, and the elimination of unjustifiable expense and delay.<br><br>This rule establishes that the rules should be interpreted to ensure just determination, simplicity in procedure, and elimination of unnecessary delay and expense." },

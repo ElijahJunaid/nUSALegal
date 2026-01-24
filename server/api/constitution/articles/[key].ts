@@ -1,4 +1,3 @@
-// Importar dados diretamente de server/data
 import { articles } from "../../../data/constitution";
 
 export default defineEventHandler(async (event) => {
@@ -20,9 +19,9 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("❌ [ERROR] Constitution Articles API failed:", error);
         throw createError({
-            statusCode: 500,
-            statusMessage: "Failed to fetch constitution article",
-            cause: error.message,
+            status: 500,
+            statusText: "Failed to fetch constitution article",
+            cause: error instanceof Error ? error.message : String(error),
         });
     }
 });

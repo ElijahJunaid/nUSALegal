@@ -1,4 +1,3 @@
-// Dados estáticos dos bills congressionais
 export const congressBills = [
     {
         number: "H.R. 1",
@@ -153,8 +152,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("Error fetching congress bills:", error);
         throw createError({
-            statusCode: 500,
-            message: "Failed to fetch congress bills",
+            status: 500,
+            statusText: "Failed to fetch congress bills",
         });
     }
 });

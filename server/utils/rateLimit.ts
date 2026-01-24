@@ -35,7 +35,7 @@ class RateLimiter {
     private defaultKeyGenerator(event: any): string {
         const headers = getHeaders(event);
         return (
-            headers["x-forwarded-for"]?.toString().split(",")[0].trim() ||
+            headers["x-forwarded-for"]?.toString().split(",")[0]?.trim() ||
             headers["x-real-ip"]?.toString() ||
             event.node.req.socket?.remoteAddress ||
             "unknown"
@@ -45,7 +45,7 @@ class RateLimiter {
     private cleanup(): void {
         const now = Date.now();
         Object.keys(this.store).forEach((key) => {
-            if (this.store[key].resetTime < now) {
+            if ((this.store[key]?.resetTime as number) < now) {
                 delete this.store[key];
             }
         });
@@ -114,16 +114,10 @@ class RateLimiter {
                 }
 
                 throw createError({
-                    statusCode: 429,
-                    statusMessage: "Too Many Requests",
-                    message: result.message,
-                    data: {
-                        limit: result.limit,
-                        remaining: result.remaining,
-                        resetTime: result.resetTime,
-                        retryAfter: result.retryAfter,
-                    },
-                });
+                    status: 429,
+                    statusText: "Too Many Requests",
+                    message: result.message || "Too many requests, please try again later.",
+                }) as any;
             }
         };
     }

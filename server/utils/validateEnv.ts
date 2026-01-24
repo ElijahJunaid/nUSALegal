@@ -1,4 +1,3 @@
-
 export function validateEnv() {
   const required = [
     'DATABASE_URL',

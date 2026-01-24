@@ -157,7 +157,6 @@ const articleContent = computed<ConstitutionArticleSection | null>(() => {
         return null;
     }
     
-    // Check if article has sections (original structure)
     if (article.value.sections && Array.isArray(article.value.sections) && article.value.sections.length > 0) {
         const pageIndex = articlePage.value - 1;
         if (pageIndex >= 0 && pageIndex < article.value.sections.length) {
@@ -166,7 +165,6 @@ const articleContent = computed<ConstitutionArticleSection | null>(() => {
         }
     }
     
-    // Check if article has direct content (new structure)
     if ((article.value as any).content) {
         console.log('Using article content directly');
         return {
@@ -175,7 +173,6 @@ const articleContent = computed<ConstitutionArticleSection | null>(() => {
         } as ConstitutionArticleSection;
     }
     
-    // Check if article has summary (fallback structure)
     if ((article.value as any).summary) {
         console.log('Using article summary as content');
         return {
@@ -207,7 +204,7 @@ const handleClick = async () => {
             });
 
             article.value = response;
-            console.log('Article loaded:', article.value); // Debug log
+            console.log('Article loaded:', article.value);
         } catch (error) {
 
         } finally {

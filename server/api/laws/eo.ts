@@ -13,8 +13,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("Error fetching executive orders:", error);
         throw createError({
-            statusCode: 500,
-            message: "Failed to fetch executive orders",
+            status: 500,
+            statusText: "Failed to fetch executive orders",
         });
     }
 });

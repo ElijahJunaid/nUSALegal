@@ -1,4 +1,3 @@
-
 export const executiveOrders = [
   { number: "EO-01-22", title: "Executive Order 01-22", description: "Revokes all prior Executive Orders except those mandating department closures, as part of an effort to prevent government abuse and streamline regulations." },
   { number: "EO10", title: "Merging BOP and USMS", description: "Merges the Bureau of Prisons into the U.S. Marshals Service, transferring all prison management, inmate safety, and rehabilitation responsibilities while maintaining USMS's existing duties." },

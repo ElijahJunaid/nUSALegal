@@ -1,6 +1,4 @@
-
-
-set -e  # Exit on error
+set -e 
 
 DATE=$(date +%Y-%m-%d_%H-%M-%S)
 BACKUP_DIR="./backups"

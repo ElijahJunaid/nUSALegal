@@ -1,16 +1,20 @@
+interface AuthTokenRequestBody {
+  endpoint: string
+}
+
 export default defineEventHandler(async (event) => {
     
     validateOrigin(event)
 
     setCorsHeaders(event)
 
-    const body = await readBody(event)
+    const body = await readBody(event) as AuthTokenRequestBody
     const { endpoint } = body
 
     if (!endpoint) {
         throw createError({
-            statusCode: 400,
-            statusMessage: 'Endpoint is required'
+            status: 400,
+            statusText: 'Endpoint is required'
         })
     }
 
@@ -50,8 +54,8 @@ export default defineEventHandler(async (event) => {
 
     if (!allowedEndpoints.includes(endpoint)) {
         throw createError({
-            statusCode: 400,
-            statusMessage: 'Invalid endpoint'
+            status: 400,
+            statusText: 'Invalid endpoint'
         })
     }
 

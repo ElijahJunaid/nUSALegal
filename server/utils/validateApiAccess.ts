@@ -9,8 +9,8 @@ export function validateApiAccess(event: H3Event, endpoint: string) {
 
     if (!authHeader) {
         throw createError({
-            statusCode: 401,
-            statusMessage: "Authorization token required",
+            status: 401,
+            statusText: "Authorization token required",
         });
     }
 
@@ -22,8 +22,8 @@ export function validateApiAccess(event: H3Event, endpoint: string) {
 
     if (!isValid) {
         throw createError({
-            statusCode: 403,
-            statusMessage: "Invalid or expired token",
+            status: 403,
+            statusText: "Invalid or expired token",
         });
     }
 }

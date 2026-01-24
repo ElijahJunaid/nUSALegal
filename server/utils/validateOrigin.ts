@@ -32,8 +32,8 @@ export function validateOrigin(event: H3Event) {
 
             if (requestHost !== host) {
                 throw createError({
-                    statusCode: 403,
-                    statusMessage: 'Cross-origin requests not allowed'
+                    status: 403,
+                    statusText: 'Cross-origin requests not allowed'
                 })
             }
         }
@@ -48,8 +48,8 @@ export function validateOrigin(event: H3Event) {
 
     if (!requestOrigin) {
         throw createError({
-            statusCode: 403,
-            statusMessage: 'Origin header required'
+            status: 403,
+            statusText: 'Origin header required'
         })
     }
 
@@ -61,8 +61,8 @@ export function validateOrigin(event: H3Event) {
 
     if (!isAllowed) {
         throw createError({
-            statusCode: 403,
-            statusMessage: `Request not allowed`
+            status: 403,
+            statusText: `Request not allowed`
         })
     }
 }

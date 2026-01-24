@@ -1,5 +1,3 @@
-
-
 export interface ConversationalResult {
   isConversational: boolean
   confidence: number
@@ -143,24 +141,27 @@ function calculateLevenshteinDistance(str1: string, str2: string): number {
   }
   
   for (let j = 0; j <= len1; j++) {
+    matrix[0] = matrix[0] || []
     matrix[0][j] = j
   }
   
   for (let i = 1; i <= len2; i++) {
     for (let j = 1; j <= len1; j++) {
       if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
-        matrix[i][j] = matrix[i - 1][j - 1]
+        matrix[i] = matrix[i] || []
+        matrix[i]![j] = matrix[i - 1]?.[j - 1] ?? 0
       } else {
-        matrix[i][j] = Math.min(
-          matrix[i - 1][j - 1] + 1,
-          matrix[i][j - 1] + 1,
-          matrix[i - 1][j] + 1
+        matrix[i] = matrix[i] || []
+        matrix[i]![j] = Math.min(
+          (matrix[i - 1]?.[j - 1] ?? 0) + 1,
+          (matrix[i]?.[j - 1] ?? 0) + 1,
+          (matrix[i - 1]?.[j] ?? 0) + 1
         )
       }
     }
   }
   
-  return matrix[len2][len1]
+  return matrix[len2]?.[len1] ?? 0
 }
 
 function findClosestMatch(text: string): { intent: ConversationalResult['intent']; similarity: number } {
@@ -198,13 +199,15 @@ export function detectConversational(text: string): ConversationalResult {
   const intent = classifyIntent(trimmed)
   if (intent !== 'unknown') {
     const templates = RESPONSE_TEMPLATES[intent]
-    const response = templates[Math.floor(Math.random() * templates.length)]
-    
-    return {
-      isConversational: true,
-      confidence: 0.95,
-      intent,
-      suggestedResponse: response
+    if (templates && templates.length > 0) {
+      const response = templates[Math.floor(Math.random() * templates.length)]
+      
+      return {
+        isConversational: true,
+        confidence: 0.95,
+        intent,
+        suggestedResponse: response
+      }
     }
   }
 
@@ -233,7 +236,9 @@ export function detectConversational(text: string): ConversationalResult {
   let suggestedResponse: string | undefined
   if (isConversational && finalIntent !== 'unknown') {
     const templates = RESPONSE_TEMPLATES[finalIntent] || RESPONSE_TEMPLATES.casual
-    suggestedResponse = templates[Math.floor(Math.random() * templates.length)]
+    if (templates && templates.length > 0) {
+      suggestedResponse = templates[Math.floor(Math.random() * templates.length)]
+    }
   }
   
   return {

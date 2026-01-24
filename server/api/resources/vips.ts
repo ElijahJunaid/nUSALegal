@@ -8,8 +8,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
         console.error("Error fetching VIPs:", error);
         throw createError({
-            statusCode: 500,
-            message: "Failed to fetch VIPs",
+            status: 500,
+            statusText: "Failed to fetch VIPs",
         });
     }
 });
