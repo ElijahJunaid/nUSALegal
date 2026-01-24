@@ -1,7 +1,3 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";  
-@import "tailwindcss/utilities";
-
 @import "daisyui/components/button.css";
 @import "daisyui/components/card.css";
 @import "daisyui/components/modal.css";
