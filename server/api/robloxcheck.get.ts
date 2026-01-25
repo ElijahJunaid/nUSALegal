@@ -1,6 +1,7 @@
 import noblox from 'noblox.js'
 import { checkTrelloBoards } from '../utils/trelloConfig'
 import { checkGroupBans } from '../utils/groupConfig'
+import { defineEventHandler, getQuery, createError } from 'h3'
 
 async function getFriendCount(userId: number): Promise<number | null> {
   try {

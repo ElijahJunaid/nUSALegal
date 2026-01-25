@@ -1,3 +1,6 @@
+import { defineEventHandler, getRouterParam, createError } from 'h3'
+import { validateApiAccess } from '../../utils/validateApiAccess'
+
 export default defineEventHandler((event) => {
     const volume = parseInt(getRouterParam(event, 'volume') || '2')
 

@@ -96,7 +96,7 @@ export const useLawsStore = defineStore('laws-rules', {
             this.error = null
 
             try {
-                const tokenResponse = await $fetch('/api/auth/token', {
+                const tokenResponse = await $fetch<{ token: string; expiresIn: string }>('/api/auth/token', {
                     method: 'POST',
                     body: { endpoint: 'laws/federal' }
                 })
@@ -124,7 +124,7 @@ export const useLawsStore = defineStore('laws-rules', {
             this.error = null
 
             try {
-                const tokenResponse = await $fetch('/api/auth/token', {
+                const tokenResponse = await $fetch<{ token: string; expiresIn: string }>('/api/auth/token', {
                     method: 'POST',
                     body: { endpoint: 'laws/eo' }
                 })
@@ -152,7 +152,7 @@ export const useLawsStore = defineStore('laws-rules', {
             this.error = null
 
             try {
-                const tokenResponse = await $fetch('/api/auth/token', {
+                const tokenResponse = await $fetch<{ token: string; expiresIn: string }>('/api/auth/token', {
                     method: 'POST',
                     body: { endpoint: 'laws/municipal' }
                 })

@@ -1,4 +1,6 @@
 import { files } from "../../data/files";
+import { defineEventHandler, createError } from 'h3'
+import { validateApiAccess } from '../../utils/validateApiAccess'
 
 export default defineEventHandler(async (event) => {
     validateApiAccess(event, "resources/files");

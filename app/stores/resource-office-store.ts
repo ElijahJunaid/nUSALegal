@@ -64,7 +64,7 @@ export const useResourceOfficeStore = defineStore('resource-office', {
             this.error = null
 
             try {
-                const tokenResponse = await $fetch('/api/auth/token', {
+                const tokenResponse = await $fetch<{ token: string; expiresIn: string }>('/api/auth/token', {
                     method: 'POST',
                     body: { endpoint: 'resources/office' }
                 })

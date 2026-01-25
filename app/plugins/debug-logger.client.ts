@@ -1,4 +1,6 @@
-export default defineNuxtPlugin((nuxtApp) => {
+import { defineNuxtPlugin, useRouter } from '#imports'
+
+export default defineNuxtPlugin((nuxtApp: any) => {
   console.log('🔷 [DEBUG] Plugin initialized');
   
   const router = useRouter();
@@ -110,7 +112,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       console.error('🔷 [DEBUG] Unhandled promise rejection:', event.reason);
     });
 
-    router.beforeEach((to, from) => {
+    router.beforeEach((to: any, from: any) => {
       console.log('🔷 [DEBUG] Route navigation:', from.path, '->', to.path);
     });
 

@@ -1,10 +1,12 @@
 import { offices } from "../../data/offices";
+import { defineEventHandler, createError } from 'h3'
+import { validateApiAccess } from '../../utils/validateApiAccess'
 
 export default defineEventHandler(async (event) => {
     validateApiAccess(event, "resources/office");
 
     try {
-        const grouped = offices.reduce((acc: any, office) => {
+        const grouped = offices.reduce((acc: any, office: any) => {
             const existing = acc.find((g: any) => g.label === office.category);
             if (existing) {
                 existing.data.push({

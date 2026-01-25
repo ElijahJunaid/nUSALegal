@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/vue';
+import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin((nuxtApp: any) => {
   const config = useRuntimeConfig();
 
   if (config.public.environment === 'development') {
@@ -15,10 +16,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   if (config.public.sentryDsn) {
     Sentry.init({
       app: nuxtApp.vueApp,
-      dsn: config.public.sentryDsn,
-      environment: config.public.environment || 'production',
+      dsn: config.public.sentryDsn as string,
+      environment: (config.public.environment as string) || 'production',
       
-      tracesSampleRate: config.public.sentrySampleRate || 1.0,
+      tracesSampleRate: (config.public.sentrySampleRate as number) || 1.0,
       
       replaysSessionSampleRate: 0.1, 
       replaysOnErrorSampleRate: 1.0,
@@ -74,7 +75,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       ],
     });
 
-    nuxtApp.vueApp.config.errorHandler = (error, instance, info) => {
+    nuxtApp.vueApp.config.errorHandler = (error: any, instance: any, info: any) => {
       console.error('Vue Error:', error, info);
       
       Sentry.withScope((scope) => {

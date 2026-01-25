@@ -78,7 +78,7 @@ export const useCourtsStore = defineStore('courts', {
             this.error = null
 
             try {
-                const tokenResponse = await $fetch('/api/auth/token', {
+                const tokenResponse = await $fetch<{ token: string; expiresIn: string }>('/api/auth/token', {
                     method: 'POST',
                     body: { endpoint: `courts/${vol}` }
                 })

@@ -1,3 +1,5 @@
+import { createError, getHeaders } from 'h3'
+
 interface RateLimitStore {
     [key: string]: {
         count: number;
@@ -33,10 +35,10 @@ class RateLimiter {
     }
 
     private defaultKeyGenerator(event: any): string {
-        const headers = getHeaders(event);
+        const headers = event.node?.req?.headers;
         return (
-            headers["x-forwarded-for"]?.toString().split(",")[0]?.trim() ||
-            headers["x-real-ip"]?.toString() ||
+            headers?.["x-forwarded-for"]?.toString().split(",")[0]?.trim() ||
+            headers?.["x-real-ip"]?.toString() ||
             event.node.req.socket?.remoteAddress ||
             "unknown"
         );

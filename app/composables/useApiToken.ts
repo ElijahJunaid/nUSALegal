@@ -18,11 +18,11 @@ export function useApiToken() {
       const response = await $fetch('/api/auth/token', {
         method: 'POST',
         body: { endpoint }
-      });
+      }) as { token: string; expiresIn: string };
 
       const cachedToken: CachedToken = {
         token: response.token,
-        expiresAt: Date.now() + (4 * 60 * 1000), // 4 minutos
+        expiresAt: Date.now() + (4 * 60 * 1000),
         endpoint
       };
 

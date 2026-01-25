@@ -1,4 +1,5 @@
 import { apiRateLimiter } from '../../utils/rateLimit'
+import { defineEventHandler, readBody, createError } from 'h3'
 
 interface MockTrialLobbyRequestBody {
   action: string

@@ -1,5 +1,6 @@
 import { getCaseById, getRandomCase } from '../../utils/cases'
 import { apiRateLimiter } from '../../utils/rateLimit'
+import { defineEventHandler, readBody, createError } from 'h3'
 
 interface MockTrialStartRequestBody {
   caseType: string

@@ -115,7 +115,7 @@ export const useBillsStore = defineStore('bills', {
             this.error = null
 
             try {
-                const tokenResponse = await $fetch('/api/auth/token', {
+                const tokenResponse = await $fetch<{ token: string; expiresIn: string }>('/api/auth/token', {
                     method: 'POST',
                     body: { endpoint: 'bills/city-council' }
                 })

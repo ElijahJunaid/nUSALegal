@@ -1,4 +1,6 @@
 import { executiveOrders } from "../../data/executive-orders";
+import { defineEventHandler, createError } from 'h3'
+import { validateApiAccess } from '../../utils/validateApiAccess'
 
 export default defineEventHandler(async (event) => {
     validateApiAccess(event, "laws/eo");

@@ -1,4 +1,6 @@
 import { frcmpRules } from "../../data/federal-rules-frcmp";
+import { defineEventHandler, createError } from 'h3'
+import { validateApiAccess } from '../../utils/validateApiAccess'
 
 export default defineEventHandler(async (event) => {
     validateApiAccess(event, "federal-rules/frcmp");

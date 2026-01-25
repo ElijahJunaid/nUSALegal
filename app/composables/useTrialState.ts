@@ -1,4 +1,5 @@
 import { ref, computed } from "vue";
+import type { CaseData } from "../utils/cases";
 
 export interface Message {
     id: string;

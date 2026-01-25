@@ -78,7 +78,7 @@ export const useFederalRulesStore = defineStore('federal-rules', {
             this.error = null
 
             try {
-                const tokenResponse = await $fetch('/api/auth/token', {
+                const tokenResponse = await $fetch<{ token: string; expiresIn: string }>('/api/auth/token', {
                     method: 'POST',
                     body: { endpoint: 'federal-rules/frcp' }
                 })
@@ -108,7 +108,7 @@ export const useFederalRulesStore = defineStore('federal-rules', {
             this.error = null
 
             try {
-                const tokenResponse = await $fetch('/api/auth/token', {
+                const tokenResponse = await $fetch<{ token: string; expiresIn: string }>('/api/auth/token', {
                     method: 'POST',
                     body: { endpoint: 'federal-rules/frcmp' }
                 })

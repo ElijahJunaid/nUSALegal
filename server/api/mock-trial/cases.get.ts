@@ -1,5 +1,6 @@
 import { getAllCases } from '../../utils/cases'
 import { apiRateLimiter } from '../../utils/rateLimit'
+import { defineEventHandler, getQuery, createError } from 'h3'
 
 export default defineEventHandler(async (event) => {
   

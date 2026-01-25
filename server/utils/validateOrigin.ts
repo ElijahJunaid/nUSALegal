@@ -1,4 +1,5 @@
 import type { H3Event } from 'h3'
+import { getHeader, setResponseHeader, createError } from 'h3'
 
 function getAllowedOrigins(): string[] {
     const originsEnv = process.env.ALLOWED_ORIGINS || ''
@@ -20,13 +21,14 @@ function getAllowedOrigins(): string[] {
 export function validateOrigin(event: H3Event) {
     const allowedOrigins = getAllowedOrigins()
 
-    const origin = getHeader(event, 'origin')
-    const referer = getHeader(event, 'referer')
+    const headers = event.node?.req?.headers
+    const origin = headers?.origin
+    const referer = headers?.referer
 
     if (allowedOrigins.length === 0) {
 
         if (origin) {
-            const host = getHeader(event, 'host')
+            const host = headers?.host
             const originUrl = new URL(origin)
             const requestHost = originUrl.host
 
@@ -69,10 +71,11 @@ export function validateOrigin(event: H3Event) {
 
 export function setCorsHeaders(event: H3Event) {
     const allowedOrigins = getAllowedOrigins()
-    const origin = getHeader(event, 'origin')
+    const headers = event.node?.req?.headers
+    const origin = headers?.origin
 
     if (allowedOrigins.includes('*')) {
-        setResponseHeader(event, 'Access-Control-Allow-Origin', '*')
+        event.node?.res?.setHeader('Access-Control-Allow-Origin', '*')
         return
     }
 
@@ -84,8 +87,8 @@ export function setCorsHeaders(event: H3Event) {
         })
 
         if (isAllowed) {
-            setResponseHeader(event, 'Access-Control-Allow-Origin', origin)
-            setResponseHeader(event, 'Access-Control-Allow-Credentials', 'true')
+            event.node?.res?.setHeader('Access-Control-Allow-Origin', origin)
+            event.node?.res?.setHeader('Access-Control-Allow-Credentials', 'true')
         }
     }
 }

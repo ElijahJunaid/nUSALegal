@@ -1,3 +1,5 @@
+import { defineEventHandler, createError } from 'h3'
+
 export default defineEventHandler(async (event) => {
     const startTime = Date.now();
 

@@ -1,13 +1,14 @@
 import { validateEnv } from '../utils/validateEnv'
 
-export default defineNitroPlugin(() => {
+export default () => {
+  if (process.env.NODE_ENV !== 'production') {
+    return
+  }
   
   try {
     validateEnv()
   } catch (error) {
     console.error('Environment validation failed:', error)
-    if (process.env.NODE_ENV === 'production') {
-      throw error 
-    }
+    throw error 
   }
-})
+}

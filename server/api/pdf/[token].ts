@@ -1,5 +1,6 @@
 import { validatePdfToken } from '../../utils/pdfTokens'
 import { getPdfFromStorage } from '../../utils/pdfStorage'
+import { defineEventHandler, getRouterParam, createError, setResponseHeaders } from 'h3'
 
 export default defineEventHandler(async (event) => {
     const token = getRouterParam(event, 'token')

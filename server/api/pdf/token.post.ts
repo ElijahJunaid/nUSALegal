@@ -2,6 +2,10 @@ interface PdfTokenRequestBody {
   pdfPath: string
 }
 
+import { defineEventHandler, readBody, createError } from 'h3'
+import { validateOrigin, setCorsHeaders } from '../../utils/validateOrigin'
+import { generatePdfToken } from '../../utils/pdfTokens'
+
 export default defineEventHandler(async (event) => {
     
     validateOrigin(event)

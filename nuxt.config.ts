@@ -25,6 +25,9 @@ export default defineNuxtConfig({
             },
         ],
     },
+    typescript: {
+        strict: false,
+    },
 
         app: {
         head: {

@@ -136,10 +136,13 @@ export const cityCouncilBills = [
         number: "Off-Roading at The Ellipse Act",
         description: "Regulates off-road vehicle activities at The Ellipse.",
         pdfPath: "dcbills/DC_City_Council_-_Off-Roading_at_The_Ellipse_Act.pdf",
-        type: "act",
+        type: "ordinance",
         category: "city-council",
     },
 ];
+
+import { defineEventHandler, createError } from 'h3'
+import { validateApiAccess } from '../../utils/validateApiAccess'
 
 export default defineEventHandler(async (event) => {
     validateApiAccess(event, "bills/city-council");

@@ -1,4 +1,6 @@
 import { constitutionAmendments } from "../../data/constitution";
+import { defineEventHandler, createError } from 'h3'
+import { validateApiAccess } from '../../utils/validateApiAccess'
 
 export default defineEventHandler(async (event) => {
     console.log(

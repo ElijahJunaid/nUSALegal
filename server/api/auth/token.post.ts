@@ -2,13 +2,54 @@ interface AuthTokenRequestBody {
   endpoint: string
 }
 
+import { defineEventHandler, readBody, createError } from 'h3'
+import { validateOrigin, setCorsHeaders } from '../../utils/validateOrigin'
+import { generateApiToken } from '../../utils/apiTokens'
+
 export default defineEventHandler(async (event) => {
     
     validateOrigin(event)
 
     setCorsHeaders(event)
 
-    const body = await readBody(event) as AuthTokenRequestBody
+    let body: AuthTokenRequestBody
+    
+    try {
+        body = await readBody(event) as AuthTokenRequestBody
+    } catch (error: any) {
+        console.log('readBody failed, trying fallback:', error.message)
+        try {
+            const req = event.node?.req as any
+            console.log('Request object:', req)
+            console.log('Request body:', req?.body)
+            console.log('Request headers:', req?.headers)
+            
+            if (req && req.body) {
+                if (typeof req.body === 'string') {
+                    body = JSON.parse(req.body) as AuthTokenRequestBody
+                } else if (req.body instanceof Buffer) {
+                    body = JSON.parse(req.body.toString()) as AuthTokenRequestBody
+                } else {
+                    body = req.body as AuthTokenRequestBody
+                }
+            } else {
+                const chunks = []
+                for await (const chunk of req) {
+                    chunks.push(chunk)
+                }
+                const rawBody = Buffer.concat(chunks).toString()
+                console.log('Stream body:', rawBody)
+                body = JSON.parse(rawBody) as AuthTokenRequestBody
+            }
+        } catch (parseError) {
+            console.log('All parsing methods failed:', parseError)
+            throw createError({
+                status: 400,
+                statusText: 'Invalid JSON in request body'
+            })
+        }
+    }
+    
     const { endpoint } = body
 
     if (!endpoint) {

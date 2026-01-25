@@ -3,6 +3,7 @@ import { cityCouncilBills } from "./bills/city-council";
 import { federalLaws } from "../data/laws";
 import { definitions } from "../data/definitions";
 import { executiveOrders } from "../data/executive-orders";
+import { defineEventHandler, getQuery, createError } from 'h3'
 
 export default defineEventHandler(async (event) => {
     const query = getQuery(event);

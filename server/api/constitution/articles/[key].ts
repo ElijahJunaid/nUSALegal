@@ -1,4 +1,6 @@
 import { articles } from "../../../data/constitution";
+import { defineEventHandler, getRouterParam, createError } from 'h3'
+import { validateApiAccess } from '../../../utils/validateApiAccess'
 
 export default defineEventHandler(async (event) => {
     console.log("🔍 [DEBUG] Constitution Articles API called (static data)");

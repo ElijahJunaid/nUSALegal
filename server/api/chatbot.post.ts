@@ -3,6 +3,8 @@ import { tavily } from '@tavily/core'
 import { validateQuery, type FilterResult } from '../utils/filter'
 import { apiRateLimiter } from '../utils/rateLimit'
 import { detectConversational } from '../utils/conversational-detector'
+import { defineEventHandler, createError, readBody } from 'h3'
+import { useRuntimeConfig } from '#imports'
 
 interface ChatbotRequestBody {
   query?: string
@@ -114,10 +116,10 @@ export default defineEventHandler(async (event) => {
   }
 
   const config = useRuntimeConfig()
-  const OPENAI_API_KEY = config.openaiApiKey
-  const TAVILY_API_KEY = config.tavilyApiKey
-  const VECTOR_STORE_ID = config.vectorStoreId
-  const ASSISTANT_ID = config.assistantId
+  const OPENAI_API_KEY = config.openaiApiKey as string
+  const TAVILY_API_KEY = config.tavilyApiKey as string
+  const VECTOR_STORE_ID = config.vectorStoreId as string
+  const ASSISTANT_ID = config.assistantId as string
 
   if (!OPENAI_API_KEY || !TAVILY_API_KEY || !VECTOR_STORE_ID || !ASSISTANT_ID) {
     console.error('[Chatbot] Missing required environment variables')
