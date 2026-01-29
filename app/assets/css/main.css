@@ -1,23 +1,6 @@
-@import "daisyui/components/button.css";
-@import "daisyui/components/card.css";
-@import "daisyui/components/modal.css";
-@import "daisyui/components/dropdown.css";
-@import "daisyui/components/badge.css";
-@import "daisyui/components/alert.css";
-@import "daisyui/components/input.css";
-@import "daisyui/components/textarea.css";
-@import "daisyui/components/select.css";
-@import "daisyui/components/menu.css";
-@import "daisyui/components/navbar.css";
-@import "daisyui/components/table.css";
-@import "daisyui/components/tab.css";
-@import "daisyui/components/checkbox.css";
-@import "daisyui/components/radio.css";
-@import "daisyui/components/range.css";
-@import "daisyui/components/loading.css";
-@import "daisyui/components/tooltip.css";
-@import "daisyui/components/divider.css";
-@import "daisyui/components/footer.css";
+@import "tailwindcss";
+@plugin "daisyui";
+
 
 @layer base {
   :root {
