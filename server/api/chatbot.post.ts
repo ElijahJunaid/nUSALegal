@@ -60,7 +60,43 @@ export default defineEventHandler(async (event) => {
     }) as any
   }
 
-  const body = await readBody(event) as ChatbotRequestBody
+  let body: ChatbotRequestBody
+    try {
+    const req = event.node?.req as any
+    console.log('Request headers:', req?.headers)
+    console.log('Request body type:', typeof req?.body)
+    console.log('Request body:', req?.body)
+        if (!req?.body) {
+      const chunks = []
+      for await (const chunk of req) {
+        chunks.push(chunk)
+      }
+      const rawBody = Buffer.concat(chunks).toString()
+      console.log('Raw body from stream:', rawBody)
+      body = JSON.parse(rawBody) as ChatbotRequestBody
+    } else {
+      if (typeof req.body === 'string') {
+        body = JSON.parse(req.body) as ChatbotRequestBody
+      } else if (req.body instanceof Buffer) {
+        body = JSON.parse(req.body.toString()) as ChatbotRequestBody
+      } else if (typeof req.body === 'object') {
+        body = req.body as ChatbotRequestBody
+      }
+    }
+    
+    if (!body) {
+      throw new Error('No body found')
+    }
+  } catch (error: any) {
+    console.error('Failed to parse body:', error.message)
+    throw createError({
+      status: 400,
+      statusText: 'Bad Request',
+      message: 'Invalid JSON in request body'
+    })
+  }
+  
+  body = body || {} as ChatbotRequestBody
   
   const query = sanitizeInput(body.query || '')
   let thread_id = body.thread_id
@@ -89,7 +125,6 @@ export default defineEventHandler(async (event) => {
 
   const conversationalResult = detectConversational(query)
   
-  // Only block very basic one-word responses, let everything else go to the AI
   if (conversationalResult.isConversational && 
       conversationalResult.confidence > 0.9 && 
       query.trim().split(/\s+/).length <= 2 &&

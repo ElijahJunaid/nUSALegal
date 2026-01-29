@@ -19,8 +19,9 @@ async function getFriendCount(userId: number): Promise<number | null> {
 }
 
 export default defineEventHandler(async (event) => {
-  const query = getQuery(event)
-  const username = query.username as string
+  const url = event.node?.req?.url || ''
+  const urlObj = new URL(url, `http://${event.node?.req?.headers?.host || 'localhost'}`)
+  const username = urlObj.searchParams.get('username') as string
 
   if (!username) {
     throw createError({

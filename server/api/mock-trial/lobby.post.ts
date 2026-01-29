@@ -11,7 +11,37 @@ interface MockTrialLobbyRequestBody {
 export default defineEventHandler(async (event) => {
   
   await apiRateLimiter.middleware()(event)
-  const body = await readBody(event) as MockTrialLobbyRequestBody
+  let body: MockTrialLobbyRequestBody
+  
+  try {
+    const req = event.node?.req as any
+    
+    if (req?.body) {
+      if (typeof req.body === 'string') {
+        body = JSON.parse(req.body) as MockTrialLobbyRequestBody
+      } else if (req.body instanceof Buffer) {
+        body = JSON.parse(req.body.toString()) as MockTrialLobbyRequestBody
+      } else if (typeof req.body === 'object') {
+        body = req.body as MockTrialLobbyRequestBody
+      } else {
+        throw new Error('Invalid body type')
+      }
+    } else {
+      const chunks = []
+      for await (const chunk of req) {
+        chunks.push(chunk)
+      }
+      const rawBody = Buffer.concat(chunks).toString()
+      body = JSON.parse(rawBody) as MockTrialLobbyRequestBody
+    }
+  } catch (error: any) {
+    console.error('Failed to parse body:', error.message)
+    throw createError({
+      status: 400,
+      statusText: 'Bad Request',
+      message: 'Invalid JSON in request body'
+    })
+  }
   const { action, lobbyCode, playerName, role } = body
 
   if (!action) {

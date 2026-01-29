@@ -11,7 +11,37 @@ export default defineEventHandler(async (event) => {
   
   await defaultRateLimiter.middleware()(event)
 
-  const body = await readBody(event) as CheckNusaBansRequestBody
+  let body: CheckNusaBansRequestBody
+  
+  try {
+    const req = event.node?.req as any
+    
+    if (req?.body) {
+      if (typeof req.body === 'string') {
+        body = JSON.parse(req.body) as CheckNusaBansRequestBody
+      } else if (req.body instanceof Buffer) {
+        body = JSON.parse(req.body.toString()) as CheckNusaBansRequestBody
+      } else if (typeof req.body === 'object') {
+        body = req.body as CheckNusaBansRequestBody
+      } else {
+        throw new Error('Invalid body type')
+      }
+    } else {
+      const chunks = []
+      for await (const chunk of req) {
+        chunks.push(chunk)
+      }
+      const rawBody = Buffer.concat(chunks).toString()
+      body = JSON.parse(rawBody) as CheckNusaBansRequestBody
+    }
+  } catch (error: any) {
+    console.error('Failed to parse body:', error.message)
+    throw createError({
+      status: 400,
+      statusText: 'Bad Request',
+      message: 'Invalid JSON in request body'
+    })
+  }
   const { userId } = body
 
   if (!userId || typeof userId !== 'string' || !/^[0-9]+$/.test(userId) || userId.length > 32) {

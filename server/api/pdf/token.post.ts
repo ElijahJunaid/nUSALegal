@@ -12,7 +12,37 @@ export default defineEventHandler(async (event) => {
 
     setCorsHeaders(event)
 
-    const body = await readBody(event) as PdfTokenRequestBody
+    let body: PdfTokenRequestBody
+    
+    try {
+        const req = event.node?.req as any
+        
+        if (req?.body) {
+            if (typeof req.body === 'string') {
+                body = JSON.parse(req.body) as PdfTokenRequestBody
+            } else if (req.body instanceof Buffer) {
+                body = JSON.parse(req.body.toString()) as PdfTokenRequestBody
+            } else if (typeof req.body === 'object') {
+                body = req.body as PdfTokenRequestBody
+            } else {
+                throw new Error('Invalid body type')
+            }
+        } else {
+            const chunks = []
+            for await (const chunk of req) {
+                chunks.push(chunk)
+            }
+            const rawBody = Buffer.concat(chunks).toString()
+            body = JSON.parse(rawBody) as PdfTokenRequestBody
+        }
+    } catch (error: any) {
+        console.error('Failed to parse body:', error.message)
+        throw createError({
+            status: 400,
+            statusText: 'Bad Request',
+            message: 'Invalid JSON in request body'
+        })
+    }
     const { pdfPath } = body
 
     if (!pdfPath) {

@@ -6,8 +6,8 @@ export default defineEventHandler(async (event) => {
   
   await apiRateLimiter.middleware()(event)
   const query = getQuery(event)
-  const caseType = query.type as 'criminal' | 'civil' | undefined
-  const caseId = query.id as string | undefined
+  const caseType = (query.type as 'criminal' | 'civil' | undefined) || ''
+  const caseId = (query.id as string) || ''
   
   if (!caseType || !['criminal', 'civil'].includes(caseType)) {
     throw createError({
