@@ -14,7 +14,6 @@ export default defineEventHandler(async (event) => {
 
     let body: AuthTokenRequestBody
     
-    // Debug: Log the raw request details
     console.log('=== Auth Token Request Debug ===')
     console.log('Headers:', event.node?.req?.headers)
     console.log('Method:', event.node?.req?.method)
@@ -23,9 +22,32 @@ export default defineEventHandler(async (event) => {
     try {
         body = await readBody(event) as AuthTokenRequestBody
         console.log('Parsed body:', body)
-    } catch (error: any) {
-        console.log('readBody failed, trying fallback:', error.message)
-        try {
+        
+        if ((!body || !body.endpoint) && process.env.NODE_ENV === 'production') {
+            console.log('Production environment with empty body, trying Netlify functions parsing...')
+            const req = event.node?.req as any
+            
+            if (req && req.body && typeof req.body.getReader === 'function') {
+                console.log('Detected Netlify ReadableStream, reading manually...')
+                const reader = req.body.getReader()
+                const decoder = new TextDecoder()
+                let result = ''
+                
+                while (true) {
+                    const { done, value } = await reader.read()
+                    if (done) break
+                    result += decoder.decode(value, { stream: true })
+                }
+                
+                console.log('Stream result:', result)
+                body = JSON.parse(result) as AuthTokenRequestBody
+            } else {
+                throw new Error('No valid body found in Netlify functions')
+            }
+        }
+        
+        else if (!body || !body.endpoint) {
+            console.log('Local development fallback parsing...')
             const req = event.node?.req as any
             console.log('Request object:', req)
             console.log('Request body:', req?.body)
@@ -48,13 +70,13 @@ export default defineEventHandler(async (event) => {
                 console.log('Stream body:', rawBody)
                 body = JSON.parse(rawBody) as AuthTokenRequestBody
             }
-        } catch (parseError) {
-            console.log('All parsing methods failed:', parseError)
-            throw createError({
-                status: 400,
-                statusText: 'Invalid JSON in request body'
-            })
         }
+    } catch (error: any) {
+        console.log('All parsing methods failed:', error.message)
+        throw createError({
+            status: 400,
+            statusText: 'Invalid JSON in request body'
+        })
     }
     
     const { endpoint } = body
