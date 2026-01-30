@@ -18,7 +18,7 @@
         <div class="assessment-section">
           <h3>Background Check Results</h3>
           <p>
-            <strong>Hiring Status:</strong> 
+            <strong>Hiring Status: </strong> 
             <span :style="{ color: getStatusColor(assessments.hiring.result) }">
               {{ assessments.hiring.result }}
             </span>
@@ -26,7 +26,7 @@
             <small>{{ assessments.hiring.reason }}</small>
           </p>
           <p>
-            <strong>EOS Compliance:</strong> 
+            <strong>EOS Compliance: </strong> 
             <span :style="{ color: getStatusColor(assessments.eos.result) }">
               {{ assessments.eos.result }}
             </span>
@@ -34,7 +34,7 @@
             <small>{{ assessments.eos.reason }}</small>
           </p>
           <p>
-            <strong>Ban Status:</strong> 
+            <strong>Ban Status: </strong> 
             <span :style="{ color: getStatusColor(assessments.ban.result) }">
               {{ assessments.ban.result }}
             </span>

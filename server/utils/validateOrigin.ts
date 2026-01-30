@@ -48,6 +48,16 @@ export function validateOrigin(event: H3Event) {
 
     const requestOrigin = origin || (referer ? new URL(referer).origin : null)
 
+    if (!requestOrigin && allowedOrigins.length > 0) {
+        const host = headers?.host
+        if (host && allowedOrigins.some(allowed => {
+            const normalizedAllowed = allowed.replace(/\/$/, '')
+            return host === new URL(normalizedAllowed).host
+        })) {
+            return
+        }
+    }
+
     if (!requestOrigin) {
         throw createError({
             status: 403,

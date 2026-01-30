@@ -61,27 +61,28 @@ export default defineEventHandler(async (event) => {
   }
 
   let body: ChatbotRequestBody
-    try {
+  
+  // Direct body parsing for H3 v2 RC compatibility
+  try {
     const req = event.node?.req as any
-    console.log('Request headers:', req?.headers)
-    console.log('Request body type:', typeof req?.body)
-    console.log('Request body:', req?.body)
-        if (!req?.body) {
-      const chunks = []
-      for await (const chunk of req) {
-        chunks.push(chunk)
-      }
-      const rawBody = Buffer.concat(chunks).toString()
-      console.log('Raw body from stream:', rawBody)
-      body = JSON.parse(rawBody) as ChatbotRequestBody
-    } else {
+    
+    if (req?.body) {
       if (typeof req.body === 'string') {
         body = JSON.parse(req.body) as ChatbotRequestBody
       } else if (req.body instanceof Buffer) {
         body = JSON.parse(req.body.toString()) as ChatbotRequestBody
       } else if (typeof req.body === 'object') {
         body = req.body as ChatbotRequestBody
+      } else {
+        throw new Error('Invalid body type')
       }
+    } else {
+      const chunks = []
+      for await (const chunk of req) {
+        chunks.push(chunk)
+      }
+      const rawBody = Buffer.concat(chunks).toString()
+      body = JSON.parse(rawBody) as ChatbotRequestBody
     }
     
     if (!body) {
@@ -100,6 +101,8 @@ export default defineEventHandler(async (event) => {
   
   const query = sanitizeInput(body.query || '')
   let thread_id = body.thread_id
+
+  console.log('[Chatbot] Received query:', JSON.stringify({ query, thread_id, queryLength: query.length }))
 
   if (thread_id && !THREAD_ID_PATTERN.test(thread_id)) {
     throw createError({
