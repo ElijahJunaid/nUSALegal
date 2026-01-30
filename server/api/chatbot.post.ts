@@ -104,6 +104,21 @@ export default defineEventHandler(async (event) => {
 
   console.log('[Chatbot] Received query:', JSON.stringify({ query, thread_id, queryLength: query.length }))
 
+  // Check for conversational queries BEFORE applying strict filters
+  const conversationalResult = detectConversational(query)
+  
+  if (conversationalResult.isConversational && 
+      conversationalResult.confidence > 0.9 && 
+      query.trim().split(/\s+/).length <= 2 &&
+      ['greeting', 'farewell', 'gratitude', 'wellbeing'].includes(conversationalResult.intent)) {
+    
+    return {
+      thread_id,
+      response: conversationalResult.suggestedResponse || 
+        "I'm here to help with legal questions! What would you like to know?"
+    }
+  }
+
   if (thread_id && !THREAD_ID_PATTERN.test(thread_id)) {
     throw createError({
       status: 400,
@@ -126,8 +141,6 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const conversationalResult = detectConversational(query)
-  
   if (conversationalResult.isConversational && 
       conversationalResult.confidence > 0.9 && 
       query.trim().split(/\s+/).length <= 2 &&

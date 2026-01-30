@@ -22,8 +22,16 @@ export function validateOrigin(event: H3Event) {
     const allowedOrigins = getAllowedOrigins()
 
     const headers = event.node?.req?.headers
-    const origin = headers?.origin
+    let origin = headers?.origin
     const referer = headers?.referer
+
+    if (!origin && process.env.NODE_ENV === 'development') {
+        const forwardedHost = headers?.['x-forwarded-host']
+        const forwardedProto = headers?.['x-forwarded-proto']
+        if (forwardedHost) {
+            origin = `${forwardedProto || 'http'}://${forwardedHost}`
+        }
+    }
 
     if (allowedOrigins.length === 0) {
 
