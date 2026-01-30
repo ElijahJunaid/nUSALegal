@@ -36,7 +36,8 @@ export const useResourceVIPStore = defineStore('resource-vips', {
         data: [] as VIPEnriched[],
         loading: false,
         isLoaded: false,
-        error: null as string | null
+        error: null as string | null,
+        nusaGGUnreachable: false
     }),
 
     getters: {
@@ -64,6 +65,10 @@ export const useResourceVIPStore = defineStore('resource-vips', {
             }
         },
         async fetchWithFallback(endpoint: string) {
+            if (this.nusaGGUnreachable) {
+                throw new Error(`nusa.gg domains are unreachable - using fallback data`)
+            }
+
             const controller = new AbortController()
             const timeout = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT)
 
@@ -79,6 +84,8 @@ export const useResourceVIPStore = defineStore('resource-vips', {
                     const fallbackResponse = await fetch(`${API_CONFIG.FALLBACK_URL}${endpoint}`)
                     return fallbackResponse
                 } catch (fallbackError) {
+                    this.nusaGGUnreachable = true
+                    console.error(`Both primary and fallback APIs failed for ${endpoint} - marking nusa.gg as unreachable`)
                     throw new Error(`Both primary and fallback APIs failed for ${endpoint}`)
                 }
             }
@@ -129,6 +136,16 @@ export const useResourceVIPStore = defineStore('resource-vips', {
         },
 
         async enrichVIPData() {
+            if (this.nusaGGUnreachable) {
+                console.log('Skipping VIP enrichment - nusa.gg domains are unreachable')
+                this.data = this.data.map(vip => ({
+                    ...vip,
+                    isLoading: false,
+                    hasError: false
+                }))
+                return
+            }
+
             const enrichmentPromises = this.data.map(async (vip, index) => {
                 try {
                     const [userResponse, avatarResponse] = await Promise.allSettled([
