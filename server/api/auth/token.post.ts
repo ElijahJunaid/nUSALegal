@@ -42,7 +42,19 @@ export default defineEventHandler(async (event) => {
                 console.log('Stream result:', result)
                 body = JSON.parse(result) as AuthTokenRequestBody
             } else {
-                throw new Error('No valid body found in Netlify functions')
+                console.log('Trying direct body access...')
+                if (req && req.body) {
+                    if (typeof req.body === 'string') {
+                        body = JSON.parse(req.body) as AuthTokenRequestBody
+                    } else if (req.body instanceof Buffer) {
+                        body = JSON.parse(req.body.toString()) as AuthTokenRequestBody
+                    } else {
+                        const bodyStr = JSON.stringify(req.body)
+                        body = JSON.parse(bodyStr) as AuthTokenRequestBody
+                    }
+                } else {
+                    throw new Error('No valid body found in Netlify functions')
+                }
             }
         }
         
