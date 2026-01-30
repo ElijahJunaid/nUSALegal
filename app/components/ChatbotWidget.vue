@@ -58,6 +58,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
 const route = useRoute()
 const isOpen = ref(false)
 const userInput = ref('')

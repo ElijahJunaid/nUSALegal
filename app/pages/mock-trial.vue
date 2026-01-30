@@ -415,7 +415,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { useToast } from '~/composables/useToast'
 import { useLobbyConnection } from '~/composables/useLobbyConnection'
 // import { useCourtroomScene } from '~/composables/useCourtroomScene'
@@ -602,7 +602,11 @@ async function selectCaseType(type: 'criminal' | 'civil') {
   availableCases.value = []
 
   try {
-    const response = await $fetch(`/api/mock-trial/cases?type=${type}`)
+    const response = await $fetch('/api/mock-trial/cases?type=' + type) as {
+      success: boolean
+      caseType: string
+      cases: any[]
+    }
     if (response.success) {
       availableCases.value = response.cases
       info(`Loaded ${response.cases.length} ${type} cases`)
@@ -690,7 +694,23 @@ async function confirmSetup() {
   
   try {
     
-    const response = await $fetch(`/api/mock-trial/random-case?type=${setupCaseType.value}`)
+    const response = await $fetch(`/api/mock-trial/random-case?type=${setupCaseType.value}`) as {
+      success: boolean
+      case: {
+        title: string
+        description: string
+        facts: string
+        statute: string
+        difficulty: string
+        roles: {
+          [role: string]: {
+            objectives: string[]
+            key_arguments: string[]
+            key_decisions: string[]
+          }
+        }
+      }
+    }
     
     if (response.success && response.case) {
       

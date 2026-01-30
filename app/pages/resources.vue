@@ -79,14 +79,14 @@
                         </div>
 
                         <h2 class="section-title capitalize text-center">
-                            {{ selected }}
+                            {{ selected === 'office' ? 'Defense' : selected.replaceAll('-', ' ') }}
                         </h2>
 
                         <div class="search-filter">
                             
                             <div class="form-control flex-1">
                                 <input v-model="searchQuery" type="text"
-                                    :placeholder="`Search ${selected.replaceAll('-', ' ')}...`"
+                                    :placeholder="`Search ${selected === 'office' ? 'Defense' : selected.replaceAll('-', ' ')}...`"
                                     class="input input-bordered w-full" />
                             </div>
                         </div>
@@ -106,6 +106,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
+
 definePageMeta({
     layout: false
 })

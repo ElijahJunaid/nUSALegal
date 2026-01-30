@@ -65,6 +65,9 @@
 </template>
 
 <script lang="ts" setup>
+import { useRoute } from 'vue-router'
+import { computed, ref, onMounted } from 'vue'
+
 const route = useRoute();
 
 const isHome = computed(() => route.path == '/')
@@ -169,7 +172,6 @@ const toggleTheme = () => {
     transform: scale(1.05);
 }
 
-/* Dark mode vibrant links */
 [data-theme='dark'] .nav-link {
     color: #b39eff;
 }

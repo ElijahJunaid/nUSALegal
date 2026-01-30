@@ -27,6 +27,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useLawsStore } from '~/stores/laws-store'
+import { storeToRefs } from 'pinia'
 
 defineEmits(['show-detail'])
 const LawsStore = useLawsStore();

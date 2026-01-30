@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, watchEffect } from 'vue';
 import { LucideX } from 'lucide-vue-next';
 
 const emit = defineEmits(['close']);

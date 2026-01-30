@@ -99,6 +99,8 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useCourtsStore } from '~/stores/courts-store'
 
 definePageMeta({

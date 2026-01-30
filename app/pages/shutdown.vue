@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSeoMeta, useHead } from 'nuxt/app'
 
 useSeoMeta({
     title: 'nUSA Legal - Maintenance',

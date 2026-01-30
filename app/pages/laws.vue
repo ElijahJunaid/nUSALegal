@@ -97,6 +97,10 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, computed, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useLawsStore, type Law } from '~/stores/laws-store';
+
 const LawsStore = useLawsStore();
 
 definePageMeta({

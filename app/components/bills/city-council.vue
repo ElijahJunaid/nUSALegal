@@ -30,6 +30,9 @@
 </template>
 
 <script lang="ts" setup>
+import { useBillsStore } from '~/stores/bills-store'
+import { storeToRefs } from 'pinia'
+
 defineEmits(['open-pdf'])
 
 const billsStore = useBillsStore();

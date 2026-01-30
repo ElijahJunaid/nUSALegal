@@ -89,6 +89,7 @@
 
 <script lang="ts" setup>
 import { useBillsStore } from '~/stores/bills-store'
+import { useHead, definePageMeta, storeToRefs, onMounted } from '#imports'
 
 definePageMeta({
     layout: false
@@ -101,10 +102,15 @@ const { loading, searchQuery, selectedSection, filterType, filteredCongressBills
 
 onMounted(fetchCongressBills)
 
+interface PdfTokenResponse {
+    token: string
+    url: string
+}
+
 async function openPDF(pdfPath: string) {
     try {
         
-        const response = await $fetch('/api/pdf/token', {
+        const response = await $fetch<PdfTokenResponse>('/api/pdf/token', {
             method: 'POST',
             body: { pdfPath }
         })

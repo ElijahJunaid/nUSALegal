@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import type { NuxtError } from '#app'
+import { navigateTo } from '#app'
 
 const props = defineProps({
     error: Object as () => NuxtError,

@@ -16,7 +16,7 @@
         <div v-else>
             <div class="office-group form-control">
                 <select v-model="filterType" class="select select-bordered w-full" @change="$emit('reset_search')">
-                    <option value="all">All Office</option>
+                    <option value="all">All Defense</option>
                     <template v-for="(filter, i) in officeGroupList" :key="i">
                         <option :value="filter">{{ filter }}</option>
                     </template>

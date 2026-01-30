@@ -124,7 +124,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useConstitutionStore } from '~/stores/constitution-store';
+import { ref, computed, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { $fetch } from 'ofetch';
+import { useConstitutionStore, type Constitution, type ConstitutionArticle, type ConstitutionArticleSection } from '~/stores/constitution-store';
 
 definePageMeta({
     layout: false

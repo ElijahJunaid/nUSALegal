@@ -62,6 +62,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
 interface SearchResult {
   id?: string
   title: string
