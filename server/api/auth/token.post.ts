@@ -14,8 +14,15 @@ export default defineEventHandler(async (event) => {
 
     let body: AuthTokenRequestBody
     
+    // Debug: Log the raw request details
+    console.log('=== Auth Token Request Debug ===')
+    console.log('Headers:', event.node?.req?.headers)
+    console.log('Method:', event.node?.req?.method)
+    console.log('URL:', event.node?.req?.url)
+    
     try {
         body = await readBody(event) as AuthTokenRequestBody
+        console.log('Parsed body:', body)
     } catch (error: any) {
         console.log('readBody failed, trying fallback:', error.message)
         try {
