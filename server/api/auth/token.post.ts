@@ -20,12 +20,18 @@ export default defineEventHandler(async (event) => {
     console.log('URL:', event.node?.req?.url)
     
     try {
+        console.log('Attempting to read body...')
         body = await readBody(event) as AuthTokenRequestBody
         console.log('Parsed body:', body)
+        console.log('Body type:', typeof body)
+        console.log('Body has endpoint:', body?.endpoint)
         
         if ((!body || !body.endpoint) && process.env.NODE_ENV === 'production') {
             console.log('Production environment with empty body, trying Netlify functions parsing...')
             const req = event.node?.req as any
+            console.log('Request object exists:', !!req)
+            console.log('Request body type:', typeof req?.body)
+            console.log('Request body:', req?.body)
             
             if (req && req.body && typeof req.body.getReader === 'function') {
                 console.log('Detected Netlify ReadableStream, reading manually...')
@@ -85,6 +91,7 @@ export default defineEventHandler(async (event) => {
         }
     } catch (error: any) {
         console.log('All parsing methods failed:', error.message)
+        console.log('Error stack:', error.stack)
         throw createError({
             status: 400,
             statusText: 'Invalid JSON in request body'
