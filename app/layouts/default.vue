@@ -1,5 +1,5 @@
 <template>
-    <div class="drawer drawer-end" :data-theme="theme">
+    <div class="drawer drawer-end">
         <input id="nusalegal-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content">
             <div class="navbar custom-navbar">
@@ -110,11 +110,13 @@ onMounted(() => {
     
     const savedTheme = localStorage.getItem('nusalegal-theme') as 'light' | 'dark' | null
     theme.value = savedTheme || 'light'
+    document.documentElement.setAttribute('data-theme', theme.value)
 })
 
 const toggleTheme = () => {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
     localStorage.setItem('nusalegal-theme', theme.value)
+    document.documentElement.setAttribute('data-theme', theme.value)
 }
 </script>
 
