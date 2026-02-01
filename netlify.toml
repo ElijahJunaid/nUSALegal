@@ -26,10 +26,18 @@ DATABASE_URL = "file:./prisma/dev.db"
 
 # Netlify Dev (local development)
 [dev]
-framework = "nuxt"
 port = 8888
 targetPort = 3001
 autoLaunch = false
+
+# Explicit API redirect for Netlify Dev proxy
+[[redirects]]
+from = "/api/*"
+to = "http://localhost:3001/api/:splat"
+status = 200
+[redirects.headers]
+X-Forwarded-Host = "localhost:8888"
+X-Forwarded-Proto = "http"
 
 # Headers for security and performance
 [[headers]]
@@ -42,7 +50,7 @@ X-XSS-Protection = "1; mode=block"
 Referrer-Policy = "strict-origin-when-cross-origin"
 
 # Content Security Policy
-Content-Security-Policy = "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://p.trellocdn.com; connect-src 'self' ws: wss: https://o4510700106416128.ingest.us.sentry.io; worker-src 'self' blob:; default-src 'self';"
+Content-Security-Policy = "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://p.trellocdn.com; connect-src 'self' ws: wss: https://o4510700106416128.ingest.us.sentry.io https://users.roblox.com https://www.roblox.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; default-src 'self';"
 
 # Redirects (if needed)
 # Uncomment and modify as needed
