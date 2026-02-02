@@ -239,7 +239,7 @@ export function useLobbyConnection() {
       } else if (reconnectAttempts.value < 3) {
         
         isReconnecting.value = false
-        setTimeout(() => attemptReconnect(), 2000)
+        setTimeout(() => attemptReconnect().catch(err => console.error('Reconnect attempt failed:', err)), 2000)
       } else {
         isReconnecting.value = false
         error('Failed to reconnect after 3 attempts')
@@ -262,7 +262,7 @@ export function useLobbyConnection() {
   function onConnectionLost() {
     isConnected.value = false
     warning('Connection lost - attempting to reconnect...')
-    attemptReconnect()
+    attemptReconnect().catch(err => console.error('Reconnect failed:', err))
   }
 
   function onPlayerJoined(message: any) {

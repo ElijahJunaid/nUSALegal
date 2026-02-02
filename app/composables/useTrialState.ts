@@ -100,7 +100,6 @@ export function useTrialState() {
         currentTurn.value = "judge";
         trialPhase.value = "opening";
 
-        // Clear previous state
         messages.value = [];
         evidence.value = [];
         objections.value = [];

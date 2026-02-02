@@ -54,6 +54,10 @@
 </template>
 
 <script lang="ts" setup>
+import { useResourceVIPStore } from '~/stores/resource-vips-store'
+import { storeToRefs } from 'pinia'
+import { watchEffect, onMounted } from 'vue'
+
 const props = defineProps<{
     search: string
 }>()

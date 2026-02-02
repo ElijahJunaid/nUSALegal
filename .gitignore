@@ -41,3 +41,11 @@ prisma/migrations/
 # Local Netlify folder
 .netlify
 next-server
+
+# Development-only scripts (never commit these)
+scripts/dev-health-check.js
+scripts/dev-health-check.cjs
+scripts/upload-pdfs-to-blobs.js
+
+# Reports
+reports/

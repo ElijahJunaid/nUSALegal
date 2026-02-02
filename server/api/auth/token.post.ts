@@ -60,7 +60,6 @@ export default defineEventHandler(async (event) => {
             }
         }
         
-        // Handle local development
         else {
             console.log('Local development, trying readBody...')
             try {

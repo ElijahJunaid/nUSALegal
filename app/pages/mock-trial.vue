@@ -415,15 +415,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, nextTick, defineAsyncComponent } from 'vue'
 import { useToast } from '~/composables/useToast'
 import { useLobbyConnection } from '~/composables/useLobbyConnection'
-// import { useCourtroomScene } from '~/composables/useCourtroomScene'
 import { useTrialState } from '~/composables/useTrialState'
+
+const ToastContainer = defineAsyncComponent(() => import('~/components/ToastContainer.vue'))
+const ReconnectionDialog = defineAsyncComponent(() => import('~/components/ReconnectionDialog.vue'))
 
 const { success, error, warning, info } = useToast()
 const lobbyConnection = useLobbyConnection()
-// const courtroomScene = useCourtroomScene()
 const trialState = useTrialState()
 
 const {
@@ -791,21 +792,22 @@ async function initializeCourtroomScene() {
   courtroomError.value = false
   
   try {
+    const { useCourtroomScene } = await import('~/composables/useCourtroomScene')
+    const courtroomScene = useCourtroomScene()
     
-    // await courtroomScene.loadBabylonScripts()
-    // const initialized = await courtroomScene.initialize('renderCanvas')
-    // if (!initialized) {
-    //   throw new Error('Failed to initialize Babylon engine')
-    // }
-    // await courtroomScene.createScene()
-    // if (setupRole.value) {
-    //   courtroomScene.createAvatar('local-player', setupRole.value, {
-    //     name: 'You',
-    //     isLocal: true
-    //   })
-    // }
-    // courtroomScene.run()
-    console.log('3D courtroom temporarily disabled')
+    await courtroomScene.loadBabylonScripts()
+    const initialized = await courtroomScene.initialize('renderCanvas')
+    if (!initialized) {
+      throw new Error('Failed to initialize Babylon engine')
+    }
+    await courtroomScene.createScene()
+    if (setupRole.value) {
+      courtroomScene.createAvatar('local-player', setupRole.value, {
+        name: 'You',
+        isLocal: true
+      })
+    }
+    courtroomScene.run()
     
     courtroomLoading.value = false
     success('3D courtroom loaded successfully!')
@@ -836,10 +838,6 @@ function sendChatMessage() {
   }
   
   chatMessages.value.push(message)
-
-  // if (courtroomScene.showChatBubble) {
-  //   courtroomScene.showChatBubble('local-player', message.content)
-  // }
   
   chatInput.value = ''
 

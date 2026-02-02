@@ -25,7 +25,7 @@
 
             <div class="office-card">
                 <div class="card-body">
-                    <template v-for="office in filteredData">
+                    <template v-for="office in filteredData" :key="office.label">
                         <div>
                             <div>{{ office.label }}</div>
                             <table class="table" v-if="office.data.length">
@@ -47,7 +47,9 @@
 </template>
 
 <script lang="ts" setup>
-import { emit } from 'process';
+import { useResourceOfficeStore } from '~/stores/resource-office-store'
+import { storeToRefs } from 'pinia'
+import { watchEffect, onMounted } from 'vue'
 
 const props = defineProps<{
     search: string

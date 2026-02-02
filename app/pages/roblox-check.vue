@@ -3,13 +3,16 @@
     <div class="search-container" style="width: 90%;">
       <h1>Roblox User Background Check</h1>
       <div class="search-input-group">
+        <label for="username-input" class="sr-only">Roblox Username</label>
         <input 
           v-model="username" 
-          type="text" 
+          type="text"
+          id="username-input"
           placeholder="Enter Roblox username"
           @keypress.enter="checkUser"
+          aria-label="Roblox username"
         >
-        <button class="search-button" @click="checkUser" role="button">Search</button>
+        <button class="search-button" @click="checkUser">Search</button>
       </div>
       <div v-if="loading" class="loading">Searching...</div>
       <div v-if="error" class="error">{{ error }}</div>
@@ -45,8 +48,7 @@
         <button 
           class="profile-toggle" 
           :class="{ open: showProfile }"
-          @click="toggleProfile" 
-          role="button"
+          @click="toggleProfile"
         >
           {{ showProfile ? 'Hide Profile' : 'View Full Profile' }}
         </button>
@@ -71,8 +73,7 @@
     <button 
       class="theme-toggle" 
       @click="toggleTheme" 
-      :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'" 
-      role="button"
+      :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
     >
       {{ isDark ? '☀️' : '🌙' }}
     </button>

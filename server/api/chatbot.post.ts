@@ -62,7 +62,6 @@ export default defineEventHandler(async (event) => {
 
   let body: ChatbotRequestBody
   
-  // Direct body parsing for H3 v2 RC compatibility
   try {
     const req = event.node?.req as any
     
@@ -104,7 +103,6 @@ export default defineEventHandler(async (event) => {
 
   console.log('[Chatbot] Received query:', JSON.stringify({ query, thread_id, queryLength: query.length }))
 
-  // Check for conversational queries BEFORE applying strict filters
   const conversationalResult = detectConversational(query)
   
   if (conversationalResult.isConversational && 

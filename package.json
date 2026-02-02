@@ -3,17 +3,25 @@
     "type": "module",
     "version": "0.7.1",
     "private": true,
+    "sideEffects": [
+        "*.css",
+        "*.vue"
+    ],
     "scripts": {
         "build": "nuxt build",
+        "start": "node .output/server/index.mjs",
+        "test": "echo \"No tests configured yet\" && exit 0",
         "upload-pdfs": "node scripts/upload-pdfs-to-blobs.js",
         "dev": "set NODE_OPTIONS=--dns-result-order=ipv4first && nuxt dev --host 127.0.0.1",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
-        "postinstall": "node scripts/postinstall.js"
+        "postinstall": "node scripts/postinstall.js",
+        "health-check": "node scripts/dev-health-check.cjs"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.600.0",
         "@netlify/blobs": "^10.5.0",
+        "@nuxtjs/i18n": "^10.2.1",
         "@pinia/nuxt": "^0.11.3",
         "@sentry/vue": "^10.34.0",
         "@tailwindcss/vite": "^4.1.18",
@@ -27,7 +35,7 @@
         "daisyui": "^5.2.3",
         "dotenv": "^17.2.3",
         "h3": "^2.0.1-rc.11",
-        "lucide-vue-next": "^0.562.0",
+        "lucide-vue-next": "^0.563.0",
         "nitropack": "^2.13.1",
         "noblox.js": "^6.2.0",
         "nuxt": "^4.2.2",
@@ -35,7 +43,8 @@
         "pinia": "^3.0.4",
         "srvx": "^0.10.1",
         "vue": "^3.5.26",
-        "vue-router": "^4.6.4",
+        "vue-router": "^5.0.1",
+        "web-vitals": "^5.1.0",
         "winston": "^3.19.0"
     },
     "devDependencies": {
@@ -50,10 +59,10 @@
         "word-wrap": "^1.2.5"
     },
     "optionalDependencies": {
-        "@oxc-parser/binding-linux-x64-gnu": "^0.108.0",
-        "@oxc-parser/binding-win32-x64-msvc": "^0.108.0",
-        "@rollup/rollup-linux-x64-gnu": "^4.55.1",
-        "@rollup/rollup-win32-x64-msvc": "^4.55.1",
+        "@oxc-parser/binding-linux-x64-gnu": "^0.111.0",
+        "@oxc-parser/binding-win32-x64-msvc": "^0.111.0",
+        "@rollup/rollup-linux-x64-gnu": "^4.57.1",
+        "@rollup/rollup-win32-x64-msvc": "^4.57.1",
         "lightningcss-linux-x64-gnu": "^1.30.2",
         "lightningcss-win32-x64-msvc": "^1.30.2"
     }

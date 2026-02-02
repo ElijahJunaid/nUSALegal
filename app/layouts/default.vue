@@ -18,7 +18,7 @@
                         
                         <div class="flex lg:hidden">
                             <label for="nusalegal-drawer" aria-label="open sidebar" class="menu-toggle">
-                                <img src="/svg/menu.svg">
+                                <img src="/svg/menu.svg" alt="Menu">
                             </label>
                         </div>
                     </div>
@@ -51,8 +51,8 @@
         <div class="drawer-side">
             <label for="nusalegal-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
             <ul class="menu">
-                <label for="nusalegal-drawer" aria-label="open sidebar" class="menu-toggle">
-                    <img src="/svg/close.svg">
+                <label for="nusalegal-drawer" aria-label="close sidebar" class="menu-toggle">
+                    <img src="/svg/close.svg" alt="Close">
                 </label>
                 <template v-for="(menu, i) in menus" :key="i">
                     <li>

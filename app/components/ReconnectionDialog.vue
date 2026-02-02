@@ -1,10 +1,10 @@
 <template>
-  <div v-if="show" class="reconnection-overlay">
+  <div v-if="show" class="reconnection-overlay" role="dialog" aria-modal="true" aria-labelledby="reconnection-title">
     <div class="reconnection-dialog">
-      <div class="reconnection-icon">
+      <div class="reconnection-icon" aria-hidden="true">
         <span class="spinner">⟳</span>
       </div>
-      <h3>Connection Lost</h3>
+      <h3 id="reconnection-title">Connection Lost</h3>
       <p>Attempting to reconnect to the lobby...</p>
       <div class="reconnection-progress">
         <div class="progress-bar">

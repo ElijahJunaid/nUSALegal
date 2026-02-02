@@ -47,6 +47,10 @@
 </template>
 
 <script lang="ts" setup>
+import { useResourceFileStore } from '~/stores/resource-files-store'
+import { storeToRefs } from 'pinia'
+import { watchEffect, onMounted, onUnmounted } from 'vue'
+
 const props = defineProps<{
     search: string
 }>()

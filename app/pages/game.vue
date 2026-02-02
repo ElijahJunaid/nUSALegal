@@ -35,11 +35,14 @@
           </template>
 
           <template v-if="currentQuestionData?.type === 'text-input'">
+            <label for="answer-input" class="sr-only">Your answer</label>
             <input 
               v-model="textAnswer"
               type="text" 
               id="answer-input"
+              placeholder="Type your answer..."
               @keyup.enter="checkAnswer(textAnswer)"
+              aria-label="Answer input"
             />
             <button id="submit-btn" @click="checkAnswer(textAnswer)">Submit</button>
           </template>

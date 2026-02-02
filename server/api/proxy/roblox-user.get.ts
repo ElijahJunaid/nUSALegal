@@ -1,7 +1,6 @@
 import { defineEventHandler, createError } from 'h3'
 
 export default defineEventHandler(async (event) => {
-    // Parse query manually to avoid h3 compatibility issues
     const url = event.node?.req?.url || ''
     const urlParams = new URLSearchParams(url.split('?')[1])
     const userId = urlParams.get('userId')
@@ -14,7 +13,6 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
-        // Fetch both user info and avatar in parallel with shorter timeout
         const [userResponse, avatarResponse] = await Promise.all([
             fetch(`https://users.roblox.com/v1/users/${userId}`, {
                 headers: { 'Accept': 'application/json' },

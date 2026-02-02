@@ -4,7 +4,7 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
     compatibilityDate: "2025-07-15",
     devtools: { enabled: true },
-    modules: ["@pinia/nuxt"],
+    modules: ["@pinia/nuxt", "@nuxtjs/i18n"],
     srcDir: "app/",
     css: ["~/assets/css/main.css"],
     vite: {
@@ -13,6 +13,7 @@ export default defineNuxtConfig({
             sourcemap: false,
         },
     },
+    // @ts-expect-error Nuxt 4 types not fully stable
     nitro: {
         preset: "netlify",
         devServer: {
@@ -28,8 +29,7 @@ export default defineNuxtConfig({
     typescript: {
         strict: false,
     },
-
-        app: {
+    app: {
         head: {
             meta: [
                 {
@@ -41,9 +41,14 @@ export default defineNuxtConfig({
                     content: "1; mode=block",
                 },
             ],
+            link: [
+                { rel: "preconnect", href: "https://api.openai.com" },
+                { rel: "preconnect", href: "https://cdn.jsdelivr.net" },
+                { rel: "dns-prefetch", href: "https://realtime.ably.io" },
+                { rel: "dns-prefetch", href: "https://rest.ably.io" },
+            ],
         },
     },
-
     runtimeConfig: {
         tokenSecret: process.env.TOKEN_SECRET || "",
         tokenExpiry: process.env.TOKEN_EXPIRY || "5",
