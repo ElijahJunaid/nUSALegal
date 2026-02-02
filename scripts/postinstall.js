@@ -13,6 +13,30 @@ const nitropackCachePath = path.join(__dirname, '../node_modules/nitropack/dist/
 const nitropackUtilsPath = path.join(__dirname, '../node_modules/nitropack/dist/runtime/internal/utils.mjs');
 const nuxtNitroServerPath = path.join(__dirname, '../node_modules/@nuxt/nitro-server/dist/runtime/handlers/error.js');
 
+// Patch Nitro's internal app to handle h3 v2 handlers
+// TEMPORARILY DISABLED - wrapper causing 500 errors
+/*
+const nitroInternalAppPath = path.join(__dirname, '../node_modules/nitropack/dist/runtime/internal/app.mjs');
+if (fs.existsSync(nitroInternalAppPath)) {
+  let content = fs.readFileSync(nitroInternalAppPath, 'utf8');
+  
+  if (!content.includes('h3v2CompatWrapper')) {
+    content = content.replace(
+      /import \{ createApp \} from 'h3';/,
+      "import { createApp, h3v2CompatWrapper } from 'h3';"
+    );
+    
+    content = content.replace(
+      /createApp\(([^)]*)\)/,
+      "createApp($1, { handlerWrapper: h3v2CompatWrapper })"
+    );
+    
+    fs.writeFileSync(nitroInternalAppPath, content);
+    console.log('Patched Nitro internal app to handle h3 v2 handlers');
+  }
+}
+*/
+
 if (fs.existsSync(nitropackCorePath)) {
   let content = fs.readFileSync(nitropackCorePath, 'utf8');
   
