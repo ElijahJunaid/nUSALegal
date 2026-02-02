@@ -6,6 +6,18 @@
 .cache
 dist
 
+# PDF text extraction
+/bills
+/scripts/extract-bills-text.js
+
+# Trello PDF downloads
+/scripts/download-trello-pdfs.js
+
+# Google Drive API credentials and auth
+/scripts/google-credentials.json
+/scripts/google-token.json
+/scripts/google-drive-auth.js
+
 # Node dependencies
 node_modules
 
