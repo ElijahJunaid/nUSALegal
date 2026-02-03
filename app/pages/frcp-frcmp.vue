@@ -87,7 +87,7 @@
                                         @click="showDetail = true; dataDetail = dt" class="card border border-base-300">
                                         <div class="card-body text-center">
                                             <h3 class="text-center font-bold text-xl">{{ dt.title }}</h3>
-                                            <p class="text-center">{{ dt.excerp }}</p>
+                                            <p class="text-center" v-html="dt.excerp"></p>
                                         </div>
                                     </div>
                                 </template>
