@@ -65,6 +65,26 @@
                                     class="input input-bordered w-full" />
                             </div>
 
+                            <div v-if="selectedSection == 'federal'" class="form-control w-full md:w-80">
+                                <select v-model="filterType" class="select select-bordered w-full"
+                                    @change="searchQuery = ''">
+                                    <option value="all">All Federal Criminal Code</option>
+                                    <template v-for="(filter, i) in filterFederalList" :key="i">
+                                        <option :value="i">{{ filter }}</option>
+                                    </template>
+                                </select>
+                            </div>
+
+                            <div v-if="selectedSection == 'eo'" class="form-control w-full md:w-80">
+                                <select v-model="filterType" class="select select-bordered w-full"
+                                    @change="searchQuery = ''">
+                                    <option value="all">All Executive Orders</option>
+                                    <template v-for="(filter, i) in filterEOList" :key="i">
+                                        <option :value="i">{{ filter }}</option>
+                                    </template>
+                                </select>
+                            </div>
+
                             <div v-if="selectedSection == 'municipal'" class="form-control w-full md:w-80">
                                 <select v-model="filterType" class="select select-bordered w-full"
                                     @change="searchQuery = ''">
@@ -108,7 +128,7 @@ definePageMeta({
 })
 
 const { setSection, fetchFederal } = LawsStore;
-const { selectedSection, searchQuery, filterType, filterMunicipalList } = storeToRefs(LawsStore);
+const { selectedSection, searchQuery, filterType, filterMunicipalList, filterFederalList, filterEOList } = storeToRefs(LawsStore);
 
 onMounted(fetchFederal)
 

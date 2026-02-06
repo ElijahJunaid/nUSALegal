@@ -16,7 +16,14 @@
       role="region" 
       aria-label="Chatbot window"
     >
-      <div id="chat-header">🧑‍⚖️ CaseBot</div>
+      <div id="chat-header">
+        <span>🧑‍⚖️ CaseBot</span>
+        <NuxtLink to="/ai-chat" class="expand-btn" title="Open full-page chat">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+          </svg>
+        </NuxtLink>
+      </div>
       
       <div id="chat-messages" ref="messagesContainer" aria-live="polite">
         <div 
@@ -259,12 +266,28 @@ const sendMessage = async () => {
   padding: 12px;
   font-size: 16px;
   font-weight: bold;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   flex-shrink: 0;
 }
 
 [data-theme='dark'] #chat-header {
   background: linear-gradient(135deg, #1e3a8a 0%, #003366 100%);
+}
+
+.expand-btn {
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+  text-decoration: none;
+}
+
+.expand-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 #chat-messages {

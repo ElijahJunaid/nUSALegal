@@ -29,7 +29,14 @@ export const useLawsStore = defineStore('laws-rules', {
     }),
 
     getters: {
-        filterMunicipalList: (state) => {
+        filterFederalList(state): string[] {
+            const categories = [...new Set(state.federal.map(law => (law as any).category || 'Uncategorized'))];
+            return categories.filter(c => c);
+        },
+        filterEOList(): string[] {
+            return ['Administration EO', 'Law Enforcement EO', 'Organizational EO'];
+        },
+        filterMunicipalList(state): string[] {
             let data: MunicipalGroup[] = state.municipal;
 
             return data.map(d => d.label);
@@ -37,6 +44,16 @@ export const useLawsStore = defineStore('laws-rules', {
         },
         filteredLaws: (state) => {
             let data: Law[] = state.selectedSection == 'federal' ? state.federal : state.eo
+
+            if (state.filterType !== 'all') {
+                const categoryIndex = state.filterType as number;
+                const categories = state.selectedSection == 'federal' 
+                    ? [...new Set(state.federal.map(law => (law as any).category || 'Uncategorized'))].filter(c => c)
+                    : [];
+                if (categories[categoryIndex]) {
+                    data = data.filter(law => (law as any).category === categories[categoryIndex]);
+                }
+            }
 
             if (state.searchQuery.trim()) {
                 const query = state.searchQuery.toLowerCase()

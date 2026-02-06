@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 interface CourtCase {
     title: string
     description: string
+    ruling?: string
     type: string
     docket: string
     citation: string

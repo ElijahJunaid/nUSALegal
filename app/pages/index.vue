@@ -10,7 +10,14 @@
         <section class="p-8">
             <div class="w-full max-w-4xl mx-auto">
                 <div class="card shadow-xl bg-base-100 mb-8">
+                    <div class="card-body p-8">
+                        <EnhancedSearch />
+                    </div>
+                </div>
+
+                <div class="card shadow-xl bg-base-100 mb-8">
                     <div class="card-body p-12">
+                        <h3 class="text-2xl font-bold text-center mb-6">Quick Navigation</h3>
                         <div class="grid md:grid-cols-2 gap-8">
                             <ButtonLink class="btn-accent" to="/courts">Courts</ButtonLink>
                             <ButtonLink class="btn-accent" to="/bills">Bills</ButtonLink>

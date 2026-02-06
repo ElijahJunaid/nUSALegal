@@ -35,6 +35,24 @@
                             }">
                                 nUSA Legal VIPS
                             </button>
+                            <button @click="selected = 'citation'" class="btn" :class="{
+                                'btn-primary': selected === 'citation',
+                                'btn-outline': selected !== 'citation'
+                            }">
+                                Citation Generator
+                            </button>
+                            <button @click="selected = 'jury'" class="btn" :class="{
+                                'btn-primary': selected === 'jury',
+                                'btn-outline': selected !== 'jury'
+                            }">
+                                Jury Instructions
+                            </button>
+                            <button @click="selected = 'sentencing'" class="btn" :class="{
+                                'btn-primary': selected === 'sentencing',
+                                'btn-outline': selected !== 'sentencing'
+                            }">
+                                Sentencing Calculator
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -76,13 +94,31 @@
                             }">
                                 nUSA Legal VIPS
                             </button>
+                            <button @click="selected = 'citation'" class="btn" :class="{
+                                'btn-primary': selected === 'citation',
+                                'btn-outline': selected !== 'citation'
+                            }">
+                                Citation Generator
+                            </button>
+                            <button @click="selected = 'jury'" class="btn" :class="{
+                                'btn-primary': selected === 'jury',
+                                'btn-outline': selected !== 'jury'
+                            }">
+                                Jury Instructions
+                            </button>
+                            <button @click="selected = 'sentencing'" class="btn" :class="{
+                                'btn-primary': selected === 'sentencing',
+                                'btn-outline': selected !== 'sentencing'
+                            }">
+                                Sentencing Calculator
+                            </button>
                         </div>
 
                         <h2 class="section-title capitalize text-center">
-                            {{ selected === 'office' ? 'Defense' : selected.replaceAll('-', ' ') }}
+                            {{ selected === 'office' ? 'Defense' : selected === 'citation' ? 'Citation Generator' : selected === 'jury' ? 'Jury Instructions' : selected === 'sentencing' ? 'Sentencing Calculator' : selected.replaceAll('-', ' ') }}
                         </h2>
 
-                        <div class="search-filter">
+                        <div class="search-filter" v-if="!['citation', 'jury', 'sentencing'].includes(selected)">
                             
                             <div class="form-control flex-1">
                                 <input v-model="searchQuery" type="text"
@@ -98,6 +134,9 @@
                             @reset_search="searchQuery = ''" />
                         <LazyResourcesVips v-if="selected === 'vips'" :search="searchQuery"
                             @reset_search="searchQuery = ''" />
+                        <LazyResourcesCitation v-if="selected === 'citation'" />
+                        <LazyResourcesJury v-if="selected === 'jury'" />
+                        <LazyResourcesSentencing v-if="selected === 'sentencing'" />
                     </div>
                 </div>
             </section>
@@ -117,7 +156,10 @@ const selected = ref<
     'files' |
     'court-procedure' |
     'office' |
-    'vips'
+    'vips' |
+    'citation' |
+    'jury' |
+    'sentencing'
 >('definition')
 
 const searchQuery = ref<string>('')

@@ -63,6 +63,7 @@ export default defineNuxtConfig({
         public: {
             isShutdown: false,
             shutdownPage: "/shutdown",
+            statusAdminKey: process.env.STATUS_ADMIN_KEY || "",
             sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN || "",
             environment:
                 process.env.NUXT_PUBLIC_ENVIRONMENT ||

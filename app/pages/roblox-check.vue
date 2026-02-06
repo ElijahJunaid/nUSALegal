@@ -70,13 +70,6 @@
         </div>
       </div>
     </div>
-    <button 
-      class="theme-toggle" 
-      @click="toggleTheme" 
-      :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
-    >
-      {{ isDark ? '☀️' : '🌙' }}
-    </button>
   </div>
 </template>
 
@@ -88,7 +81,6 @@ const loading = ref(false)
 const error = ref('')
 const result = ref<any>(null)
 const showProfile = ref(false)
-const isDark = ref(false)
 
 interface Assessment {
   result: string
@@ -217,22 +209,6 @@ function getStatusColor(status: string): string {
 function toggleProfile() {
   showProfile.value = !showProfile.value
 }
-
-function toggleTheme() {
-  isDark.value = !isDark.value
-  const newTheme = isDark.value ? 'dark' : 'light'
-  document.documentElement.setAttribute('data-theme', newTheme)
-  localStorage.setItem('theme', newTheme)
-}
-
-onMounted(() => {
-  
-  const savedTheme = localStorage.getItem('theme')
-  if (savedTheme) {
-    isDark.value = savedTheme === 'dark'
-    document.documentElement.setAttribute('data-theme', savedTheme)
-  }
-})
 </script>
 
 <style scoped>
@@ -353,26 +329,6 @@ onMounted(() => {
 .badge-count {
   font-weight: bold;
   color: #1976d2;
-}
-
-.theme-toggle {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: none;
-  background: #1976d2;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-  z-index: 1000;
-}
-
-.theme-toggle:hover {
-  background: #1565c0;
 }
 
 [data-theme="dark"] .search-container {
