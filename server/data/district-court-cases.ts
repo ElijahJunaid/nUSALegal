@@ -1,0 +1,72 @@
+export const districtCourtCases = [
+  {
+    caseNumber: "DC-2024-001",
+    title: "State of nUSA v. Johnson",
+    plaintiff: "State of nUSA",
+    defendant: "Marcus Johnson",
+    charge: "Assault",
+    outcome: "Guilty",
+    sentence: "18 months imprisonment",
+    judge: "Hon. Patricia Davis",
+    prosecutor: "Alex Morrison",
+    defense: "Jessica Williams",
+    date: "2024-01-15",
+    summary: "Defendant was found guilty of assault following a bar fight. Evidence included witness testimony and security camera footage."
+  },
+  {
+    caseNumber: "DC-2024-002",
+    title: "State of nUSA v. Martinez",
+    plaintiff: "State of nUSA",
+    defendant: "Carlos Martinez",
+    charge: "Theft",
+    outcome: "Guilty",
+    sentence: "2 years probation, restitution of $3,500",
+    judge: "Hon. John Mitchell",
+    prosecutor: "Sarah Chen",
+    defense: "Robert Taylor",
+    date: "2024-01-22",
+    summary: "Defendant pled guilty to theft of government property. Accepted responsibility and agreed to restitution terms."
+  },
+  {
+    caseNumber: "DC-2024-003",
+    title: "State of nUSA v. Thompson",
+    plaintiff: "State of nUSA",
+    defendant: "Emily Thompson",
+    charge: "Drug Possession",
+    outcome: "Not Guilty",
+    sentence: "N/A",
+    judge: "Hon. Maria Santos",
+    prosecutor: "Michael Rodriguez",
+    defense: "Amanda Garcia",
+    date: "2024-02-03",
+    summary: "Defendant was acquitted after defense successfully argued illegal search and seizure. Evidence was suppressed."
+  },
+  {
+    caseNumber: "DC-2024-004",
+    title: "State of nUSA v. Williams",
+    plaintiff: "State of nUSA",
+    defendant: "David Williams",
+    charge: "Robbery",
+    outcome: "Guilty",
+    sentence: "5 years imprisonment",
+    judge: "Hon. William Brown",
+    prosecutor: "Emily Thompson",
+    defense: "James Anderson",
+    date: "2024-02-10",
+    summary: "Defendant convicted of armed robbery. Multiple witnesses identified defendant, and stolen property was recovered."
+  },
+  {
+    caseNumber: "DC-2024-005",
+    title: "State of nUSA v. Anderson",
+    plaintiff: "State of nUSA",
+    defendant: "Lisa Anderson",
+    charge: "Assault",
+    outcome: "Dismissed",
+    sentence: "N/A",
+    judge: "Hon. Jennifer Lee",
+    prosecutor: "David Park",
+    defense: "Lisa Martinez",
+    date: "2024-02-17",
+    summary: "Case dismissed due to insufficient evidence. Key witness failed to appear and prosecution could not meet burden of proof."
+  }
+]

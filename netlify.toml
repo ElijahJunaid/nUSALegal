@@ -1,0 +1,78 @@
+# Netlify Configuration for Nuxt 3 Deployment
+# Documentation: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+# Build command for Nuxt with nitropack compilation
+command = """
+    npm install &&
+    npm run build
+"""
+
+# Publish directory (Nuxt outputs to .output/public)
+publish = "dist"
+
+# Functions directory for Nuxt server routes (production only)
+functions = ".netlify/functions-internal/server"
+
+[build.environment]
+# Node version for build
+NODE_VERSION = "24"
+
+# Enable Node.js modules
+NODE_OPTIONS = "--max-old-space-size=4096"
+
+# Database URL for SQLite (ponto para o arquivo criado durante o build)
+DATABASE_URL = "file:./prisma/dev.db"
+
+ALLOWED_ORIGINS = "https://nusalegal.com,https://www.nusalegal.com,https://new-usa.netlify.app,https://www.new-usa.netlify.app,http://localhost:3001,http://127.0.0.1:3001,http://localhost:8888,http://127.0.0.1:8888,http://localhost:8889,http://127.0.0.1:8889"
+
+# Netlify Dev (local development)
+[dev]
+port = 8888
+targetPort = 3001
+autoLaunch = false
+
+# NOTE: Do NOT add a global redirect for /api/* to localhost - it would break production.
+# netlify dev handles API proxying via targetPort automatically.
+
+# Headers for security and performance
+[[headers]]
+for = "/*"
+[headers.values]
+# Security headers
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+X-XSS-Protection = "1; mode=block"
+Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Content Security Policy
+Content-Security-Policy = "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://p.trellocdn.com; connect-src 'self' ws: wss: https://o4510700106416128.ingest.us.sentry.io https://users.roblox.com https://www.roblox.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; default-src 'self';"
+
+# Redirects (if needed)
+# Uncomment and modify as needed
+
+# Redirect API routes to Nuxt server functions
+# [[redirects]]
+#   from = "/api/*"
+#   to = "/.netlify/functions/:splat"
+#   status = 200
+
+# Redirect old routes (example)
+# [[redirects]]
+#   from = "/old-path"
+#   to = "/new-path"
+#   status = 301
+
+# SPA fallback for client-side routing
+# Only applies in production (not in dev mode)
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+force = false
+
+[functions]
+
+# Optional:
+# NUXT_PUBLIC_IS_SHUTDOWN=false
+# ALLOWED_ORIGINS=https://nusalegal.com

@@ -1,0 +1,44 @@
+name: Deploy to Production
+
+on:
+    push:
+        branches:
+            - main
+            - master
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+
+            - name: Setup Deno
+              uses: denoland/setup-deno@v1
+              with:
+                  deno-version: v1.x
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Rebuild native bindings
+              run: npm rebuild
+
+            - name: Build Nuxt app
+              run: npm run build
+              env:
+                  NODE_ENV: production
+
+            - name: Deploy to Netlify
+              run: npx netlify-cli@16.0.0 deploy --prod-if-unlocked --dir=server
+              env:
+                  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+                  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

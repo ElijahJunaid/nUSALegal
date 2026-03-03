@@ -1,0 +1,63 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# PDF text extraction
+/bills
+/scripts/extract-bills-text.js
+
+# Trello PDF downloads
+/scripts/download-trello-pdfs.js
+
+# Google Drive API credentials and auth
+/scripts/google-credentials.json
+/scripts/google-token.json
+/scripts/google-drive-auth.js
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Generated Prisma
+/app/generated/prisma
+
+# Database backups
+backups/
+scripts/backups/
+*.sql
+*.sql.gz
+*.sql.zip
+*.db.backup
+
+# Database
+*.db
+*.db-journal
+prisma/migrations/
+# Local Netlify folder
+.netlify
+next-server
+
+# Development-only scripts (never commit these)
+scripts/dev-health-check.js
+scripts/dev-health-check.cjs
+scripts/upload-pdfs-to-blobs.js
+
+# Reports
+reports/

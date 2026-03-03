@@ -1,0 +1,72 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "retry": "Retry"
+  },
+  "navigation": {
+    "home": "Home",
+    "bills": "Bills",
+    "laws": "Laws",
+    "courts": "Courts",
+    "resources": "Resources",
+    "mockTrial": "Mock Trial",
+    "status": "Status",
+    "dashboard": "Dashboard"
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "serverError": "Server error occurred",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "badRequest": "Bad request",
+    "networkError": "Network error"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "invalidFormat": "Invalid format",
+    "tooShort": "Too short",
+    "tooLong": "Too long"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "operational": "Operational",
+    "degraded": "Degraded",
+    "down": "Down",
+    "maintenance": "Maintenance"
+  },
+  "health": {
+    "title": "System Status Dashboard",
+    "subtitle": "Monitor system health and performance metrics",
+    "uptime": "Uptime",
+    "responseTime": "Response Time",
+    "healthCheck": "Health Check",
+    "environment": "Environment",
+    "serviceStatus": "Service Status",
+    "refresh": "Refresh Status"
+  },
+  "metrics": {
+    "requests": "Requests",
+    "errors": "Errors",
+    "apiCalls": "API Calls",
+    "database": "Database",
+    "total": "Total",
+    "average": "Average",
+    "duration": "Duration"
+  }
+}
