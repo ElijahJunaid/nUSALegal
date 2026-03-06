@@ -26,7 +26,7 @@ export const useConstitutionStore = defineStore('constitution', {
         constitution: [] as Constitution[],
         constitutionAmendments: [] as Constitution[],
         constitutionLoaded: false,
-        constitutionAmandmentsLoaded: false,
+        constitutionAmendmentsLoaded: false,
         loading: false,
         error: null as string | null,
     }),
@@ -49,8 +49,8 @@ export const useConstitutionStore = defineStore('constitution', {
 
             if (section === 'constitution' && !this.constitutionLoaded) {
                 await this.fetchConstitution()
-            } else if (section === 'constitution-amendments' && !this.constitutionAmandmentsLoaded) {
-                await this.fetchConstitutionAmandments()
+            } else if (section === 'constitution-amendments' && !this.constitutionAmendmentsLoaded) {
+                await this.fetchConstitutionAmendments()
             }
         },
 
@@ -81,8 +81,8 @@ export const useConstitutionStore = defineStore('constitution', {
                 this.loading = false
             }
         },
-        async fetchConstitutionAmandments() {
-            if (this.constitutionAmandmentsLoaded) {
+        async fetchConstitutionAmendments() {
+            if (this.constitutionAmendmentsLoaded) {
                 return
             }
 
@@ -92,19 +92,19 @@ export const useConstitutionStore = defineStore('constitution', {
             try {
                 const tokenResponse = await $fetch<{ token: string; expiresIn: string }>('/api/auth/token', {
                     method: 'POST',
-                    body: { endpoint: 'constitution/constitution-amandments' }
+                    body: { endpoint: 'constitution/constitution-amendments' }
                 })
-                const data = await $fetch<Constitution[]>('/api/constitution/constitution-amandments', {
+                const data = await $fetch<Constitution[]>('/api/constitution/constitution-amendments', {
                     headers: {
                         Authorization: `Bearer ${tokenResponse.token}`
                     }
                 })
 
                 this.constitutionAmendments = data
-                this.constitutionAmandmentsLoaded = true
+                this.constitutionAmendmentsLoaded = true
             } catch (err: any) {
-                this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch Constitution Amandments'
-                console.error('Failed to fetch Constitution Amandments:', err)
+                this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch Constitution Amendments'
+                console.error('Failed to fetch Constitution Amendments:', err)
             } finally {
                 this.loading = false
             }

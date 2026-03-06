@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         console.log("🔐 [DEBUG] Validating API access...");
-        validateApiAccess(event, "constitution/constitution-amandments");
+        validateApiAccess(event, "constitution/constitution-amendments");
         console.log("✅ [DEBUG] API access validated");
 
         const result = constitutionAmendments.map((amendment) => ({

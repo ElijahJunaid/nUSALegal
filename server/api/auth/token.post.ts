@@ -276,6 +276,7 @@ export default defineEventHandler(async (event) => {
         }
 
         const allowedEndpoints = [
+            'global-search',
             'bills/congress',
             'bills/city-council',
             'district-court',

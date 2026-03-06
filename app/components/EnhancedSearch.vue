@@ -95,8 +95,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useApiToken } from '~/composables/useApiToken'
 
 const router = useRouter()
+const { getToken } = useApiToken()
 
 const searchQuery = ref('')
 const selectedCategory = ref('all')
@@ -131,7 +133,11 @@ const performSearch = async () => {
   isSearching.value = true
   
   try {
+    const token = await getToken('global-search')
     const results = await $fetch('/api/global-search', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
       params: {
         q: searchQuery.value,
         category: selectedCategory.value
