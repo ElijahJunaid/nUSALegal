@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+if [ -f "package.json" ] && grep -q '"test"' package.json; then
+  echo "Running tests before push..."
+  npm test
+fi
+
+if [ -f "package.json" ] && grep -q '"build"' package.json; then
+  echo "Running build check before push..."
+  npm run build
+fi
+
+echo "Pre-push checks completed!"
