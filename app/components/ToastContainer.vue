@@ -7,6 +7,11 @@
         class="toast"
         :class="`toast-${toast.type}`"
         @click="remove(toast.id)"
+        @keydown.enter="remove(toast.id)"
+        @keydown.space="remove(toast.id)"
+        role="alert"
+        tabindex="0"
+        :aria-label="`${toast.type}: ${toast.message}`"
       >
         <div class="toast-icon">
           <span v-if="toast.type === 'success'">✓</span>
@@ -15,7 +20,13 @@
           <span v-else>ℹ</span>
         </div>
         <div class="toast-message">{{ toast.message }}</div>
-        <button class="toast-close" @click.stop="remove(toast.id)">×</button>
+        <button 
+          class="toast-close" 
+          @click.stop="remove(toast.id)"
+          @keydown.enter.stop="remove(toast.id)"
+          @keydown.space.stop="remove(toast.id)"
+          aria-label="Close notification"
+        >×</button>
       </div>
     </TransitionGroup>
   </div>
@@ -105,7 +116,9 @@ const { toasts, remove } = useToast()
 }
 
 [data-theme='dark'] .toast {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 212, 255, 0.1);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(0, 212, 255, 0.1);
 }
 
 [data-theme='dark'] .toast-success {
@@ -162,7 +175,7 @@ const { toasts, remove } = useToast()
     left: 10px;
     max-width: none;
   }
-  
+
   .toast {
     min-width: auto;
   }

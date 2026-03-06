@@ -5,22 +5,26 @@
       <p class="subtitle">Analytics, trends, and performance metrics from the legal system</p>
 
       <div class="tabs">
-        <button 
-          v-for="tab in tabs" 
+        <button
+          v-for="tab in tabs"
           :key="tab.id"
           @click="activeTab = tab.id"
+          @keydown.enter="activeTab = tab.id"
+          @keydown.space="activeTab = tab.id"
           :class="{ active: activeTab === tab.id }"
           class="tab-button"
+          :aria-label="`View ${tab.label} tab`"
+          :aria-pressed="activeTab === tab.id"
+          role="tab"
         >
           {{ tab.label }}
         </button>
       </div>
 
       <div class="tab-content">
-        <!-- Case Statistics Tab -->
         <div v-if="activeTab === 'cases'" class="stats-section">
           <h2>Case Statistics</h2>
-          
+
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-value">{{ caseStats.totalCases }}</div>
@@ -43,17 +47,10 @@
           <div class="chart-section">
             <h3>Most Common Charges</h3>
             <div class="chart-container">
-              <div 
-                v-for="charge in topCharges" 
-                :key="charge.name"
-                class="bar-chart-row"
-              >
+              <div v-for="charge in topCharges" :key="charge.name" class="bar-chart-row">
                 <div class="charge-name">{{ charge.name }}</div>
                 <div class="bar-wrapper">
-                  <div 
-                    class="bar" 
-                    :style="{ width: charge.percentage + '%' }"
-                  ></div>
+                  <div class="bar" :style="{ width: charge.percentage + '%' }"></div>
                   <span class="bar-label">{{ charge.count }} cases</span>
                 </div>
               </div>
@@ -63,8 +60,8 @@
           <div class="chart-section">
             <h3>Case Outcomes</h3>
             <div class="outcome-grid">
-              <div 
-                v-for="outcome in caseOutcomes" 
+              <div
+                v-for="outcome in caseOutcomes"
                 :key="outcome.type"
                 class="outcome-card"
                 :style="{ borderColor: outcome.color }"
@@ -79,7 +76,6 @@
           </div>
         </div>
 
-        <!-- Legal Analytics Tab -->
         <div v-if="activeTab === 'analytics'" class="stats-section">
           <h2>Legal Analytics</h2>
 
@@ -87,15 +83,11 @@
             <div class="analytics-card">
               <h3>Prosecution Success Rates by Department</h3>
               <div class="dept-stats">
-                <div 
-                  v-for="dept in departmentStats" 
-                  :key="dept.name"
-                  class="dept-row"
-                >
+                <div v-for="dept in departmentStats" :key="dept.name" class="dept-row">
                   <span class="dept-name">{{ dept.name }}</span>
                   <div class="progress-bar">
-                    <div 
-                      class="progress-fill" 
+                    <div
+                      class="progress-fill"
                       :style="{ width: dept.winRate + '%', background: dept.color }"
                     ></div>
                   </div>
@@ -107,18 +99,12 @@
             <div class="analytics-card">
               <h3>Common Defense Strategies</h3>
               <div class="defense-list">
-                <div 
-                  v-for="defense in commonDefenses" 
-                  :key="defense.strategy"
-                  class="defense-item"
-                >
+                <div v-for="defense in commonDefenses" :key="defense.strategy" class="defense-item">
                   <div class="defense-header">
                     <span class="defense-name">{{ defense.strategy }}</span>
                     <span class="defense-success">{{ defense.successRate }}% success</span>
                   </div>
-                  <div class="defense-usage">
-                    Used {{ defense.timesUsed }} times
-                  </div>
+                  <div class="defense-usage">Used {{ defense.timesUsed }} times</div>
                 </div>
               </div>
             </div>
@@ -126,16 +112,27 @@
             <div class="analytics-card full-width">
               <h3>Sentencing Trends</h3>
               <div class="trend-info">
-                <p><strong>Average Sentence Length:</strong> {{ sentencingTrends.avgLength }} months</p>
-                <p><strong>Most Common Sentence:</strong> {{ sentencingTrends.mostCommon }}</p>
-                <p><strong>Plea Bargain Rate:</strong> {{ sentencingTrends.pleaRate }}%</p>
-                <p><strong>Appeal Success Rate:</strong> {{ sentencingTrends.appealRate }}%</p>
+                <p>
+                  <strong>Average Sentence Length:</strong>
+                  {{ sentencingTrends.avgLength }} months
+                </p>
+                <p>
+                  <strong>Most Common Sentence:</strong>
+                  {{ sentencingTrends.mostCommon }}
+                </p>
+                <p>
+                  <strong>Plea Bargain Rate:</strong>
+                  {{ sentencingTrends.pleaRate }}%
+                </p>
+                <p>
+                  <strong>Appeal Success Rate:</strong>
+                  {{ sentencingTrends.appealRate }}%
+                </p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Leaderboard Tab -->
         <div v-if="activeTab === 'leaderboard'" class="stats-section">
           <h2>Leaderboards</h2>
 
@@ -143,8 +140,8 @@
             <div class="leaderboard-card">
               <h3>🏆 Top Prosecutors</h3>
               <div class="leaderboard-list">
-                <div 
-                  v-for="(attorney, index) in topProsecutors" 
+                <div
+                  v-for="(attorney, index) in topProsecutors"
                   :key="attorney.name"
                   class="leaderboard-item"
                   :class="{ 'top-three': index < 3 }"
@@ -161,8 +158,8 @@
             <div class="leaderboard-card">
               <h3>⚖️ Top Defense Attorneys</h3>
               <div class="leaderboard-list">
-                <div 
-                  v-for="(attorney, index) in topDefense" 
+                <div
+                  v-for="(attorney, index) in topDefense"
                   :key="attorney.name"
                   class="leaderboard-item"
                   :class="{ 'top-three': index < 3 }"
@@ -179,11 +176,7 @@
             <div class="leaderboard-card">
               <h3>👨‍⚖️ Most Active Judges</h3>
               <div class="leaderboard-list">
-                <div 
-                  v-for="(judge, index) in topJudges" 
-                  :key="judge.name"
-                  class="leaderboard-item"
-                >
+                <div v-for="(judge, index) in topJudges" :key="judge.name" class="leaderboard-item">
                   <span class="rank">{{ index + 1 }}</span>
                   <span class="attorney-name">{{ judge.name }}</span>
                   <span class="attorney-stats">{{ judge.casesPresided }} cases</span>
@@ -194,8 +187,8 @@
             <div class="leaderboard-card">
               <h3>🔥 Most Active Departments</h3>
               <div class="leaderboard-list">
-                <div 
-                  v-for="(dept, index) in mostActiveDepts" 
+                <div
+                  v-for="(dept, index) in mostActiveDepts"
                   :key="dept.name"
                   class="leaderboard-item"
                 >
@@ -252,8 +245,8 @@ const mostActiveDepts = ref([])
 
 onMounted(async () => {
   try {
-    const data = await $fetch('/api/statistics') as any
-    
+    const data = (await $fetch('/api/statistics')) as any
+
     caseStats.value = data.caseStats
     topCharges.value = data.topCharges
     caseOutcomes.value = data.caseOutcomes
@@ -610,11 +603,11 @@ h1 {
   .analytics-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .leaderboard-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .tabs {
     flex-direction: column;
   }

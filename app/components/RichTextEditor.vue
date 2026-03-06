@@ -1,68 +1,93 @@
 <template>
   <div class="border rounded-lg overflow-hidden">
-    
     <div v-if="editor" class="flex gap-1 p-2 border-b bg-base-200">
-      <button 
+      <button
         type="button"
         @click="editor.chain().focus().toggleBold().run()"
+        @keydown.enter="editor.chain().focus().toggleBold().run()"
+        @keydown.space="editor.chain().focus().toggleBold().run()"
         :class="{ 'bg-primary text-primary-content': editor.isActive('bold') }"
         class="btn btn-xs btn-ghost"
         title="Bold"
+        aria-label="Toggle bold text"
+        :aria-pressed="editor.isActive('bold')"
       >
         <Icon name="lucide:bold" class="w-4 h-4" />
       </button>
-      <button 
+      <button
         type="button"
         @click="editor.chain().focus().toggleItalic().run()"
+        @keydown.enter="editor.chain().focus().toggleItalic().run()"
+        @keydown.space="editor.chain().focus().toggleItalic().run()"
         :class="{ 'bg-primary text-primary-content': editor.isActive('italic') }"
         class="btn btn-xs btn-ghost"
         title="Italic"
+        aria-label="Toggle italic text"
+        :aria-pressed="editor.isActive('italic')"
       >
         <Icon name="lucide:italic" class="w-4 h-4" />
       </button>
-      <button 
+      <button
         type="button"
         @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+        @keydown.enter="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+        @keydown.space="editor.chain().focus().toggleHeading({ level: 2 }).run()"
         :class="{ 'bg-primary text-primary-content': editor.isActive('heading', { level: 2 }) }"
         class="btn btn-xs btn-ghost"
         title="Heading"
+        aria-label="Toggle heading level 2"
+        :aria-pressed="editor.isActive('heading', { level: 2 })"
       >
         <Icon name="lucide:heading-2" class="w-4 h-4" />
       </button>
-      <button 
+      <button
         type="button"
         @click="editor.chain().focus().toggleBulletList().run()"
+        @keydown.enter="editor.chain().focus().toggleBulletList().run()"
+        @keydown.space="editor.chain().focus().toggleBulletList().run()"
         :class="{ 'bg-primary text-primary-content': editor.isActive('bulletList') }"
         class="btn btn-xs btn-ghost"
         title="Bullet List"
+        aria-label="Toggle bullet list"
+        :aria-pressed="editor.isActive('bulletList')"
       >
         <Icon name="lucide:list" class="w-4 h-4" />
       </button>
-      <button 
+      <button
         type="button"
         @click="editor.chain().focus().toggleOrderedList().run()"
+        @keydown.enter="editor.chain().focus().toggleOrderedList().run()"
+        @keydown.space="editor.chain().focus().toggleOrderedList().run()"
         :class="{ 'bg-primary text-primary-content': editor.isActive('orderedList') }"
         class="btn btn-xs btn-ghost"
         title="Numbered List"
+        aria-label="Toggle ordered list"
+        :aria-pressed="editor.isActive('orderedList')"
       >
         <Icon name="lucide:list-ordered" class="w-4 h-4" />
       </button>
       <div class="divider divider-horizontal"></div>
-      <button 
+      <button
         type="button"
         @click="editor.chain().focus().undo().run()"
+        @keydown.enter="editor.chain().focus().undo().run()"
+        @keydown.space="editor.chain().focus().undo().run()"
         :disabled="!editor.can().undo()"
         class="btn btn-xs btn-ghost"
         title="Undo"
+        aria-label="Undo last action"
       >
         <Icon name="lucide:undo" class="w-4 h-4" />
       </button>
-      <button 
+      <button
         type="button"
         @click="editor.chain().focus().redo().run()"
+        @keydown.enter="editor.chain().focus().redo().run()"
+        @keydown.space="editor.chain().focus().redo().run()"
         :disabled="!editor.can().redo()"
         class="btn btn-xs btn-ghost"
         title="Redo"
+        aria-label="Redo last action"
       >
         <Icon name="lucide:redo" class="w-4 h-4" />
       </button>
@@ -91,7 +116,7 @@ const editor = useEditor({
   extensions: [
     StarterKit,
     Link.configure({
-      openOnClick: false,
+      openOnClick: false
     })
   ],
   content: props.modelValue || '',
@@ -105,11 +130,14 @@ const editor = useEditor({
   }
 })
 
-watch(() => props.modelValue, (value) => {
-  if (editor.value && value !== editor.value.getHTML()) {
-    editor.value.commands.setContent(value || '')
+watch(
+  () => props.modelValue,
+  value => {
+    if (editor.value && value !== editor.value.getHTML()) {
+      editor.value.commands.setContent(value || '')
+    }
   }
-})
+)
 
 onBeforeUnmount(() => {
   editor.value?.destroy()

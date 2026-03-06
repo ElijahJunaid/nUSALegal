@@ -26,16 +26,24 @@ const bannedGroups = {
   severeBans: [] as number[],
   minorBans: [] as number[],
   limitedGroups: [
-    3130067, 3842918, 761943, 905999, 816616, 759572,
-    766074, 761141, 977773, 761706, 2900057, 792297,
-    761515, 860594, 1252274, 845643
+    3130067, 3842918, 761943, 905999, 816616, 759572, 766074, 761141, 977773, 761706, 2900057,
+    792297, 761515, 860594, 1252274, 845643
   ],
   limitedRanks: [] as string[],
   excludedRanks: [
-    "Suspended", "Vice President", "President", "Community Oversight",
-    "Founder", "Protectee", "American Online", "Agency Oversight",
-    "Foreign Leader", "Department Oversight", "Representative",
-    "Oversight Staff", "Business Owners"
+    'Suspended',
+    'Vice President',
+    'President',
+    'Community Oversight',
+    'Founder',
+    'Protectee',
+    'American Online',
+    'Agency Oversight',
+    'Foreign Leader',
+    'Department Oversight',
+    'Representative',
+    'Oversight Staff',
+    'Business Owners'
   ]
 }
 
@@ -53,7 +61,6 @@ export async function checkGroupBans(groups: RobloxGroup[]): Promise<GroupBanRes
   }
 
   for (const group of groups) {
-    
     if (bannedGroups.severeBans.includes(group.Id)) {
       results.hasSevereBans = true
       results.severeBanGroups.push({

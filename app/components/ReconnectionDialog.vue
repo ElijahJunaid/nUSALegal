@@ -1,5 +1,11 @@
 <template>
-  <div v-if="show" class="reconnection-overlay" role="dialog" aria-modal="true" aria-labelledby="reconnection-title">
+  <div
+    v-if="show"
+    class="reconnection-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="reconnection-title"
+  >
     <div class="reconnection-dialog">
       <div class="reconnection-icon" aria-hidden="true">
         <span class="spinner">⟳</span>
@@ -8,19 +14,20 @@
       <p>Attempting to reconnect to the lobby...</p>
       <div class="reconnection-progress">
         <div class="progress-bar">
-          <div 
-            class="progress-fill" 
-            :style="{ width: `${(countdown / 10) * 100}%` }"
-          ></div>
+          <div class="progress-fill" :style="{ width: `${(countdown / 10) * 100}%` }"></div>
         </div>
         <div class="reconnection-info">
           <span>Attempt {{ attempts }}/3</span>
           <span>{{ countdown }}s remaining</span>
         </div>
       </div>
-      <button class="cancel-button" @click="$emit('cancel')">
-        Return to Lobby Selection
-      </button>
+      <button 
+        class="cancel-button" 
+        @click="$emit('cancel')"
+        @keydown.enter="$emit('cancel')"
+        @keydown.space="$emit('cancel')"
+        aria-label="Cancel reconnection and return to lobby selection"
+      >Return to Lobby Selection</button>
     </div>
   </div>
 </template>

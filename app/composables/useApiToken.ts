@@ -1,50 +1,50 @@
 interface CachedToken {
-  token: string;
-  expiresAt: number;
-  endpoint: string;
+  token: string
+  expiresAt: number
+  endpoint: string
 }
 
-const tokenCache = new Map<string, CachedToken>();
+const tokenCache = new Map<string, CachedToken>()
 
 export function useApiToken() {
   const getToken = async (endpoint: string): Promise<string> => {
-    const cached = tokenCache.get(endpoint);
+    const cached = tokenCache.get(endpoint)
 
     if (cached && cached.expiresAt > Date.now() + 30000) {
-      return cached.token;
+      return cached.token
     }
 
     try {
-      const response = await $fetch('/api/auth/token', {
+      const response = (await $fetch('/api/auth/token', {
         method: 'POST',
         body: { endpoint }
-      }) as { token: string; expiresIn: string };
+      })) as { token: string; expiresIn: string }
 
       const cachedToken: CachedToken = {
         token: response.token,
-        expiresAt: Date.now() + (4 * 60 * 1000),
+        expiresAt: Date.now() + 4 * 60 * 1000,
         endpoint
-      };
+      }
 
-      tokenCache.set(endpoint, cachedToken);
+      tokenCache.set(endpoint, cachedToken)
 
-      return response.token;
+      return response.token
     } catch (error) {
-      console.error('Failed to get API token:', error);
-      throw error;
+      console.error('Failed to get API token:', error)
+      throw error
     }
-  };
+  }
 
   const clearCache = (endpoint?: string) => {
     if (endpoint) {
-      tokenCache.delete(endpoint);
+      tokenCache.delete(endpoint)
     } else {
-      tokenCache.clear();
+      tokenCache.clear()
     }
-  };
+  }
 
   return {
     getToken,
     clearCache
-  };
+  }
 }

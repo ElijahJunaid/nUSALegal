@@ -18,7 +18,7 @@ async function getFriendCount(userId: number): Promise<number | null> {
   }
 }
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const url = event.node?.req?.url || ''
   const urlObj = new URL(url, `http://${event.node?.req?.headers?.host || 'localhost'}`)
   const username = urlObj.searchParams.get('username') as string
@@ -40,7 +40,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    
     const userId = await noblox.getIdFromUsername(username).catch(() => {
       throw new Error('User not found')
     })
@@ -53,7 +52,7 @@ export default defineEventHandler(async (event) => {
     ])
 
     let groupBanResults: Awaited<ReturnType<typeof checkGroupBans>>
-    
+
     try {
       groupBanResults = await checkGroupBans(groups)
     } catch (err) {
@@ -72,7 +71,9 @@ export default defineEventHandler(async (event) => {
     }
 
     const nusaGroup = groups.find((g: any) => g.Id === 758071) || null
-    const nusaRank = nusaGroup ? await noblox.getRankInGroup(758071, userId).catch(() => null) : null
+    const nusaRank = nusaGroup
+      ? await noblox.getRankInGroup(758071, userId).catch(() => null)
+      : null
     const isFederalPrisoner = nusaGroup?.Role === 'Federal Prisoner'
 
     const trelloResults = await checkTrelloBoards(userInfo.username).catch(error => {
@@ -104,16 +105,19 @@ export default defineEventHandler(async (event) => {
         group_name: g.Name,
         role_name: g.Role
       })),
-      nusa_info: nusaGroup ? {
-        rank: nusaRank,
-        role: nusaGroup.Role
-      } : null,
+      nusa_info: nusaGroup
+        ? {
+            rank: nusaRank,
+            role: nusaGroup.Role
+          }
+        : null,
       federal_prisoner: isFederalPrisoner,
       trello_checks: {
         property_bans: [...(trelloResults.severeBans || []), ...(trelloResults.minorBans || [])],
         department_blacklists: trelloResults.blacklists || [],
         warrants: trelloResults.warrants || [],
-        has_bans: (trelloResults.severeBans?.length || 0) > 0 || (trelloResults.minorBans?.length || 0) > 0,
+        has_bans:
+          (trelloResults.severeBans?.length || 0) > 0 || (trelloResults.minorBans?.length || 0) > 0,
         has_blacklists: (trelloResults.blacklists?.length || 0) > 0,
         has_warrants: (trelloResults.warrants?.length || 0) > 0,
         hasSevereBans: trelloResults.hasSevereBans,

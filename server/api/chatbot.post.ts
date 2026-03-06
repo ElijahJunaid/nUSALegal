@@ -15,7 +15,6 @@ const THREAD_ID_PATTERN = /^thread_[a-zA-Z0-9]{24,}$/
 const VECTOR_STORE_ID_PATTERN = /^vs_[a-zA-Z0-9]{24,}$/
 
 function removeCitations(text: string): string {
-
   return text
     .replace(/【\d+:\d+†[^】]+】/g, '')
     .replace(/\[\d+:\d+†[^\]]+\]/g, '')
@@ -24,10 +23,7 @@ function removeCitations(text: string): string {
 
 function sanitizeInput(input: string): string {
   if (!input) return ''
-  return input
-    .trim()
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
+  return input.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
 async function withTimeout<T>(
@@ -49,8 +45,7 @@ async function withTimeout<T>(
   }
 }
 
-export default defineEventHandler(async (event) => {
-  
+export default defineEventHandler(async event => {
   const rateLimit = await apiRateLimiter.check(event)
   if (!rateLimit.allowed) {
     throw createError({
@@ -61,10 +56,10 @@ export default defineEventHandler(async (event) => {
   }
 
   let body: ChatbotRequestBody
-  
+
   try {
     const req = event.node?.req as any
-    
+
     if (req?.body) {
       if (typeof req.body === 'string') {
         body = JSON.parse(req.body) as ChatbotRequestBody
@@ -83,7 +78,7 @@ export default defineEventHandler(async (event) => {
       const rawBody = Buffer.concat(chunks).toString()
       body = JSON.parse(rawBody) as ChatbotRequestBody
     }
-    
+
     if (!body) {
       throw new Error('No body found')
     }
@@ -95,24 +90,29 @@ export default defineEventHandler(async (event) => {
       message: 'Invalid JSON in request body'
     })
   }
-  
-  body = body || {} as ChatbotRequestBody
-  
+
+  body = body || ({} as ChatbotRequestBody)
+
   const query = sanitizeInput(body.query || '')
   let thread_id = body.thread_id
 
-  console.log('[Chatbot] Received query:', JSON.stringify({ query, thread_id, queryLength: query.length }))
+  console.log(
+    '[Chatbot] Received query:',
+    JSON.stringify({ query, thread_id, queryLength: query.length })
+  )
 
   const conversationalResult = detectConversational(query)
-  
-  if (conversationalResult.isConversational && 
-      conversationalResult.confidence > 0.9 && 
-      query.trim().split(/\s+/).length <= 2 &&
-      ['greeting', 'farewell', 'gratitude', 'wellbeing'].includes(conversationalResult.intent)) {
-    
+
+  if (
+    conversationalResult.isConversational &&
+    conversationalResult.confidence > 0.9 &&
+    query.trim().split(/\s+/).length <= 2 &&
+    ['greeting', 'farewell', 'gratitude', 'wellbeing'].includes(conversationalResult.intent)
+  ) {
     return {
       thread_id,
-      response: conversationalResult.suggestedResponse || 
+      response:
+        conversationalResult.suggestedResponse ||
         "I'm here to help with legal questions! What would you like to know?"
     }
   }
@@ -126,11 +126,13 @@ export default defineEventHandler(async (event) => {
   }
 
   const filterResult = validateQuery(query, 'chatbot-user')
-  
+
   if (!filterResult.allowed) {
     return {
       thread_id,
-      response: filterResult.suggestion || 'This question is not appropriate or relevant. Please ask something related to legal matters.',
+      response:
+        filterResult.suggestion ||
+        'This question is not appropriate or relevant. Please ask something related to legal matters.',
       filterInfo: {
         severity: filterResult.severity,
         intent: filterResult.intent,
@@ -139,19 +141,22 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  if (conversationalResult.isConversational && 
-      conversationalResult.confidence > 0.9 && 
-      query.trim().split(/\s+/).length <= 2 &&
-      ['greeting', 'farewell', 'gratitude'].includes(conversationalResult.intent)) {
+  if (
+    conversationalResult.isConversational &&
+    conversationalResult.confidence > 0.9 &&
+    query.trim().split(/\s+/).length <= 2 &&
+    ['greeting', 'farewell', 'gratitude'].includes(conversationalResult.intent)
+  ) {
     console.log('[Chatbot] Basic conversational query detected:', {
       query: query.substring(0, 50),
       intent: conversationalResult.intent,
       confidence: conversationalResult.confidence
     })
-    
+
     return {
       thread_id,
-      response: conversationalResult.suggestedResponse || 
+      response:
+        conversationalResult.suggestedResponse ||
         "I'm here to help with legal questions! What would you like to know?"
     }
   }
@@ -215,7 +220,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    
     if (!thread_id) {
       const thread = await openai.beta.threads.create()
       thread_id = thread.id
@@ -256,30 +260,24 @@ export default defineEventHandler(async (event) => {
         })
       )
 
-      run = await withTimeout(
-        openai.beta.threads.runs.submitToolOutputs(
-          run.id,
-          {
-            tool_outputs,
-            thread_id: activeThreadId
-          }
-        ),
+      run = (await withTimeout(
+        openai.beta.threads.runs.submitToolOutputs(run.id, {
+          tool_outputs,
+          thread_id: activeThreadId
+        }),
         45000,
         'OpenAI API request timed out'
-      ) as any
-      
+      )) as any
+
       run = await withTimeout(
-        (openai.beta.threads.runs.retrieve as any)(
-          activeThreadId,
-          run.id
-        ),
+        (openai.beta.threads.runs.retrieve as any)(activeThreadId, run.id),
         45000,
         'OpenAI API request timed out'
       )
     }
 
     const messagesResponse = await openai.beta.threads.messages.list(activeThreadId)
-    const assistantMessages = messagesResponse.data.filter((m) => m.role === 'assistant')
+    const assistantMessages = messagesResponse.data.filter(m => m.role === 'assistant')
 
     if (assistantMessages.length === 0) {
       console.error('[Chatbot] No response from assistant')

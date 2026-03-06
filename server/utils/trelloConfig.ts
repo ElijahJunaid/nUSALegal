@@ -33,9 +33,9 @@ const trelloBoards = {
 }
 
 const boardListNames: Record<string, string> = {
-  'BtAXade2': 'Blacklisted',
+  BtAXade2: 'Blacklisted',
   '2w4zaqFS': 'Bank Bans',
-  'exfhKJtm': 'AoS Players',
+  exfhKJtm: 'AoS Players',
   '1sH1ZM3A': 'Capitol Banned',
   '1OQj0CTk': 'Prison Bans'
 }
@@ -91,15 +91,20 @@ async function checkBoardCategory(
       })
 
       const listName = boardListNames[boardId] || 'Unknown List'
-      results.push(...matches.map(card => ({
-        board: boardId,
-        card: card.name,
-        list: listName,
-        url: card.url,
-        description: card.desc
-      })))
+      results.push(
+        ...matches.map(card => ({
+          board: boardId,
+          card: card.name,
+          list: listName,
+          url: card.url,
+          description: card.desc
+        }))
+      )
     } catch (error: any) {
-      console.error(`Error accessing board ${boardId}:`, error.response?.statusText || error.message)
+      console.error(
+        `Error accessing board ${boardId}:`,
+        error.response?.statusText || error.message
+      )
     }
   }
 

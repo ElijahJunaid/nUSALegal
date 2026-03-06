@@ -9,13 +9,13 @@ import { municipalLaws } from '../data/municipal-laws'
 import { definitions } from '../data/definitions'
 import { districtCourtCases } from '../data/district-court-cases'
 
-export default defineEventHandler(async (event) => {
-  validateApiAccess(event, "global-search");
+export default defineEventHandler(async event => {
+  validateApiAccess(event, 'global-search')
 
   try {
     const query = getQuery(event)
-    const searchTerm = (query.q as string || '').toLowerCase().trim()
-    const category = query.category as string || 'all'
+    const searchTerm = ((query.q as string) || '').toLowerCase().trim()
+    const category = (query.category as string) || 'all'
 
     if (!searchTerm || searchTerm.length < 2) {
       return []
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
         const matchCode = law.uscode?.toLowerCase().includes(searchTerm)
         const matchDescription = law.description?.toLowerCase().includes(searchTerm)
         const matchCategory = law.category?.toLowerCase().includes(searchTerm)
-        
+
         if (matchTitle || matchCode || matchDescription || matchCategory) {
           results.push({
             title: law.title,
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
         const matchCode = law.code?.toLowerCase().includes(searchTerm)
         const matchDescription = law.description?.toLowerCase().includes(searchTerm)
         const matchCategory = law.category?.toLowerCase().includes(searchTerm)
-        
+
         if (matchTitle || matchCode || matchDescription || matchCategory) {
           results.push({
             title: law.title,
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
         const matchNumber = rule.number?.toLowerCase().includes(searchTerm)
         const matchTitle = rule.title?.toLowerCase().includes(searchTerm)
         const matchDescription = rule.description?.toLowerCase().includes(searchTerm)
-        
+
         if (matchNumber || matchTitle || matchDescription) {
           results.push({
             title: rule.number,
@@ -85,7 +85,7 @@ export default defineEventHandler(async (event) => {
         const matchNumber = rule.number?.toLowerCase().includes(searchTerm)
         const matchTitle = rule.title?.toLowerCase().includes(searchTerm)
         const matchDescription = rule.description?.toLowerCase().includes(searchTerm)
-        
+
         if (matchNumber || matchTitle || matchDescription) {
           results.push({
             title: rule.number,
@@ -103,7 +103,7 @@ export default defineEventHandler(async (event) => {
       constitutionArticles.forEach((article: any) => {
         const matchTitle = article.title?.toLowerCase().includes(searchTerm)
         const matchSummary = article.summary?.toLowerCase().includes(searchTerm)
-        
+
         if (matchTitle || matchSummary) {
           results.push({
             title: article.title,
@@ -120,7 +120,7 @@ export default defineEventHandler(async (event) => {
         const matchTitle = amendment.title?.toLowerCase().includes(searchTerm)
         const matchContent = amendment.content?.toLowerCase().includes(searchTerm)
         const matchSummary = amendment.summary?.toLowerCase().includes(searchTerm)
-        
+
         if (matchTitle || matchContent || matchSummary) {
           results.push({
             title: amendment.title,
@@ -139,7 +139,7 @@ export default defineEventHandler(async (event) => {
         const matchNumber = order.number?.toLowerCase().includes(searchTerm)
         const matchTitle = order.title?.toLowerCase().includes(searchTerm)
         const matchDescription = order.description?.toLowerCase().includes(searchTerm)
-        
+
         if (matchNumber || matchTitle || matchDescription) {
           results.push({
             title: order.title,
@@ -160,7 +160,7 @@ export default defineEventHandler(async (event) => {
         const matchCharge = courtCase.charge?.toLowerCase().includes(searchTerm)
         const matchJudge = courtCase.judge?.toLowerCase().includes(searchTerm)
         const matchSummary = courtCase.summary?.toLowerCase().includes(searchTerm)
-        
+
         if (matchTitle || matchCaseNumber || matchCharge || matchJudge || matchSummary) {
           results.push({
             title: courtCase.title,
@@ -178,7 +178,7 @@ export default defineEventHandler(async (event) => {
       definitions.forEach((def: any) => {
         const matchTitle = def.title?.toLowerCase().includes(searchTerm)
         const matchDescription = def.description?.toLowerCase().includes(searchTerm)
-        
+
         if (matchTitle || matchDescription) {
           results.push({
             title: def.title,
@@ -194,10 +194,10 @@ export default defineEventHandler(async (event) => {
 
     return results.slice(0, 50)
   } catch (error) {
-    console.error("Error in global search:", error);
+    console.error('Error in global search:', error)
     throw createError({
       status: 500,
-      statusText: "Failed to perform search",
-    });
+      statusText: 'Failed to perform search'
+    })
   }
-});
+})

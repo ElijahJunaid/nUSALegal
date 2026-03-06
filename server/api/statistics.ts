@@ -13,8 +13,8 @@ import {
   mostActiveDepts
 } from '../data/statistics-data'
 
-export default defineEventHandler(async (event) => {
-  validateApiAccess(event, "statistics");
+export default defineEventHandler(async event => {
+  validateApiAccess(event, 'statistics')
 
   try {
     return {
@@ -30,10 +30,10 @@ export default defineEventHandler(async (event) => {
       mostActiveDepts
     }
   } catch (error) {
-    console.error("Error fetching statistics:", error);
+    console.error('Error fetching statistics:', error)
     throw createError({
       status: 500,
-      statusText: "Failed to fetch statistics",
-    });
+      statusText: 'Failed to fetch statistics'
+    })
   }
-});
+})

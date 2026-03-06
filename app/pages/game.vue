@@ -1,34 +1,41 @@
 <template>
   <div class="game-page">
-    
     <div v-if="!gameStarted" id="main-menu">
-      <h1 class="game-title">The Impossible<br>nUSA Quiz</h1>
-      <button id="start-btn" @click="startGame">Start the Quiz!</button>
+      <h1 class="game-title">
+        The Impossible
+        <br />
+        nUSA Quiz
+      </h1>
+      <button 
+        id="start-btn" 
+        @click="startGame"
+        @keydown.enter="startGame"
+        @keydown.space="startGame"
+        aria-label="Start the quiz game"
+      >Start the Quiz!</button>
     </div>
 
     <div v-else id="game-container">
       <div id="lives">
-        <div 
-          v-for="(life, index) in currentLives" 
-          :key="index" 
-          class="life"
-        ></div>
+        <div v-for="(life, index) in currentLives" :key="index" class="life"></div>
       </div>
-      
+
       <div id="progress-bar">
         <div id="progress" :style="{ width: progressPercentage + '%' }"></div>
       </div>
-      
+
       <div v-if="!gameEnded" id="question-container">
         <div id="question">{{ currentQuestionData?.text }}</div>
         <div id="answer-container">
-          
           <template v-if="currentQuestionData?.type === 'multiple-choice'">
-            <button 
-              v-for="(option, index) in currentQuestionData.options" 
+            <button
+              v-for="(option, index) in currentQuestionData.options"
               :key="index"
               class="answer-btn"
               @click="checkAnswer(option)"
+              @keydown.enter="checkAnswer(option)"
+              @keydown.space="checkAnswer(option)"
+              :aria-label="`Select answer: ${option}`"
             >
               {{ option }}
             </button>
@@ -36,28 +43,41 @@
 
           <template v-if="currentQuestionData?.type === 'text-input'">
             <label for="answer-input" class="sr-only">Your answer</label>
-            <input 
+            <input
               v-model="textAnswer"
-              type="text" 
+              type="text"
               id="answer-input"
               placeholder="Type your answer..."
               @keyup.enter="checkAnswer(textAnswer)"
               aria-label="Answer input"
             />
-            <button id="submit-btn" @click="checkAnswer(textAnswer)">Submit</button>
+            <button 
+              id="submit-btn" 
+              @click="checkAnswer(textAnswer)" 
+              @keydown.enter="checkAnswer(textAnswer)"
+              @keydown.space="checkAnswer(textAnswer)"
+              aria-label="Submit your answer"
+            >Submit</button>
           </template>
         </div>
       </div>
-      
+
       <div v-if="isGameOver" class="game-over">Game Over!</div>
       <div v-if="isVictory" class="victory">Congratulations! You've Won!</div>
-      <button v-if="gameEnded" class="restart-btn" @click="restartGame">Play Again</button>
+      <button 
+        v-if="gameEnded" 
+        class="restart-btn" 
+        @click="restartGame"
+        @keydown.enter="restartGame"
+        @keydown.space="restartGame"
+        aria-label="Play the quiz again"
+      >Play Again</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed } from 'vue'
 
 interface Question {
   type: 'multiple-choice' | 'text-input' | 'click-target'
@@ -125,12 +145,12 @@ const createParticles = (x: number, y: number) => {
 
 const loseLife = (lifeElement: HTMLElement) => {
   document.body.style.animation = 'shake 0.5s'
-  setTimeout(() => document.body.style.animation = '', 500)
+  setTimeout(() => (document.body.style.animation = ''), 500)
 
   const rect = lifeElement.getBoundingClientRect()
   const centerX = rect.left + rect.width / 2
   const centerY = rect.top + rect.height / 2
-  
+
   lifeElement.style.animation = 'explode 0.3s forwards'
   createParticles(centerX, centerY)
   setTimeout(() => lifeElement.remove(), 300)
@@ -139,11 +159,11 @@ const loseLife = (lifeElement: HTMLElement) => {
 const checkAnswer = (answer: string) => {
   const question = currentQuestionData.value
   if (!question) return
-  
+
   if (answer.toLowerCase() === question.answer.toLowerCase()) {
     currentQuestionIndex.value++
     textAnswer.value = ''
-    
+
     if (currentQuestionIndex.value >= questions.length) {
       isVictory.value = true
     }
@@ -153,7 +173,7 @@ const checkAnswer = (answer: string) => {
       loseLife(lifeElements[lifeElements.length - 1] as HTMLElement)
     }
     currentLives.value--
-    
+
     if (currentLives.value <= 0) {
       setTimeout(() => {
         isGameOver.value = true
@@ -173,18 +193,27 @@ const restartGame = () => {
 
 <style>
 @keyframes shake {
-  0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(-5px, -5px); }
-  50% { transform: translate(5px, 5px); }
-  75% { transform: translate(-5px, 5px); }
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-5px, -5px);
+  }
+  50% {
+    transform: translate(5px, 5px);
+  }
+  75% {
+    transform: translate(-5px, 5px);
+  }
 }
 
 @keyframes explode {
-  0% { 
+  0% {
     transform: scale(1);
     opacity: 1;
   }
-  100% { 
+  100% {
     transform: scale(2);
     opacity: 0;
   }
@@ -202,20 +231,43 @@ const restartGame = () => {
 }
 
 @keyframes rainbow {
-  0% { color: #ff0000; }
-  17% { color: #ff8000; }
-  33% { color: #ffff00; }
-  50% { color: #00ff00; }
-  67% { color: #0080ff; }
-  83% { color: #8000ff; }
-  100% { color: #ff0000; }
+  0% {
+    color: #ff0000;
+  }
+  17% {
+    color: #ff8000;
+  }
+  33% {
+    color: #ffff00;
+  }
+  50% {
+    color: #00ff00;
+  }
+  67% {
+    color: #0080ff;
+  }
+  83% {
+    color: #8000ff;
+  }
+  100% {
+    color: #ff0000;
+  }
 }
 
 .game-page {
   margin: 0;
   padding: 20px;
   background-color: #1a1a1a;
-  background-image: linear-gradient(45deg, #1a1a1a 25%, #222 25%, #222 50%, #1a1a1a 50%, #1a1a1a 75%, #222 75%, #222 100%);
+  background-image: linear-gradient(
+    45deg,
+    #1a1a1a 25%,
+    #222 25%,
+    #222 50%,
+    #1a1a1a 50%,
+    #1a1a1a 75%,
+    #222 75%,
+    #222 100%
+  );
   background-size: 40px 40px;
   color: white;
   font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -243,12 +295,14 @@ const restartGame = () => {
 #start-btn {
   font-size: 24px;
   padding: 15px 30px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: none;
   border-radius: 10px;
   color: white;
   cursor: pointer;
-  transition: transform 0.2s, background-color 0.3s;
+  transition:
+    transform 0.2s,
+    background-color 0.3s;
   font-family: 'Comic Sans MS', cursive, sans-serif;
   box-shadow: 0 5px 0 #45a049;
 }
@@ -288,7 +342,7 @@ const restartGame = () => {
 
 #progress {
   height: 100%;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   transition: width 0.3s ease;
 }
 
@@ -314,7 +368,7 @@ const restartGame = () => {
   padding: 10px;
   font-size: 18px;
   cursor: pointer;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: none;
   color: white;
   border-radius: 5px;
@@ -337,13 +391,14 @@ const restartGame = () => {
   padding: 10px 20px;
   font-size: 18px;
   cursor: pointer;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: none;
   color: white;
   border-radius: 5px;
 }
 
-.game-over, .victory {
+.game-over,
+.victory {
   font-size: 36px;
   margin-bottom: 20px;
 }
@@ -353,14 +408,14 @@ const restartGame = () => {
 }
 
 .victory {
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .restart-btn {
   padding: 15px 30px;
   font-size: 24px;
   cursor: pointer;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: none;
   color: white;
   border-radius: 5px;

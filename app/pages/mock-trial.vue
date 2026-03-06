@@ -1,21 +1,43 @@
 <template>
   <div class="mock-trial-page">
     <ToastContainer />
-    <ReconnectionDialog 
-      :show="isReconnecting" 
-      :attempts="reconnectAttempts" 
+    <ReconnectionDialog
+      :show="isReconnecting"
+      :attempts="reconnectAttempts"
       :countdown="reconnectCountdown"
       @cancel="handleReconnectCancel"
     />
     <main id="main-content">
       <h1>Mock Trial Simulator</h1>
-      <p>Experience an interactive court simulation with AI-powered roles. Choose your role and participate in a realistic trial proceeding.</p>
+      <p>
+        Experience an interactive court simulation with AI-powered roles. Choose your role and
+        participate in a realistic trial proceeding.
+      </p>
 
-      <div v-if="!showLobby && !showTrialSetup && !showSimulation" class="mode-selection" role="navigation" aria-label="Trial mode selection">
-        <button class="mode-button" @click="startSinglePlayer" :disabled="isLoading" aria-label="Start single player trial">
+      <div
+        v-if="!showLobby && !showTrialSetup && !showSimulation"
+        class="mode-selection"
+        role="navigation"
+        aria-label="Trial mode selection"
+      >
+        <button
+          class="mode-button"
+          @click="startSinglePlayer"
+          @keydown.enter="startSinglePlayer"
+          @keydown.space="startSinglePlayer"
+          :disabled="isLoading"
+          aria-label="Start single player trial"
+        >
           Single Player
         </button>
-        <button class="mode-button" @click="createLobby" :disabled="isLoading" aria-label="Create multiplayer lobby">
+        <button
+          class="mode-button"
+          @click="createLobby"
+          @keydown.enter="createLobby"
+          @keydown.space="createLobby"
+          :disabled="isLoading"
+          aria-label="Create multiplayer lobby"
+        >
           <span v-if="!isLoading">Create Lobby</span>
           <span v-else class="loading">Creating...</span>
         </button>
@@ -34,24 +56,33 @@
             :aria-invalid="!!lobbyCodeError"
             tabindex="0"
           />
-          <button class="mode-button" @click="joinLobby" :disabled="isLoading || !lobbyCodeInput.trim()" aria-label="Join existing lobby">
+          <button
+            class="mode-button"
+            @click="joinLobby"
+            @keydown.enter="joinLobby"
+            @keydown.space="joinLobby"
+            :disabled="isLoading || !lobbyCodeInput.trim()"
+            aria-label="Join existing lobby"
+          >
             <span v-if="!isLoading">Join Lobby</span>
             <span v-else class="loading">Joining...</span>
           </button>
         </div>
-        <span v-if="lobbyCodeError" class="error-message" id="lobby-code-error" role="alert">{{ lobbyCodeError }}</span>
+        <span v-if="lobbyCodeError" class="error-message" id="lobby-code-error" role="alert">
+          {{ lobbyCodeError }}
+        </span>
       </div>
 
       <div v-if="showLobby" class="lobby-interface">
         <div class="lobby-header">
           <h2>Trial Lobby</h2>
           <div class="lobby-code-display">
-            Lobby Code: <span>{{ lobbyCode }}</span>
+            Lobby Code:
+            <span>{{ lobbyCode }}</span>
           </div>
         </div>
 
         <div class="lobby-content">
-          
           <div v-if="isLobbyLeader" class="lobby-settings">
             <div class="case-selection">
               <h3>Select Case Type</h3>
@@ -60,6 +91,10 @@
                   class="toggle-button"
                   :class="{ selected: selectedCaseType === 'criminal' }"
                   @click="selectCaseType('criminal')"
+                  @keydown.enter="selectCaseType('criminal')"
+                  @keydown.space="selectCaseType('criminal')"
+                  aria-label="Select criminal case type"
+                  :aria-pressed="selectedCaseType === 'criminal'"
                 >
                   Criminal
                 </button>
@@ -67,6 +102,10 @@
                   class="toggle-button"
                   :class="{ selected: selectedCaseType === 'civil' }"
                   @click="selectCaseType('civil')"
+                  @keydown.enter="selectCaseType('civil')"
+                  @keydown.space="selectCaseType('civil')"
+                  aria-label="Select civil case type"
+                  :aria-pressed="selectedCaseType === 'civil'"
                 >
                   Civil
                 </button>
@@ -82,13 +121,23 @@
                   class="case-card"
                   :class="{ selected: selectedCase?.id === caseItem.id }"
                   @click="selectCase(caseItem)"
+                  @keydown.enter="selectCase(caseItem)"
+                  @keydown.space="selectCase(caseItem)"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="`Select case: ${caseItem.title}`"
+                  :aria-pressed="selectedCase?.id === caseItem.id"
                 >
                   <div class="case-card-header">
                     <h4>{{ caseItem.title }}</h4>
-                    <span v-if="caseItem.difficulty" class="case-difficulty">{{ caseItem.difficulty }}</span>
+                    <span v-if="caseItem.difficulty" class="case-difficulty">
+                      {{ caseItem.difficulty }}
+                    </span>
                   </div>
                   <p class="case-description">{{ caseItem.description }}</p>
-                  <div v-if="selectedCase?.id === caseItem.id" class="selected-badge">✓ Selected</div>
+                  <div v-if="selectedCase?.id === caseItem.id" class="selected-badge">
+                    ✓ Selected
+                  </div>
                 </div>
               </div>
               <div v-else class="no-cases">
@@ -101,7 +150,9 @@
               <div class="case-card selected">
                 <div class="case-card-header">
                   <h4>{{ selectedCase.title }}</h4>
-                  <span v-if="selectedCase.difficulty" class="case-difficulty">{{ selectedCase.difficulty }}</span>
+                  <span v-if="selectedCase.difficulty" class="case-difficulty">
+                    {{ selectedCase.difficulty }}
+                  </span>
                 </div>
                 <p class="case-description">{{ selectedCase.description }}</p>
               </div>
@@ -115,15 +166,12 @@
             <div class="players-header">
               <h3>Players</h3>
               <div class="player-count">
-                <span>{{ playerCount }}</span> / 5
+                <span>{{ playerCount }}</span>
+                / 5
               </div>
             </div>
             <div class="players-list">
-              <div
-                v-for="player in players"
-                :key="player.name"
-                class="player-item"
-              >
+              <div v-for="player in players" :key="player.name" class="player-item">
                 <div class="player-avatar">{{ player.name.charAt(0).toUpperCase() }}</div>
                 <div class="player-info">
                   <span class="player-name">{{ player.name }}</span>
@@ -145,6 +193,12 @@
                 class="role-item"
                 :class="{ claimed: role.claimedBy }"
                 @click="claimRole(role.id)"
+                @keydown.enter="claimRole(role.id)"
+                @keydown.space="claimRole(role.id)"
+                role="button"
+                tabindex="0"
+                :aria-label="`Claim role: ${role.name}`"
+                :aria-disabled="!!role.claimedBy"
               >
                 <div class="role-info">
                   <span class="role-name">{{ role.name }}</span>
@@ -161,17 +215,33 @@
             class="start-button"
             :disabled="!canStartTrial || isLoading"
             @click="startTrialFromLobby"
+            @keydown.enter="startTrialFromLobby"
+            @keydown.space="startTrialFromLobby"
+            aria-label="Start trial from lobby"
           >
             <span v-if="!isLoading">Start Trial</span>
             <span v-else class="loading">Starting...</span>
           </button>
-          <button class="leave-button" @click="leaveLobby" :disabled="isLoading">
+          <button 
+            class="leave-button" 
+            @click="leaveLobby" 
+            @keydown.enter="leaveLobby"
+            @keydown.space="leaveLobby"
+            :disabled="isLoading"
+            aria-label="Leave trial lobby"
+          >
             Leave Lobby
           </button>
         </div>
       </div>
 
-      <form v-if="showTrialSetup" class="trial-setup" @submit.prevent="confirmSetup" role="form" aria-label="Trial setup form">
+      <form
+        v-if="showTrialSetup"
+        class="trial-setup"
+        @submit.prevent="confirmSetup"
+        role="form"
+        aria-label="Trial setup form"
+      >
         <section class="selection-row visible">
           <h2>Select Case Type</h2>
           <div class="card-container">
@@ -204,32 +274,52 @@
           </div>
         </section>
 
-        <section
-          class="selection-row"
-          :class="{ visible: setupCaseType }"
-        >
+        <section class="selection-row" :class="{ visible: setupCaseType }">
           <h2>Select Your Role</h2>
           <div class="card-container" :data-case-type="setupCaseType">
             <div
               class="selection-card"
               :class="{ selected: setupRole === 'judge' }"
               @click="setupRole = 'judge'"
+              @keydown.enter="setupRole = 'judge'"
+              @keydown.space="setupRole = 'judge'"
+              role="button"
+              tabindex="0"
+              aria-label="Select judge role"
+              :aria-pressed="setupRole === 'judge'"
             >
               <h3>Judge</h3>
-              <p>Preside over the trial, make rulings on objections, and ensure proper court procedure</p>
+              <p>
+                Preside over the trial, make rulings on objections, and ensure proper court
+                procedure
+              </p>
             </div>
             <div
               class="selection-card criminal-role"
               :class="{ selected: setupRole === 'prosecutor' }"
               @click="setupRole = 'prosecutor'"
+              @keydown.enter="setupRole = 'prosecutor'"
+              @keydown.space="setupRole = 'prosecutor'"
+              role="button"
+              tabindex="0"
+              aria-label="Select prosecutor role"
+              :aria-pressed="setupRole === 'prosecutor'"
             >
               <h3>Prosecutor</h3>
-              <p>Represent the government in criminal cases, present evidence, and examine witnesses</p>
+              <p>
+                Represent the government in criminal cases, present evidence, and examine witnesses
+              </p>
             </div>
             <div
               class="selection-card civil-role"
               :class="{ selected: setupRole === 'plaintiff' }"
               @click="setupRole = 'plaintiff'"
+              @keydown.enter="setupRole = 'plaintiff'"
+              @keydown.space="setupRole = 'plaintiff'"
+              role="button"
+              tabindex="0"
+              aria-label="Select plaintiff role"
+              :aria-pressed="setupRole === 'plaintiff'"
             >
               <h3>Plaintiff</h3>
               <p>The party initiating the civil lawsuit, presents evidence to prove their case</p>
@@ -238,6 +328,12 @@
               class="selection-card"
               :class="{ selected: setupRole === 'defense' }"
               @click="setupRole = 'defense'"
+              @keydown.enter="setupRole = 'defense'"
+              @keydown.space="setupRole = 'defense'"
+              role="button"
+              tabindex="0"
+              aria-label="Select defense role"
+              :aria-pressed="setupRole === 'defense'"
             >
               <h3>Defense</h3>
               <p>Represent the defendant, challenge evidence, and present defense arguments</p>
@@ -246,6 +342,12 @@
               class="selection-card"
               :class="{ selected: setupRole === 'witness' }"
               @click="setupRole = 'witness'"
+              @keydown.enter="setupRole = 'witness'"
+              @keydown.space="setupRole = 'witness'"
+              role="button"
+              tabindex="0"
+              aria-label="Select witness role"
+              :aria-pressed="setupRole === 'witness'"
             >
               <h3>Witness</h3>
               <p>Provide testimony and respond to questioning from both sides</p>
@@ -254,6 +356,12 @@
               class="selection-card center-card"
               :class="{ selected: setupRole === 'jury' }"
               @click="setupRole = 'jury'"
+              @keydown.enter="setupRole = 'jury'"
+              @keydown.space="setupRole = 'jury'"
+              role="button"
+              tabindex="0"
+              aria-label="Select jury role"
+              :aria-pressed="setupRole === 'jury'"
             >
               <h3>Jury</h3>
               <p>Listen to evidence and arguments, deliberate, and reach a verdict</p>
@@ -277,39 +385,62 @@
       <div v-if="showTrialInterface" id="trial-interface">
         <div class="courtroom-container">
           <canvas id="renderCanvas" touch-action="none"></canvas>
-          <div v-if="courtroomLoading" class="canvas-loading">
-            Loading 3D courtroom...
-          </div>
+          <div v-if="courtroomLoading" class="canvas-loading">Loading 3D courtroom...</div>
           <div v-if="courtroomError" class="canvas-error" role="alert">
             <span>Failed to load 3D courtroom</span>
-            <button @click="initializeCourtroomScene()" class="error-retry-button" aria-label="Retry loading 3D courtroom">
+            <button
+              @click="initializeCourtroomScene()"
+              class="error-retry-button"
+              aria-label="Retry loading 3D courtroom"
+            >
               Retry
             </button>
           </div>
         </div>
       </div>
 
-      <section v-if="showSimulation" class="simulation-area" :class="{ 'single-player': isSinglePlayer }">
+      <section
+        v-if="showSimulation"
+        class="simulation-area"
+        :class="{ 'single-player': isSinglePlayer }"
+      >
         <div class="trial-content">
-          
           <div class="case-info">
             <h2>Case Information</h2>
             <div id="case-details" v-html="caseDetailsHtml"></div>
           </div>
 
           <div v-if="currentTurn" class="turn-indicator">
-            <strong>Current Turn:</strong> {{ currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1) }}
+            <strong>Current Turn:</strong>
+            {{ currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1) }}
             <span v-if="isMyTurn()" class="your-turn">👈 Your turn!</span>
           </div>
 
           <div v-if="evidenceList.length > 0" class="evidence-section">
             <h3>Evidence</h3>
-            <div v-for="ev in evidenceList" :key="ev.id" class="evidence-item" :class="{ admitted: ev.admitted }">
+            <div
+              v-for="ev in evidenceList"
+              :key="ev.id"
+              class="evidence-item"
+              :class="{ admitted: ev.admitted }"
+            >
               <p>{{ ev.description }}</p>
               <span class="evidence-status">{{ ev.admitted ? '✓ Admitted' : 'Pending' }}</span>
               <div v-if="setupRole === 'judge' && !ev.admitted" class="evidence-actions">
-                <button @click="admitEvidence(ev.id)" class="btn-admit">Admit</button>
-                <button @click="denyEvidence(ev.id)" class="btn-deny">Deny</button>
+                <button 
+                  @click="admitEvidence(ev.id)" 
+                  @keydown.enter="admitEvidence(ev.id)"
+                  @keydown.space="admitEvidence(ev.id)"
+                  class="btn-admit"
+                  :aria-label="`Admit evidence: ${ev.description}`"
+                >Admit</button>
+                <button 
+                  @click="denyEvidence(ev.id)" 
+                  @keydown.enter="denyEvidence(ev.id)"
+                  @keydown.space="denyEvidence(ev.id)"
+                  class="btn-deny"
+                  :aria-label="`Deny evidence: ${ev.description}`"
+                >Deny</button>
               </div>
             </div>
           </div>
@@ -317,11 +448,28 @@
           <div v-if="pendingObjections.length > 0" class="objections-section">
             <h3>Objections</h3>
             <div v-for="obj in pendingObjections" :key="obj.id" class="objection-item">
-              <p><strong>{{ obj.type }}</strong> by {{ obj.madeBy }}</p>
+              <p>
+                <strong>{{ obj.type }}</strong>
+                by {{ obj.madeBy }}
+              </p>
               <span v-if="obj.ruling" class="ruling">{{ obj.ruling.toUpperCase() }}</span>
               <div v-if="setupRole === 'judge' && !obj.ruling" class="objection-actions">
-                <button @click="ruleOnObjection(obj.id, true)" class="btn-sustain">Sustain</button>
-                <button @click="ruleOnObjection(obj.id, false)" class="btn-overrule">Overrule</button>
+                <button 
+                  @click="ruleOnObjection(obj.id, true)" 
+                  @keydown.enter="ruleOnObjection(obj.id, true)"
+                  @keydown.space="ruleOnObjection(obj.id, true)"
+                  class="btn-sustain"
+                  :aria-label="`Sustain objection: ${obj.type}`"
+                >Sustain</button>
+                <button 
+                  @click="ruleOnObjection(obj.id, false)" 
+                  @keydown.enter="ruleOnObjection(obj.id, false)"
+                  @keydown.space="ruleOnObjection(obj.id, false)"
+                  class="btn-overrule"
+                  :aria-label="`Overrule objection: ${obj.type}`"
+                >
+                  Overrule
+                </button>
               </div>
             </div>
           </div>
@@ -330,66 +478,150 @@
             <h2>Jury Deliberation</h2>
             <p>Cast your verdict:</p>
             <div class="verdict-buttons">
-              <button @click="castVote('guilty')" class="btn-verdict btn-guilty">
+              <button 
+                @click="castVote('guilty')" 
+                @keydown.enter="castVote('guilty')"
+                @keydown.space="castVote('guilty')"
+                class="btn-verdict btn-guilty"
+                :aria-label="`Cast verdict: ${setupCaseType === 'criminal' ? 'Guilty' : 'Liable'}`"
+              >
                 {{ setupCaseType === 'criminal' ? 'Guilty' : 'Liable' }}
               </button>
-              <button @click="castVote('not-guilty')" class="btn-verdict btn-not-guilty">
+              <button 
+                @click="castVote('not-guilty')" 
+                @keydown.enter="castVote('not-guilty')"
+                @keydown.space="castVote('not-guilty')"
+                class="btn-verdict btn-not-guilty"
+                :aria-label="`Cast verdict: ${setupCaseType === 'criminal' ? 'Not Guilty' : 'Not Liable'}`"
+              >
                 {{ setupCaseType === 'criminal' ? 'Not Guilty' : 'Not Liable' }}
               </button>
             </div>
             <div v-if="finalVerdict" class="final-verdict">
               <h2>Final Verdict: {{ finalVerdict }}</h2>
-              <button @click="endTrial()" class="btn-end-trial">End Trial</button>
+              <button 
+                @click="endTrial()" 
+                @keydown.enter="endTrial()"
+                @keydown.space="endTrial()"
+                class="btn-end-trial"
+                aria-label="End trial and return to main menu"
+              >End Trial</button>
             </div>
           </div>
         </div>
 
         <div class="trial-controls">
-          
           <div id="interaction-area" class="interaction-area">
             <h3>Actions</h3>
 
             <div v-if="setupRole === 'judge'" class="role-actions">
-              <button @click="performRoleAction('call-witness')" :disabled="!isMyTurn()" aria-label="Call witness to stand">Call Witness</button>
-              <button @click="advanceTurn()" aria-label="Advance to next turn">Advance Turn</button>
+              <button
+                @click="performRoleAction('call-witness')"
+                @keydown.enter="performRoleAction('call-witness')"
+                @keydown.space="performRoleAction('call-witness')"
+                :disabled="!isMyTurn()"
+                aria-label="Call witness to stand"
+              >
+                Call Witness
+              </button>
+              <button 
+                @click="advanceTurn()" 
+                @keydown.enter="advanceTurn()"
+                @keydown.space="advanceTurn()"
+                aria-label="Advance to next turn"
+              >Advance Turn</button>
             </div>
 
             <div v-if="setupRole === 'prosecutor' || setupRole === 'defense'" class="role-actions">
-              <button @click="performRoleAction('examine-witness')" :disabled="!isMyTurn()" aria-label="Examine witness">Examine Witness</button>
+              <button
+                @click="performRoleAction('examine-witness')"
+                @keydown.enter="performRoleAction('examine-witness')"
+                @keydown.space="performRoleAction('examine-witness')"
+                :disabled="!isMyTurn()"
+                aria-label="Examine witness"
+              >
+                Examine Witness
+              </button>
               <div class="evidence-input-group">
-                <input v-model="evidenceInput" type="text" placeholder="Describe evidence..." aria-label="Evidence description" />
-                <button @click="performRoleAction('present-evidence')" :disabled="!isMyTurn()" aria-label="Present evidence">Present Evidence</button>
+                <input
+                  v-model="evidenceInput"
+                  type="text"
+                  placeholder="Describe evidence..."
+                  aria-label="Evidence description"
+                />
+                <button
+                  @click="performRoleAction('present-evidence')"
+                  @keydown.enter="performRoleAction('present-evidence')"
+                  @keydown.space="performRoleAction('present-evidence')"
+                  :disabled="!isMyTurn()"
+                  aria-label="Present evidence"
+                >
+                  Present Evidence
+                </button>
               </div>
               <div class="objection-buttons">
-                <button v-for="objType in objectionTypes" :key="objType.id" 
-                  @click="makeObjection(objType.label)" 
+                <button
+                  v-for="objType in objectionTypes"
+                  :key="objType.id"
+                  @click="makeObjection(objType.label)"
+                  @keydown.enter="makeObjection(objType.label)"
+                  @keydown.space="makeObjection(objType.label)"
                   :disabled="!isMyTurn()"
-                  class="btn-objection">
+                  class="btn-objection"
+                  :aria-label="`Make objection: ${objType.label}`"
+                >
                   {{ objType.label }}
                 </button>
               </div>
             </div>
 
             <div v-if="setupRole === 'witness'" class="role-actions">
-              <button @click="performRoleAction('respond')" :disabled="!isMyTurn()" aria-label="Respond to question">Respond to Question</button>
+              <button
+                @click="performRoleAction('respond')"
+                @keydown.enter="performRoleAction('respond')"
+                @keydown.space="performRoleAction('respond')"
+                :disabled="!isMyTurn()"
+                aria-label="Respond to question"
+              >
+                Respond to Question
+              </button>
             </div>
 
             <div v-if="setupRole === 'jury'" class="role-actions">
-              <button @click="performRoleAction('deliberate')" aria-label="Begin jury deliberation">Begin Deliberation</button>
+              <button 
+                @click="performRoleAction('deliberate')" 
+                @keydown.enter="performRoleAction('deliberate')"
+                @keydown.space="performRoleAction('deliberate')"
+                aria-label="Begin jury deliberation"
+              >
+                Begin Deliberation
+              </button>
             </div>
 
-            <button @click="endTrial()" class="btn-end-trial">End Trial</button>
+            <button 
+                @click="endTrial()" 
+                @keydown.enter="endTrial()"
+                @keydown.space="endTrial()"
+                class="btn-end-trial"
+                aria-label="End trial and return to main menu"
+              >End Trial</button>
           </div>
 
           <div id="chat-interface" class="chat-interface">
             <h3>Chat</h3>
             <div class="chat-messages" id="chat-messages">
               <div v-for="msg in chatMessages" :key="msg.id" class="chat-message">
-                <strong>{{ msg.sender }}:</strong> {{ msg.content }}
+                <strong>{{ msg.sender }}:</strong>
+                {{ msg.content }}
               </div>
             </div>
             <div class="chat-input-container">
-              <select v-model="chatRecipient" id="chat-recipient" class="chat-recipient" aria-label="Message recipient">
+              <select
+                v-model="chatRecipient"
+                id="chat-recipient"
+                class="chat-recipient"
+                aria-label="Message recipient"
+              >
                 <option value="all">Everyone</option>
                 <option value="judge">Judge</option>
                 <option value="prosecutor">Prosecutor</option>
@@ -405,7 +637,14 @@
                 placeholder="Type your message..."
                 autocomplete="off"
               />
-              <button id="chat-send" class="chat-send">Send</button>
+              <button 
+                id="chat-send" 
+                class="chat-send"
+                @click="sendChatMessage"
+                @keydown.enter="sendChatMessage"
+                @keydown.space="sendChatMessage"
+                aria-label="Send chat message"
+              >Send</button>
             </div>
           </div>
         </div>
@@ -455,7 +694,7 @@ const isLobbyLeader = ref(false)
 const selectedCaseType = ref<'criminal' | 'civil' | null>(null)
 const selectedCase = ref<any>(null)
 const availableCases = ref<any[]>([])
-const players = ref<Array<{ name: string; role: string | null; isLeader: boolean }>>([]) 
+const players = ref<Array<{ name: string; role: string | null; isLeader: boolean }>>([])
 const playerCount = computed(() => players.value.length)
 
 const setupCaseType = ref<'criminal' | 'civil' | null>(null)
@@ -466,14 +705,18 @@ const courtroomError = ref(false)
 
 const caseDetailsHtml = ref('')
 
-const chatMessages = ref<Array<{ id: string; sender: string; content: string; timestamp: number }>>([])  
+const chatMessages = ref<Array<{ id: string; sender: string; content: string; timestamp: number }>>(
+  []
+)
 const chatInput = ref('')
 const chatRecipient = ref('all')
 
 const currentTurn = ref<string | null>(null)
 const turnOrder = ['judge', 'prosecutor', 'defense', 'witness', 'jury']
 
-const evidenceList = ref<Array<{ id: string; description: string; submittedBy: string; admitted: boolean }>>([])  
+const evidenceList = ref<
+  Array<{ id: string; description: string; submittedBy: string; admitted: boolean }>
+>([])
 const evidenceInput = ref('')
 
 const objectionTypes = [
@@ -483,22 +726,35 @@ const objectionTypes = [
   { id: 'speculation', label: 'Speculation' },
   { id: 'argumentative', label: 'Argumentative' }
 ]
-const pendingObjections = ref<Array<{ id: string; type: string; reason: string; madeBy: string; ruling: string | null }>>([])  
+const pendingObjections = ref<
+  Array<{ id: string; type: string; reason: string; madeBy: string; ruling: string | null }>
+>([])
 
 const verdictPhase = ref(false)
 const verdictVotes = ref<Record<string, 'guilty' | 'not-guilty' | null>>({})
 const finalVerdict = ref<string | null>(null)
 
-const availableRoles = ref<Array<{ id: string; name: string; description: string; claimedBy: string | null }>>([
-  { id: 'judge', name: 'Judge', description: 'Oversee the trial and make rulings', claimedBy: null },
-  { id: 'prosecutor', name: 'Prosecutor', description: 'Present the case against the defendant', claimedBy: null },
+const availableRoles = ref<
+  Array<{ id: string; name: string; description: string; claimedBy: string | null }>
+>([
+  {
+    id: 'judge',
+    name: 'Judge',
+    description: 'Oversee the trial and make rulings',
+    claimedBy: null
+  },
+  {
+    id: 'prosecutor',
+    name: 'Prosecutor',
+    description: 'Present the case against the defendant',
+    claimedBy: null
+  },
   { id: 'defense', name: 'Defense', description: 'Defend the accused', claimedBy: null },
   { id: 'witness', name: 'Witness', description: 'Testify about case events', claimedBy: null },
   { id: 'jury', name: 'Jury', description: 'Decide the verdict', claimedBy: null }
 ])
 
 const canStartTrial = computed(() => {
-  
   return selectedCase.value && availableRoles.value.some((r: any) => r.claimedBy === 'You')
 })
 
@@ -509,27 +765,29 @@ function startSinglePlayer() {
 
 async function createLobby() {
   isLoading.value = true
-  
+
   const code = generateLobbyCode()
   lobbyCode.value = code
 
   const connected = await lobbyConnection.connect(code, 'You', true)
-  
+
   if (connected) {
     isLobbyLeader.value = true
     showLobby.value = true
 
-    players.value = [{
-      name: 'You',
-      role: null,
-      isLeader: true
-    }]
-    
+    players.value = [
+      {
+        name: 'You',
+        role: null,
+        isLeader: true
+      }
+    ]
+
     success(`Lobby created! Code: ${lobbyCode.value}`)
   } else {
     error('Failed to create lobby')
   }
-  
+
   isLoading.value = false
 }
 
@@ -539,27 +797,26 @@ function handleLobbyCodeInput() {
 }
 
 async function joinLobby() {
-  
   if (!lobbyCodeInput.value.trim()) {
     lobbyCodeError.value = 'Lobby code is required'
     error('Please enter a lobby code')
     return
   }
-  
+
   if (lobbyCodeInput.value.length !== 6) {
     lobbyCodeError.value = 'Lobby code must be 6 characters'
     error('Lobby code must be exactly 6 characters')
     return
   }
-  
+
   lobbyCodeError.value = ''
   isLoading.value = true
-  
+
   const code = lobbyCodeInput.value.toUpperCase()
   lobbyCode.value = code
 
   const connected = await lobbyConnection.connect(code, 'You', false)
-  
+
   if (connected) {
     isLobbyLeader.value = false
     showLobby.value = true
@@ -568,19 +825,18 @@ async function joinLobby() {
       { name: 'Host', role: null, isLeader: true },
       { name: 'You', role: null, isLeader: false }
     ]
-    
+
     success('Joined lobby successfully!')
   } else {
     error('Failed to join lobby')
   }
-  
+
   isLoading.value = false
 }
 
 function leaveLobby() {
-  
   lobbyConnection.disconnect()
-  
+
   showLobby.value = false
   lobbyCode.value = ''
   lobbyCodeInput.value = ''
@@ -588,8 +844,8 @@ function leaveLobby() {
   selectedCase.value = null
   availableCases.value = []
   players.value = []
-  availableRoles.value.forEach((role: any) => role.claimedBy = null)
-  
+  availableRoles.value.forEach((role: any) => (role.claimedBy = null))
+
   info('Left the lobby')
 }
 
@@ -603,7 +859,7 @@ async function selectCaseType(type: 'criminal' | 'civil') {
   availableCases.value = []
 
   try {
-    const response = await $fetch('/api/mock-trial/cases?type=' + type) as {
+    const response = (await $fetch('/api/mock-trial/cases?type=' + type)) as {
       success: boolean
       caseType: string
       cases: any[]
@@ -617,21 +873,20 @@ async function selectCaseType(type: 'criminal' | 'civil') {
     availableCases.value = []
     warning('Failed to load cases. Please try again.')
   }
-
 }
 
 function selectCase(caseItem: any) {
   selectedCase.value = caseItem
 
   lobbyConnection.selectCase(caseItem)
-  
+
   success(`Selected: ${caseItem.title}`)
 }
 
 function claimRole(roleId: string): void {
   const role = availableRoles.value.find((r: any) => r.id === roleId)
   if (!role) return
-  
+
   if (role.claimedBy && role.claimedBy !== 'You') {
     warning(`This role is already claimed by ${role.claimedBy}`)
     return
@@ -650,7 +905,7 @@ function claimRole(roleId: string): void {
   }
 
   lobbyConnection.claimRole(roleId, role.name)
-  
+
   if (previousRole) {
     info(`Switched from ${previousRole.name} to ${role.name}`)
   } else {
@@ -663,39 +918,36 @@ function startTrialFromLobby() {
     error('Please select a case and claim a role before starting')
     return
   }
-  
+
   isLoading.value = true
 
   const trialData = lobbyConnection.startTrial()
-  
+
   setTimeout(() => {
     showLobby.value = false
     showTrialInterface.value = true
     showSimulation.value = true
     isLoading.value = false
-    
+
     success('Trial started! Good luck!')
-    
   }, 600)
 }
 
 async function confirmSetup() {
-  
   if (!setupCaseType.value) {
     error('Please select a case type')
     return
   }
-  
+
   if (!setupRole.value) {
     error('Please select a role')
     return
   }
-  
+
   isLoading.value = true
-  
+
   try {
-    
-    const response = await $fetch(`/api/mock-trial/random-case?type=${setupCaseType.value}`) as {
+    const response = (await $fetch(`/api/mock-trial/random-case?type=${setupCaseType.value}`)) as {
       success: boolean
       case: {
         title: string
@@ -712,15 +964,18 @@ async function confirmSetup() {
         }
       }
     }
-    
+
     if (response.success && response.case) {
-      
-      caseDetailsHtml.value = generateCaseDetailsHtml(response.case, setupRole.value, setupCaseType.value)
+      caseDetailsHtml.value = generateCaseDetailsHtml(
+        response.case,
+        setupRole.value,
+        setupCaseType.value
+      )
 
       showTrialSetup.value = false
       showTrialInterface.value = true
       showSimulation.value = true
-      
+
       success(`Starting ${response.case.title}!`)
 
       setTimeout(() => {
@@ -745,18 +1000,18 @@ function generateCaseDetailsHtml(caseData: any, role: string, caseType: string):
     <p><strong>Description:</strong> ${caseData.description}</p>
     <p><strong>Facts:</strong> ${caseData.facts}</p>
   `
-  
+
   if (caseData.statute) {
     html += `<p><strong>Statute:</strong> ${caseData.statute}</p>`
   }
-  
+
   html += `<p><strong>Difficulty:</strong> ${caseData.difficulty}</p>`
 
   if (caseData.roles && caseData.roles[role]) {
     const roleData = caseData.roles[role]
-    
+
     html += '<div class="role-info">'
-    
+
     if (roleData.objectives && roleData.objectives.length > 0) {
       html += '<h3>Your Role Objectives:</h3><ul>'
       roleData.objectives.forEach((obj: string) => {
@@ -764,7 +1019,7 @@ function generateCaseDetailsHtml(caseData: any, role: string, caseType: string):
       })
       html += '</ul>'
     }
-    
+
     if (roleData.key_arguments && roleData.key_arguments.length > 0) {
       html += '<h3>Key Arguments:</h3><ul>'
       roleData.key_arguments.forEach((arg: string) => {
@@ -772,7 +1027,7 @@ function generateCaseDetailsHtml(caseData: any, role: string, caseType: string):
       })
       html += '</ul>'
     }
-    
+
     if (roleData.key_decisions && roleData.key_decisions.length > 0) {
       html += '<h3>Key Decisions:</h3><ul>'
       roleData.key_decisions.forEach((dec: string) => {
@@ -780,21 +1035,21 @@ function generateCaseDetailsHtml(caseData: any, role: string, caseType: string):
       })
       html += '</ul>'
     }
-    
+
     html += '</div>'
   }
-  
+
   return html
 }
 
 async function initializeCourtroomScene() {
   courtroomLoading.value = true
   courtroomError.value = false
-  
+
   try {
     const { useCourtroomScene } = await import('~/composables/useCourtroomScene')
     const courtroomScene = useCourtroomScene()
-    
+
     await courtroomScene.loadBabylonScripts()
     const initialized = await courtroomScene.initialize('renderCanvas')
     if (!initialized) {
@@ -808,7 +1063,7 @@ async function initializeCourtroomScene() {
       })
     }
     courtroomScene.run()
-    
+
     courtroomLoading.value = false
     success('3D courtroom loaded successfully!')
   } catch (err) {
@@ -829,16 +1084,16 @@ function handleReconnectCancel() {
 
 function sendChatMessage() {
   if (!chatInput.value.trim()) return
-  
+
   const message = {
     id: `msg-${Date.now()}`,
     sender: setupRole.value || 'Unknown',
     content: chatInput.value.trim(),
     timestamp: Date.now()
   }
-  
+
   chatMessages.value.push(message)
-  
+
   chatInput.value = ''
 
   nextTick(() => {
@@ -847,7 +1102,6 @@ function sendChatMessage() {
       chatContainer.scrollTop = chatContainer.scrollHeight
     }
   })
-
 }
 
 function handleChatKeypress(event: KeyboardEvent) {
@@ -896,11 +1150,11 @@ function advanceTurn() {
     currentTurn.value = turnOrder[0] || null
     return
   }
-  
+
   const currentIndex = turnOrder.indexOf(currentTurn.value)
   const nextIndex = (currentIndex + 1) % turnOrder.length
   currentTurn.value = turnOrder[nextIndex] || null
-  
+
   info(`Turn: ${currentTurn.value}`)
 }
 
@@ -915,7 +1169,7 @@ function addEvidence(description: string) {
     submittedBy: setupRole.value || 'Unknown',
     admitted: false
   }
-  
+
   evidenceList.value.push(evidence)
   success('Evidence submitted for judge review')
 }
@@ -925,7 +1179,7 @@ function admitEvidence(evidenceId: string) {
     warning('Only the judge can admit evidence')
     return
   }
-  
+
   evidenceList.value.forEach((e: any) => {
     if (e.id === evidenceId) {
       e.admitted = true
@@ -939,7 +1193,7 @@ function denyEvidence(evidenceId: string) {
     warning('Only the judge can deny evidence')
     return
   }
-  
+
   evidenceList.value = evidenceList.value.filter((e: any) => e.id !== evidenceId)
   info('Evidence denied')
 }
@@ -954,7 +1208,7 @@ function makeObjection(type: string) {
     madeBy: setupRole.value || 'Unknown',
     ruling: null
   }
-  
+
   pendingObjections.value.push(objection)
   info(`Objection: ${type}`)
 }
@@ -966,7 +1220,7 @@ function ruleOnObjection(objectionId: string, sustained: boolean) {
     warning('Only the judge can rule on objections')
     return
   }
-  
+
   pendingObjections.value.forEach((o: any) => {
     if (o.id === objectionId) {
       o.ruling = sustained ? 'sustained' : 'overruled'
@@ -982,7 +1236,7 @@ function castVote(vote: 'guilty' | 'not-guilty') {
     warning('Only jury members can vote')
     return
   }
-  
+
   const playerId = 'local-player'
   verdictVotes.value[playerId] = vote
   success(`Vote cast: ${vote}`)
@@ -996,18 +1250,17 @@ function finalizeVerdict() {
   const votes = Object.values(verdictVotes.value)
   const guiltyVotes = votes.filter(v => v === 'guilty').length
   const notGuiltyVotes = votes.filter(v => v === 'not-guilty').length
-  
+
   if (guiltyVotes > notGuiltyVotes) {
     finalVerdict.value = setupCaseType.value === 'criminal' ? 'Guilty' : 'Liable'
   } else {
     finalVerdict.value = setupCaseType.value === 'criminal' ? 'Not Guilty' : 'Not Liable'
   }
-  
+
   success(`Final verdict: ${finalVerdict.value}`)
 }
 
 function endTrial() {
-  
   showTrialInterface.value = false
   showSimulation.value = false
   showTrialSetup.value = false
@@ -1045,7 +1298,7 @@ onMounted(() => {
   if (chatInputEl) {
     chatInputEl.addEventListener('keypress', handleChatKeypress as any)
   }
-  
+
   const chatSendBtn = document.getElementById('chat-send')
   if (chatSendBtn) {
     chatSendBtn.addEventListener('click', sendChatMessage)
@@ -1054,7 +1307,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
 :root {
   --primary-color: #333;
   --secondary-color: #666;
@@ -1062,7 +1314,7 @@ onMounted(() => {
   --card-background: #fff;
   --text-color: #333;
   --link-color: #0066cc;
-  --link-hover: #007BFF;
+  --link-hover: #007bff;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --hover-shadow: rgba(0, 0, 0, 0.2);
   --accent-blue: #0066cc;
@@ -1102,7 +1354,9 @@ main {
   text-align: center;
 }
 
-main h1, main h2, main h3 {
+main h1,
+main h2,
+main h3 {
   color: var(--text-color);
 }
 
@@ -1111,7 +1365,8 @@ main h1, main h2, main h3 {
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
 }
 
-[data-theme='dark'] main h2, [data-theme='dark'] main h3 {
+[data-theme='dark'] main h2,
+[data-theme='dark'] main h3 {
   color: var(--secondary-color);
 }
 
@@ -1400,7 +1655,9 @@ main h1, main h2, main h3 {
 
 :root .role-item.claimed {
   background: var(--selected-bg);
-  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4), inset 0 0 0 3px var(--accent-blue);
+  box-shadow:
+    0 4px 12px rgba(0, 102, 204, 0.4),
+    inset 0 0 0 3px var(--accent-blue);
 }
 
 :root .role-item.claimed .role-name {
@@ -1542,14 +1799,18 @@ main h1, main h2, main h3 {
 .selection-card.selected {
   border-color: var(--accent-blue);
   border-width: 3px;
-  box-shadow: 0 0 20px var(--accent-blue), 0 0 0 2px var(--accent-blue);
+  box-shadow:
+    0 0 20px var(--accent-blue),
+    0 0 0 2px var(--accent-blue);
   transform: translateY(-2px) scale(1.02);
   background: linear-gradient(135deg, var(--card-background) 0%, rgba(0, 212, 255, 0.1) 100%);
 }
 
 :root .selection-card.selected {
   background: var(--selected-bg);
-  box-shadow: 0 8px 16px rgba(0, 102, 204, 0.3), 0 0 0 3px var(--accent-blue);
+  box-shadow:
+    0 8px 16px rgba(0, 102, 204, 0.3),
+    0 0 0 3px var(--accent-blue);
   border-color: var(--accent-blue);
 }
 
@@ -1612,11 +1873,11 @@ main h1, main h2, main h3 {
   display: none;
 }
 
-[data-case-type="civil"] .civil-role {
+[data-case-type='civil'] .civil-role {
   display: block;
 }
 
-[data-case-type="criminal"] .criminal-role {
+[data-case-type='criminal'] .criminal-role {
   display: block;
 }
 
@@ -1708,7 +1969,9 @@ main h1, main h2, main h3 {
   margin-left: 0.5rem;
 }
 
-.evidence-section, .objections-section, .verdict-section {
+.evidence-section,
+.objections-section,
+.verdict-section {
   background-color: var(--card-background);
   border: 2px solid var(--border-color);
   padding: 1.5rem;
@@ -1716,7 +1979,8 @@ main h1, main h2, main h3 {
   border-radius: 8px;
 }
 
-.evidence-item, .objection-item {
+.evidence-item,
+.objection-item {
   background: rgba(0, 0, 0, 0.02);
   padding: 1rem;
   margin: 0.5rem 0;
@@ -1735,13 +1999,15 @@ main h1, main h2, main h3 {
   margin-left: 1rem;
 }
 
-.evidence-actions, .objection-actions {
+.evidence-actions,
+.objection-actions {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
-.btn-admit, .btn-sustain {
+.btn-admit,
+.btn-sustain {
   background: #28a745;
   color: white;
   border: none;
@@ -1750,7 +2016,8 @@ main h1, main h2, main h3 {
   cursor: pointer;
 }
 
-.btn-deny, .btn-overrule {
+.btn-deny,
+.btn-overrule {
   background: #dc3545;
   color: white;
   border: none;
@@ -1984,54 +2251,54 @@ main h1, main h2, main h3 {
   .lobby-content {
     grid-template-columns: 1fr;
   }
-  
+
   .card-container {
     grid-template-columns: 1fr;
   }
-  
+
   .mode-button {
     width: 100%;
     max-width: none;
   }
-  
+
   .join-section {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .join-section .mode-button {
     width: 100%;
   }
-  
+
   #lobby-code {
     width: 100%;
   }
-  
+
   .courtroom-container {
     height: 400px;
   }
-  
+
   .simulation-area {
     padding: 1rem;
   }
-  
+
   .trial-content,
   .trial-controls {
     width: 100%;
   }
-  
+
   .chat-input-container {
     flex-wrap: wrap;
   }
-  
+
   .chat-recipient {
     width: 100%;
   }
-  
+
   .objection-buttons {
     flex-direction: column;
   }
-  
+
   .verdict-buttons {
     flex-direction: column;
   }
@@ -2041,16 +2308,16 @@ main h1, main h2, main h3 {
   main h1 {
     font-size: 1.5rem;
   }
-  
+
   .mode-button {
     font-size: 1rem;
     padding: 0.75rem 1.5rem;
   }
-  
+
   .selection-card {
     padding: 1rem;
   }
-  
+
   .chat-messages {
     height: 200px;
   }
@@ -2196,7 +2463,7 @@ main h1, main h2, main h3 {
   .role-item {
     border-width: 3px;
   }
-  
+
   .mode-button:hover,
   .selection-card:hover,
   .role-item:hover {
@@ -2264,7 +2531,8 @@ main h1, main h2, main h3 {
   margin-bottom: 1rem;
 }
 
-.case-browser, .selected-case-display {
+.case-browser,
+.selected-case-display {
   margin-top: 2rem;
 }
 
@@ -2350,7 +2618,8 @@ main h1, main h2, main h3 {
   font-weight: 600;
 }
 
-.no-cases, .waiting-message {
+.no-cases,
+.waiting-message {
   text-align: center;
   padding: 2rem;
   color: var(--secondary-color);
@@ -2423,7 +2692,8 @@ main h1, main h2, main h3 {
   flex-shrink: 0;
 }
 
-.players-header, .roles-header {
+.players-header,
+.roles-header {
   display: flex;
   justify-content: space-between;
   align-items: center;

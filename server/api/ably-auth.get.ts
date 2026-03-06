@@ -1,15 +1,15 @@
 import { defineEventHandler, getQuery, createError } from 'h3'
 import { validateOrigin } from '../utils/validateOrigin'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     validateOrigin(event)
-    
+
     const query = getQuery(event)
     const rnd = query.rnd as string
-    
+
     console.log('🔐 [DEBUG] Ably auth endpoint called', { rnd })
-    
+
     // Check if Ably configuration exists
     if (!process.env.ABLY_API_KEY) {
       console.error('❌ [ERROR] ABLY_API_KEY not configured')
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
         statusText: 'Ably not configured'
       })
     }
-    
+
     // Generate a simple token for Ably authentication
     // In production, you might want to use proper Ably token generation
     const tokenData = {
@@ -30,18 +30,17 @@ export default defineEventHandler(async (event) => {
       },
       clientId: `client-${rnd || 'unknown'}`
     }
-    
+
     console.log('✅ [DEBUG] Generated Ably token for client:', tokenData.clientId)
-    
+
     return tokenData
-    
   } catch (error: any) {
     console.error('❌ [ERROR] Ably auth failed:', error)
-    
+
     if (error.statusCode) {
       throw error
     }
-    
+
     throw createError({
       status: 500,
       statusText: 'Failed to generate Ably token'

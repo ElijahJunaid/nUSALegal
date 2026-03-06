@@ -23,7 +23,7 @@ export const caseOutcomes = [
 export const departmentStats = [
   { name: 'FBI', winRate: 78, color: '#3b82f6' },
   { name: 'State Police', winRate: 72, color: '#8b5cf6' },
-  { name: 'Sheriff\'s Office', winRate: 65, color: '#10b981' },
+  { name: "Sheriff's Office", winRate: 65, color: '#10b981' },
   { name: 'City Police', winRate: 61, color: '#f59e0b' }
 ]
 
@@ -69,7 +69,7 @@ export const topJudges = [
 export const mostActiveDepts = [
   { name: 'FBI', casesFiled: 94 },
   { name: 'State Police', casesFiled: 78 },
-  { name: 'Sheriff\'s Office', casesFiled: 52 },
+  { name: "Sheriff's Office", casesFiled: 52 },
   { name: 'City Police', casesFiled: 48 },
   { name: 'DEA', casesFiled: 31 }
 ]

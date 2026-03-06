@@ -1,18 +1,24 @@
 <template>
   <div class="roblox-check-page">
-    <div class="search-container" style="width: 90%;">
+    <div class="search-container" style="width: 90%">
       <h1>Roblox User Background Check</h1>
       <div class="search-input-group">
         <label for="username-input" class="sr-only">Roblox Username</label>
-        <input 
-          v-model="username" 
+        <input
+          v-model="username"
           type="text"
           id="username-input"
           placeholder="Enter Roblox username"
           @keypress.enter="checkUser"
           aria-label="Roblox username"
-        >
-        <button class="search-button" @click="checkUser">Search</button>
+        />
+        <button 
+          class="search-button" 
+          @click="checkUser"
+          @keydown.enter="checkUser"
+          @keydown.space="checkUser"
+          aria-label="Search for Roblox username"
+        >Search</button>
       </div>
       <div v-if="loading" class="loading">Searching...</div>
       <div v-if="error" class="error">{{ error }}</div>
@@ -21,52 +27,78 @@
         <div class="assessment-section">
           <h3>Background Check Results</h3>
           <p>
-            <strong>Hiring Status: </strong> 
+            <strong>Hiring Status:</strong>
             <span :style="{ color: getStatusColor(assessments.hiring.result) }">
               {{ assessments.hiring.result }}
             </span>
-            <br>
+            <br />
             <small>{{ assessments.hiring.reason }}</small>
           </p>
           <p>
-            <strong>EOS Compliance: </strong> 
+            <strong>EOS Compliance:</strong>
             <span :style="{ color: getStatusColor(assessments.eos.result) }">
               {{ assessments.eos.result }}
             </span>
-            <br>
+            <br />
             <small>{{ assessments.eos.reason }}</small>
           </p>
           <p>
-            <strong>Ban Status: </strong> 
+            <strong>Ban Status:</strong>
             <span :style="{ color: getStatusColor(assessments.ban.result) }">
               {{ assessments.ban.result }}
             </span>
-            <br>
+            <br />
             <small>{{ assessments.ban.reason }}</small>
           </p>
         </div>
         <button 
           class="profile-toggle" 
-          :class="{ open: showProfile }"
+          :class="{ open: showProfile }" 
           @click="toggleProfile"
+          @keydown.enter="toggleProfile"
+          @keydown.space="toggleProfile"
+          :aria-label="showProfile ? 'Hide full profile information' : 'View full profile information'"
+          :aria-expanded="showProfile"
         >
           {{ showProfile ? 'Hide Profile' : 'View Full Profile' }}
         </button>
-        <div v-if="showProfile" class="profile-section" style="display: block;">
+        <div v-if="showProfile" class="profile-section" style="display: block">
           <h3>Profile Information</h3>
-          <p><strong>Display Name:</strong> {{ result.display_name }}</p>
-          <p><strong>Account Created:</strong> {{ accountAge.date }} ({{ accountAge.ageString }} old)</p>
-          <p><strong>Account Status:</strong> {{ result.is_banned ? 'BANNED' : 'Active' }}</p>
-          <p><strong>Friends Count:</strong> {{ result.friends_count }}</p>
-          <p><strong>Badges:</strong> <span class="badge-count">{{ result.badges_count }}</span></p>
-          <p><strong>Description:</strong> {{ result.description || 'No description' }}</p>
+          <p>
+            <strong>Display Name:</strong>
+            {{ result.display_name }}
+          </p>
+          <p>
+            <strong>Account Created:</strong>
+            {{ accountAge.date }} ({{ accountAge.ageString }} old)
+          </p>
+          <p>
+            <strong>Account Status:</strong>
+            {{ result.is_banned ? 'BANNED' : 'Active' }}
+          </p>
+          <p>
+            <strong>Friends Count:</strong>
+            {{ result.friends_count }}
+          </p>
+          <p>
+            <strong>Badges:</strong>
+            <span class="badge-count">{{ result.badges_count }}</span>
+          </p>
+          <p>
+            <strong>Description:</strong>
+            {{ result.description || 'No description' }}
+          </p>
           <p><strong>Groups:</strong></p>
           <ul class="group-list">
             <li v-for="(group, index) in result.groups" :key="index">
               {{ group.group_name }} ({{ group.role_name }})
             </li>
           </ul>
-          <p><a :href="`https://www.roblox.com/users/${result.userId}/profile`" target="_blank">View Roblox Profile</a></p>
+          <p>
+            <a :href="`https://www.roblox.com/users/${result.userId}/profile`" target="_blank">
+              View Roblox Profile
+            </a>
+          </p>
         </div>
       </div>
     </div>
@@ -99,14 +131,14 @@ const assessments = ref<{
 
 const accountAge = computed(() => {
   if (!result.value?.created) return { date: '', ageString: '' }
-  
+
   const created = new Date(result.value.created)
   const createdDate = created.toLocaleDateString()
   const now = new Date()
   const ageInDays = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24))
   const ageInYears = Math.floor(ageInDays / 365)
   const ageString = ageInYears > 0 ? `${ageInYears} years` : `${ageInDays} days`
-  
+
   return { date: createdDate, ageString }
 })
 
@@ -142,43 +174,54 @@ async function hiringAssessment(data: any): Promise<Assessment> {
 
   if (data.is_banned) return { result: 'DO NOT HIRE', reason: 'Tier 1: Account is banned' }
   if (ageInDays < 30) return { result: 'DO NOT HIRE', reason: 'Tier 1: Account too new' }
-  if (data.friends_count < 5) return { result: 'CAUTION', reason: 'Tier 1: Limited social activity' }
+  if (data.friends_count < 5)
+    return { result: 'CAUTION', reason: 'Tier 1: Limited social activity' }
 
   try {
     const userId = String(data.id || '')
-    
+
     if (userId && /^[0-9]+$/.test(userId)) {
       const banResponse = await $fetch<{ result: string; reason: string }>('/api/check-nusa-bans', {
         method: 'POST',
         body: { userId }
       })
-      
+
       if (banResponse && banResponse.result === 'DO NOT HIRE') {
         return { result: banResponse.result, reason: banResponse.reason }
       }
     }
-  } catch (error) {
-    
-  }
+  } catch (error) {}
 
   if (!data.nusa_info) return { result: 'DO NOT HIRE', reason: 'Tier 2: Not a member of nUSA' }
-  if (data.federal_prisoner) return { result: 'DO NOT HIRE', reason: 'Tier 2: Federal Prisoner in nUSA' }
-  if (data.group_bans.hasLimitedRanks) return { result: 'DO NOT HIRE', reason: 'Tier 2: Has too many high ranks in agencies' }
-  if (data.group_bans.tooManyGroups) return { result: 'DO NOT HIRE', reason: `Tier 2: Member of too many agencies: (${data.group_bans.limitedGroupCount})` }
-  if (data.trello_checks.hasSevereBans) return { result: 'DO NOT HIRE', reason: 'Tier 2: Found in severe property ban list' }
-  if (data.group_bans.has_minor_bans) return { result: 'CAUTION', reason: 'Tier 2: Member of cautioned group' }
-  if (data.trello_checks.has_blacklists) return { result: 'CAUTION', reason: 'Tier 2: Department blacklist found' }
-  if (data.group_bans.has_severe_bans) return { result: 'DO NOT HIRE', reason: 'Tier 2: Member of banned group' }
-  if (data.trello_checks.has_bans) return { result: 'DO NOT HIRE', reason: 'Tier 2: Property ban found' }
-  if (data.trello_checks.hasMinorBans) return { result: 'CAUTION', reason: 'Tier 2: Found in minor property ban list' }
+  if (data.federal_prisoner)
+    return { result: 'DO NOT HIRE', reason: 'Tier 2: Federal Prisoner in nUSA' }
+  if (data.group_bans.hasLimitedRanks)
+    return { result: 'DO NOT HIRE', reason: 'Tier 2: Has too many high ranks in agencies' }
+  if (data.group_bans.tooManyGroups)
+    return {
+      result: 'DO NOT HIRE',
+      reason: `Tier 2: Member of too many agencies: (${data.group_bans.limitedGroupCount})`
+    }
+  if (data.trello_checks.hasSevereBans)
+    return { result: 'DO NOT HIRE', reason: 'Tier 2: Found in severe property ban list' }
+  if (data.group_bans.has_minor_bans)
+    return { result: 'CAUTION', reason: 'Tier 2: Member of cautioned group' }
+  if (data.trello_checks.has_blacklists)
+    return { result: 'CAUTION', reason: 'Tier 2: Department blacklist found' }
+  if (data.group_bans.has_severe_bans)
+    return { result: 'DO NOT HIRE', reason: 'Tier 2: Member of banned group' }
+  if (data.trello_checks.has_bans)
+    return { result: 'DO NOT HIRE', reason: 'Tier 2: Property ban found' }
+  if (data.trello_checks.hasMinorBans)
+    return { result: 'CAUTION', reason: 'Tier 2: Found in minor property ban list' }
 
   return { result: 'CONSIDER HIRING', reason: 'All background checks passed' }
 }
 
 function eosAssessment(data: any): Assessment {
-  const suspiciousGroups = data.groups.some((g: any) =>
-    g.group_name.toLowerCase().includes('hack') ||
-    g.group_name.toLowerCase().includes('exploit')
+  const suspiciousGroups = data.groups.some(
+    (g: any) =>
+      g.group_name.toLowerCase().includes('hack') || g.group_name.toLowerCase().includes('exploit')
   )
   if (suspiciousGroups) return { result: 'WARNING', reason: 'Membership in suspicious groups' }
   return { result: 'PASS', reason: 'No obvious EOS violations detected' }
@@ -278,7 +321,7 @@ function toggleProfile() {
   padding: 1.5rem;
   border-radius: 8px;
   margin: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .assessment-section h3 {
@@ -310,7 +353,7 @@ function toggleProfile() {
   padding: 1.5rem;
   border-radius: 8px;
   margin-top: 1rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .profile-section h3 {
@@ -331,24 +374,24 @@ function toggleProfile() {
   color: #1976d2;
 }
 
-[data-theme="dark"] .search-container {
+[data-theme='dark'] .search-container {
   background: #2d2d2d;
   color: #fff;
 }
 
-[data-theme="dark"] .assessment-section,
-[data-theme="dark"] .profile-section {
+[data-theme='dark'] .assessment-section,
+[data-theme='dark'] .profile-section {
   background: #1e1e1e;
   color: #fff;
 }
 
-[data-theme="dark"] .search-input-group input {
+[data-theme='dark'] .search-input-group input {
   background: #1e1e1e;
   color: #fff;
   border-color: #444;
 }
 
-[data-theme="dark"] .error {
+[data-theme='dark'] .error {
   background: #5d1f1f;
   color: #ffcdd2;
 }

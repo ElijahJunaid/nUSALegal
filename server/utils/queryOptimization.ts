@@ -34,7 +34,7 @@ export function createSelect<T extends Record<string, boolean>>(
   if (includeTimestamps) {
     return fields
   }
-  
+
   const { createdAt, updatedAt, ...rest } = fields
   return rest as T
 }
@@ -45,24 +45,21 @@ export async function processBatches<T, R>(
   processor: (batch: T[]) => Promise<R[]>
 ): Promise<R[]> {
   const results: R[] = []
-  
+
   for (let i = 0; i < items.length; i += batchSize) {
     const batch = items.slice(i, i + batchSize)
     const batchResults = await processor(batch)
     results.push(...batchResults)
   }
-  
+
   return results
 }
 
-export function createTextSearchWhere(
-  searchTerm: string,
-  fields: string[]
-): any {
+export function createTextSearchWhere(searchTerm: string, fields: string[]): any {
   if (!searchTerm || fields.length === 0) {
     return {}
   }
-  
+
   return {
     OR: fields.map(field => ({
       [field]: {
@@ -80,9 +77,9 @@ export function optimizeIncludes<T extends Record<string, any>>(
   if (!selectFields) {
     return includes
   }
-  
+
   const optimized = {} as T
-  
+
   for (const [key, value] of Object.entries(includes)) {
     if (value === true && selectFields) {
       optimized[key as keyof T] = { select: selectFields } as T[keyof T]
@@ -90,23 +87,20 @@ export function optimizeIncludes<T extends Record<string, any>>(
       optimized[key as keyof T] = value
     }
   }
-  
+
   return optimized
 }
 
-export function createCursorPagination(
-  cursor: string | undefined,
-  limit: number = 50
-) {
-  const take = Math.min(limit, 100) 
-  
+export function createCursorPagination(cursor: string | undefined, limit: number = 50) {
+  const take = Math.min(limit, 100)
+
   if (!cursor) {
     return { take }
   }
-  
+
   return {
     take,
-    skip: 1, 
+    skip: 1,
     cursor: { id: cursor }
   }
 }
@@ -116,7 +110,7 @@ export function debounce<T extends (...args: any[]) => any>(
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout | null = null
-  
+
   return function (...args: Parameters<T>) {
     if (timeout) clearTimeout(timeout)
     timeout = setTimeout(() => func(...args), wait)

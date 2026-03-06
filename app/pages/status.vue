@@ -33,7 +33,12 @@
       <div class="services-section">
         <h2>Service Status</h2>
         <div class="service-list">
-          <div v-for="service in services" :key="service.name" class="service-item" :class="service.status">
+          <div
+            v-for="service in services"
+            :key="service.name"
+            class="service-item"
+            :class="service.status"
+          >
             <span class="status-indicator"></span>
             <span class="service-name">{{ service.name }}</span>
             <span class="service-status">{{ service.status }}</span>
@@ -42,7 +47,14 @@
       </div>
 
       <div class="actions">
-        <button @click="refreshStatus" class="btn-refresh" :disabled="loading">
+        <button 
+          @click="refreshStatus" 
+          @keydown.enter="refreshStatus"
+          @keydown.space="refreshStatus"
+          class="btn-refresh" 
+          :disabled="loading"
+          aria-label="Refresh system status"
+        >
           {{ loading ? 'Refreshing...' : 'Refresh Status' }}
         </button>
       </div>
@@ -74,7 +86,7 @@ const services = ref([
   { name: 'OpenAI Integration', status: 'operational' },
   { name: 'Ably Realtime', status: 'operational' },
   { name: 'S3 Storage', status: 'operational' },
-  { name: 'Sentry Monitoring', status: 'operational' },
+  { name: 'Sentry Monitoring', status: 'operational' }
 ])
 
 const uptime = computed(() => {
@@ -82,7 +94,7 @@ const uptime = computed(() => {
   const days = Math.floor(seconds / 86400)
   const hours = Math.floor((seconds % 86400) / 3600)
   const mins = Math.floor((seconds % 3600) / 60)
-  
+
   if (days > 0) return `${days}d ${hours}h`
   if (hours > 0) return `${hours}h ${mins}m`
   return `${mins}m`
@@ -93,7 +105,7 @@ async function checkHealth() {
     const start = Date.now()
     const response = await $fetch('/api/health')
     const end = Date.now()
-    
+
     responseTime.value = end - start
     healthStatus.value = {
       status: 'healthy',
@@ -117,11 +129,11 @@ async function refreshStatus() {
 onMounted(() => {
   checkHealth()
   uptimeSeconds.value = Math.floor(Date.now() / 1000) % 86400
-  
+
   const interval = setInterval(() => {
     uptimeSeconds.value++
   }, 1000)
-  
+
   onUnmounted(() => {
     clearInterval(interval)
   })

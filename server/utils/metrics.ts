@@ -29,7 +29,7 @@ class MetricsCollector {
 
   recordRequest(method: string, path: string, statusCode: number, duration: number) {
     const key = `${method}:${path}:${statusCode}`
-    
+
     if (!this.metrics.requests[key]) {
       this.metrics.requests[key] = {
         count: 0,
@@ -37,29 +37,30 @@ class MetricsCollector {
         lastUpdated: Date.now()
       }
     }
-    
+
     this.metrics.requests[key].count++
-    this.metrics.requests[key].totalDuration = (this.metrics.requests[key].totalDuration || 0) + duration
+    this.metrics.requests[key].totalDuration =
+      (this.metrics.requests[key].totalDuration || 0) + duration
     this.metrics.requests[key].lastUpdated = Date.now()
   }
 
   recordError(type: string, message: string) {
     const key = `${type}:${message}`
-    
+
     if (!this.metrics.errors[key]) {
       this.metrics.errors[key] = {
         count: 0,
         lastUpdated: Date.now()
       }
     }
-    
+
     this.metrics.errors[key].count++
     this.metrics.errors[key].lastUpdated = Date.now()
   }
 
   recordApiCall(service: string, operation: string, success: boolean, duration: number) {
     const key = `${service}:${operation}:${success ? 'success' : 'failure'}`
-    
+
     if (!this.metrics.apiCalls[key]) {
       this.metrics.apiCalls[key] = {
         count: 0,
@@ -67,15 +68,16 @@ class MetricsCollector {
         lastUpdated: Date.now()
       }
     }
-    
+
     this.metrics.apiCalls[key].count++
-    this.metrics.apiCalls[key].totalDuration = (this.metrics.apiCalls[key].totalDuration || 0) + duration
+    this.metrics.apiCalls[key].totalDuration =
+      (this.metrics.apiCalls[key].totalDuration || 0) + duration
     this.metrics.apiCalls[key].lastUpdated = Date.now()
   }
 
   recordDatabaseQuery(operation: string, table: string, duration: number) {
     const key = `${operation}:${table}`
-    
+
     if (!this.metrics.database[key]) {
       this.metrics.database[key] = {
         count: 0,
@@ -83,28 +85,30 @@ class MetricsCollector {
         lastUpdated: Date.now()
       }
     }
-    
+
     this.metrics.database[key].count++
-    this.metrics.database[key].totalDuration = (this.metrics.database[key].totalDuration || 0) + duration
+    this.metrics.database[key].totalDuration =
+      (this.metrics.database[key].totalDuration || 0) + duration
     this.metrics.database[key].lastUpdated = Date.now()
   }
 
   getMetrics() {
     this.metrics.uptime = Date.now() - this.metrics.startTime
-    
+
     const summarize = (data: Record<string, MetricData>) => {
       const summary: Record<string, any> = {}
-      
+
       Object.entries(data).forEach(([key, value]) => {
         summary[key] = {
           count: value.count,
-          avgDuration: value.totalDuration && value.count > 0 
-            ? Math.round(value.totalDuration / value.count) 
-            : undefined,
+          avgDuration:
+            value.totalDuration && value.count > 0
+              ? Math.round(value.totalDuration / value.count)
+              : undefined,
           lastUpdated: new Date(value.lastUpdated).toISOString()
         }
       })
-      
+
       return summary
     }
 
@@ -132,36 +136,40 @@ class MetricsCollector {
 
   getPrometheusFormat() {
     const lines: string[] = []
-    
+
     lines.push('# HELP app_uptime_seconds Application uptime in seconds')
     lines.push('# TYPE app_uptime_seconds gauge')
     lines.push(`app_uptime_seconds ${Math.floor((Date.now() - this.metrics.startTime) / 1000)}`)
     lines.push('')
-    
+
     lines.push('# HELP http_requests_total Total number of HTTP requests')
     lines.push('# TYPE http_requests_total counter')
     Object.entries(this.metrics.requests).forEach(([key, value]) => {
       const [method, path, status] = key.split(':')
-      lines.push(`http_requests_total{method="${method}",path="${path}",status="${status}"} ${value.count}`)
+      lines.push(
+        `http_requests_total{method="${method}",path="${path}",status="${status}"} ${value.count}`
+      )
     })
     lines.push('')
-    
+
     lines.push('# HELP http_request_duration_ms HTTP request duration in milliseconds')
     lines.push('# TYPE http_request_duration_ms histogram')
     Object.entries(this.metrics.requests).forEach(([key, value]) => {
       const [method, path, status] = key.split(':')
       const avg = value.totalDuration && value.count > 0 ? value.totalDuration / value.count : 0
-      lines.push(`http_request_duration_ms{method="${method}",path="${path}",status="${status}"} ${avg.toFixed(2)}`)
+      lines.push(
+        `http_request_duration_ms{method="${method}",path="${path}",status="${status}"} ${avg.toFixed(2)}`
+      )
     })
     lines.push('')
-    
+
     lines.push('# HELP app_errors_total Total number of errors')
     lines.push('# TYPE app_errors_total counter')
     Object.entries(this.metrics.errors).forEach(([key, value]) => {
       const [type] = key.split(':')
       lines.push(`app_errors_total{type="${type}"} ${value.count}`)
     })
-    
+
     return lines.join('\n')
   }
 

@@ -8,14 +8,13 @@ interface MockTrialLobbyRequestBody {
   role?: string
 }
 
-export default defineEventHandler(async (event) => {
-  
+export default defineEventHandler(async event => {
   await apiRateLimiter.middleware()(event)
   let body: MockTrialLobbyRequestBody
-  
+
   try {
     const req = event.node?.req as any
-    
+
     if (req?.body) {
       if (typeof req.body === 'string') {
         body = JSON.parse(req.body) as MockTrialLobbyRequestBody
@@ -53,15 +52,13 @@ export default defineEventHandler(async (event) => {
 
   switch (action) {
     case 'create':
-      
       return {
         success: true,
         lobbyCode: generateLobbyCode(),
         message: 'Lobby created'
       }
-      
+
     case 'join':
-      
       if (!lobbyCode) {
         throw createError({
           status: 400,
@@ -73,16 +70,14 @@ export default defineEventHandler(async (event) => {
         lobbyCode,
         message: 'Joined lobby'
       }
-      
+
     case 'leave':
-      
       return {
         success: true,
         message: 'Left lobby'
       }
-      
+
     case 'claim-role':
-      
       if (!role) {
         throw createError({
           status: 400,
@@ -94,7 +89,7 @@ export default defineEventHandler(async (event) => {
         role,
         message: 'Role claimed'
       }
-      
+
     default:
       throw createError({
         status: 400,

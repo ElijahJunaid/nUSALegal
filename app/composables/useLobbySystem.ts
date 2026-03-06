@@ -13,11 +13,11 @@ export function useLobbySystem() {
   const isLeader = ref(false)
   const connectedPlayers = ref<Map<string, Player>>(new Map())
   const selectedCase = ref<{ type: string; index: number } | null>(null)
-  const claimedRoles = ref<Map<string, string>>(new Map()) 
-  
+  const claimedRoles = ref<Map<string, string>>(new Map())
+
   const HEARTBEAT_INTERVAL = 5000
   const PLAYER_TIMEOUT = 15000
-  
+
   let heartbeatInterval: ReturnType<typeof setInterval> | null = null
   let lastHeartbeat = Date.now()
 
@@ -32,7 +32,7 @@ export function useLobbySystem() {
       isLeader: asLeader,
       lastSeen: Date.now()
     })
-    
+
     startHeartbeat()
 
     console.log(`${asLeader ? 'Created' : 'Joined'} lobby: ${code}`)
@@ -49,7 +49,6 @@ export function useLobbySystem() {
 
   function startHeartbeat() {
     heartbeatInterval = setInterval(() => {
-      
       lastHeartbeat = Date.now()
       checkPlayersActivity()
     }, HEARTBEAT_INTERVAL)
@@ -73,7 +72,6 @@ export function useLobbySystem() {
   }
 
   function claimRole(role: string) {
-    
     const currentOwner = claimedRoles.value.get(role)
     if (currentOwner && currentOwner !== 'You') {
       throw new Error(`Role ${role} is already claimed by ${currentOwner}`)
@@ -98,7 +96,7 @@ export function useLobbySystem() {
   function releaseRole(role: string) {
     if (claimedRoles.value.get(role) === 'You') {
       claimedRoles.value.delete(role)
-      
+
       const player = connectedPlayers.value.get('You')
       if (player) {
         player.role = null
@@ -113,7 +111,7 @@ export function useLobbySystem() {
       console.warn('Only lobby leader can select case')
       return
     }
-    
+
     selectedCase.value = { type, index }
 
     console.log(`Selected case: ${type} #${index}`)
@@ -139,7 +137,6 @@ export function useLobbySystem() {
   }
 
   function onRoleClaim(playerName: string, role: string) {
-    
     const previousOwner = claimedRoles.value.get(role)
     if (previousOwner && previousOwner !== playerName) {
       const player = connectedPlayers.value.get(previousOwner)

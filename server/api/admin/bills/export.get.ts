@@ -2,10 +2,10 @@ import { congressBills } from '../../bills/congress'
 import { cityCouncilBills } from '../../bills/city-council'
 import { defineEventHandler, getQuery, createError, setHeader } from 'h3'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const query = getQuery(event)
   const format = (query.format as string) || 'json'
-  
+
   try {
     const allBills = [...congressBills, ...cityCouncilBills]
       .sort((a, b) => a.number.localeCompare(b.number))
@@ -17,11 +17,10 @@ export default defineEventHandler(async (event) => {
         description: bill.description,
         pdfPath: bill.pdfPath || ''
       }))
-    
+
     const bills = allBills
-    
+
     if (format === 'csv') {
-      
       const headers = ['ID', 'Number', 'Type', 'Category', 'Description', 'PDF Path']
       const rows = bills.map(b => [
         b.id,
@@ -31,12 +30,9 @@ export default defineEventHandler(async (event) => {
         `"${(b.description || '').replace(/"/g, '""')}"`,
         b.pdfPath || ''
       ])
-      
-      const csv = [
-        headers.join(','),
-        ...rows.map(row => row.join(','))
-      ].join('\n')
-      
+
+      const csv = [headers.join(','), ...rows.map(row => row.join(','))].join('\n')
+
       setHeader(event, 'Content-Type', 'text/csv')
       setHeader(event, 'Content-Disposition', 'attachment; filename="bills.csv"')
       return csv

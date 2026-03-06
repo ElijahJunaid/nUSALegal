@@ -6,19 +6,34 @@
     </label>
     <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-1">
       <li>
-        <button @click="exportData('json')">
+        <button 
+          @click="exportData('json')" 
+          @keydown.enter="exportData('json')"
+          @keydown.space="exportData('json')"
+          aria-label="Export data as JSON"
+        >
           <Icon name="lucide:download" class="w-4 h-4" />
           Export as JSON
         </button>
       </li>
       <li>
-        <button @click="exportData('csv')">
+        <button 
+          @click="exportData('csv')" 
+          @keydown.enter="exportData('csv')"
+          @keydown.space="exportData('csv')"
+          aria-label="Export data as CSV"
+        >
           <Icon name="lucide:file-spreadsheet" class="w-4 h-4" />
           Export as CSV
         </button>
       </li>
       <li>
-        <button @click="showImportModal = true">
+        <button 
+          @click="showImportModal = true" 
+          @keydown.enter="showImportModal = true"
+          @keydown.space="showImportModal = true"
+          aria-label="Import data"
+        >
           <Icon name="lucide:upload" class="w-4 h-4" />
           Import Data
         </button>
@@ -30,9 +45,9 @@
     <div class="modal-box">
       <h3 class="font-bold text-lg">Import {{ entityName }}</h3>
       <p class="py-4">Upload a JSON or CSV file to bulk import {{ entityName.toLowerCase() }}.</p>
-      
-      <input 
-        type="file" 
+
+      <input
+        type="file"
         ref="fileInput"
         @change="handleImportFile"
         accept=".json,.csv"
@@ -44,11 +59,15 @@
           <Icon name="lucide:check-circle" class="w-5 h-5" />
           <div>
             <p>✅ Successfully imported: {{ importResult.success }}</p>
-            <p v-if="importResult.created > 0" class="text-xs">Created: {{ importResult.created }}</p>
-            <p v-if="importResult.updated > 0" class="text-xs">Updated: {{ importResult.updated }}</p>
+            <p v-if="importResult.created > 0" class="text-xs">
+              Created: {{ importResult.created }}
+            </p>
+            <p v-if="importResult.updated > 0" class="text-xs">
+              Updated: {{ importResult.updated }}
+            </p>
           </div>
         </div>
-        
+
         <div v-if="importResult.failed > 0" class="alert alert-warning mt-2">
           <Icon name="lucide:alert-triangle" class="w-5 h-5" />
           <div>
@@ -57,7 +76,9 @@
               <summary class="cursor-pointer text-xs">View errors</summary>
               <ul class="list-disc list-inside text-xs mt-1">
                 <li v-for="(error, i) in importResult.errors.slice(0, 5)" :key="i">{{ error }}</li>
-                <li v-if="importResult.errors.length > 5">... and {{ importResult.errors.length - 5 }} more</li>
+                <li v-if="importResult.errors.length > 5">
+                  ... and {{ importResult.errors.length - 5 }} more
+                </li>
               </ul>
             </details>
           </div>
@@ -73,13 +94,24 @@
         <Icon name="lucide:loader-2" class="w-8 h-8 animate-spin mx-auto" />
         <p class="mt-2">Importing data...</p>
       </div>
-      
+
       <div class="modal-action">
-        <button @click="closeModal" class="btn">Close</button>
+        <button 
+          @click="closeModal" 
+          @keydown.enter="closeModal"
+          @keydown.space="closeModal"
+          class="btn"
+          aria-label="Close import modal"
+        >Close</button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button @click="closeModal">close</button>
+      <button 
+        @click="closeModal" 
+        @keydown.enter="closeModal"
+        @keydown.space="closeModal"
+        aria-label="Close import modal"
+      >close</button>
     </form>
   </dialog>
 </template>
@@ -88,8 +120,8 @@
 import { ref } from 'vue'
 
 interface Props {
-  endpoint: string      
-  entityName: string    
+  endpoint: string
+  entityName: string
 }
 
 const props = defineProps<Props>()
@@ -113,26 +145,25 @@ const exportData = async (format: string) => {
 const handleImportFile = async (event: Event) => {
   const target = event.target as HTMLInputElement
   if (!target.files || !target.files[0]) return
-  
+
   const file = target.files[0]
   importing.value = true
   error.value = ''
   importResult.value = null
-  
+
   try {
     const text = await file.text()
     let data: any
-    
+
     if (file.name.endsWith('.json')) {
       data = JSON.parse(text)
     } else if (file.name.endsWith('.csv')) {
-      
       const lines = text.split('\n').filter(l => l.trim())
       if (lines.length === 0) {
         throw new Error('CSV file is empty')
       }
       const headers = lines[0]!.split(',').map(h => h.trim().replace(/^"|"$/g, ''))
-      
+
       data = lines.slice(1).map(line => {
         const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''))
         const obj: any = {}
@@ -151,10 +182,9 @@ const handleImportFile = async (event: Event) => {
       method: 'POST',
       body: { [props.entityName.toLowerCase()]: dataArray }
     })
-    
+
     importResult.value = response
     emit('refresh')
-    
   } catch (e: any) {
     error.value = e.data?.message || e.message || 'Import failed'
   } finally {

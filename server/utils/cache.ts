@@ -23,15 +23,13 @@ export async function getCachedOrFetch<T>(
   fetcher: () => Promise<T>,
   ttl: number = 300
 ): Promise<T> {
-  
   if (!redis) {
     return await fetcher()
   }
 
   try {
-    
     const cached = await redis.get(key)
-    
+
     if (cached !== null) {
       return cached as T
     }
@@ -85,11 +83,7 @@ export async function getCache<T>(key: string): Promise<T | null> {
   }
 }
 
-export async function setCache<T>(
-  key: string,
-  value: T,
-  ttl: number = 300
-): Promise<void> {
+export async function setCache<T>(key: string, value: T, ttl: number = 300): Promise<void> {
   if (!redis) return
 
   try {

@@ -9,15 +9,14 @@ interface MockTrialStartRequestBody {
   playerName: string
 }
 
-export default defineEventHandler(async (event) => {
-  
+export default defineEventHandler(async event => {
   await apiRateLimiter.middleware()(event)
   let body: MockTrialStartRequestBody
   const { caseType, caseId, role, playerName } = body
-  
+
   try {
     const req = event.node?.req as any
-    
+
     if (req?.body) {
       if (typeof req.body === 'string') {
         body = JSON.parse(req.body) as MockTrialStartRequestBody
@@ -66,7 +65,7 @@ export default defineEventHandler(async (event) => {
   } else {
     caseData = getRandomCase(caseType as 'criminal' | 'civil')
   }
-  
+
   if (!caseData) {
     throw createError({
       status: 404,

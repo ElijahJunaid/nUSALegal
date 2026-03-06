@@ -1,7 +1,7 @@
 import { defineEventHandler, getQuery } from 'h3'
 import { metricsCollector } from '../utils/metrics'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(event => {
   const query = getQuery(event)
   const format = query.format || 'json'
 
@@ -11,7 +11,7 @@ export default defineEventHandler((event) => {
   }
 
   const metrics = metricsCollector.getMetrics()
-  
+
   return {
     success: true,
     timestamp: new Date().toISOString(),

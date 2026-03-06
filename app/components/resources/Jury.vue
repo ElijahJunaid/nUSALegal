@@ -16,7 +16,14 @@
         </select>
       </div>
 
-      <button @click="generateInstructions" class="btn btn-primary w-full mt-6" :disabled="!selectedCharge">
+      <button
+        @click="generateInstructions"
+        @keydown.enter="generateInstructions"
+        @keydown.space="generateInstructions"
+        class="btn btn-primary w-full mt-6"
+        :disabled="!selectedCharge"
+        aria-label="Generate jury instructions"
+      >
         Generate Jury Instructions
       </button>
 
@@ -24,7 +31,13 @@
         <div class="w-full">
           <div class="font-bold text-lg mb-3">{{ chargeTitle }}</div>
           <div class="text-sm whitespace-pre-line leading-relaxed">{{ instructions }}</div>
-          <button @click="copyInstructions" class="btn btn-sm btn-outline mt-4">
+          <button 
+            @click="copyInstructions" 
+            @keydown.enter="copyInstructions"
+            @keydown.space="copyInstructions"
+            class="btn btn-sm btn-outline mt-4"
+            :aria-label="copied ? 'Instructions copied to clipboard' : 'Copy instructions to clipboard'"
+          >
             {{ copied ? '✓ Copied!' : 'Copy to Clipboard' }}
           </button>
         </div>
@@ -141,7 +154,7 @@ function copyInstructions() {
   const text = `${chargeTitle.value}\n\n${instructions.value}`
   navigator.clipboard.writeText(text)
   copied.value = true
-  setTimeout(() => copied.value = false, 2000)
+  setTimeout(() => (copied.value = false), 2000)
 }
 </script>
 

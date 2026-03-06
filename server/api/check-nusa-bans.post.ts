@@ -7,15 +7,14 @@ interface CheckNusaBansRequestBody {
   userId: string
 }
 
-export default defineEventHandler(async (event) => {
-  
+export default defineEventHandler(async event => {
   await defaultRateLimiter.middleware()(event)
 
   let body: CheckNusaBansRequestBody
-  
+
   try {
     const req = event.node?.req as any
-    
+
     if (req?.body) {
       if (typeof req.body === 'string') {
         body = JSON.parse(req.body) as CheckNusaBansRequestBody
@@ -65,17 +64,14 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await axios.get(
-      `https://api.nusa.gg/user/${userId}/bans`,
-      {
-        timeout: 5000,
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent': 'nUSA Legal Background Check',
-          'x-api-key': apiKey
-        }
+    const response = await axios.get(`https://api.nusa.gg/user/${userId}/bans`, {
+      timeout: 5000,
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'nUSA Legal Background Check',
+        'x-api-key': apiKey
       }
-    )
+    })
 
     if (!response.data || typeof response.data !== 'object') {
       throw new Error('Invalid API response structure')

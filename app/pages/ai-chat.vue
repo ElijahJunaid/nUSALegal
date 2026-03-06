@@ -7,8 +7,8 @@
       </div>
 
       <div class="messages-area" ref="messagesContainer">
-        <div 
-          v-for="(message, index) in messages" 
+        <div
+          v-for="(message, index) in messages"
           :key="index"
           :class="['message-wrapper', message.type]"
         >
@@ -25,7 +25,7 @@
       </div>
 
       <div class="input-area">
-        <textarea 
+        <textarea
           v-model="userInput"
           placeholder="Type your legal question here... (Press Ctrl+Enter to send)"
           class="chat-textarea"
@@ -35,11 +35,14 @@
         ></textarea>
         <button 
           @click="sendMessage" 
-          class="send-button"
+          @keydown.enter="sendMessage"
+          @keydown.space="sendMessage"
+          class="send-button" 
           :disabled="isLoading || !userInput.trim()"
+          aria-label="Send message"
         >
           <svg v-if="!isLoading" viewBox="0 0 24 24" width="24" height="24">
-            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
           </svg>
           <span v-if="isLoading">Sending...</span>
           <span v-else>Send</span>
@@ -58,7 +61,7 @@ definePageMeta({
 })
 
 const userInput = ref('')
-const messages = ref<Array<{text: string, type: 'user' | 'bot', isMarkdown?: boolean}>>([])
+const messages = ref<Array<{ text: string; type: 'user' | 'bot'; isMarkdown?: boolean }>>([])
 const isLoading = ref(false)
 const messagesContainer = ref<HTMLElement | null>(null)
 const threadId = ref<string | null>(null)
@@ -81,7 +84,7 @@ const scrollToBottom = () => {
 
 const parseMarkdown = (text: string): string => {
   if (!text) return ''
-  
+
   let html = text
 
   html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>')
@@ -91,7 +94,10 @@ const parseMarkdown = (text: string): string => {
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>')
 
-  html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+  html = html.replace(
+    /\[(.+?)\]\((.+?)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+  )
 
   html = html.replace(/^\* (.+)$/gm, '<li>$1</li>')
   html = html.replace(/(<li>.+<\/li>)(\n<li>)/g, '$1$2')
@@ -104,7 +110,7 @@ const parseMarkdown = (text: string): string => {
   html = html.replace(/(<\/h[1-3]>)<\/p>/g, '$1')
   html = html.replace(/<p>(<ul>)/g, '$1')
   html = html.replace(/(<\/ul>)<\/p>/g, '$1')
-  
+
   return html
 }
 
@@ -117,12 +123,12 @@ const sendMessage = async () => {
     type: 'user',
     isMarkdown: false
   })
-  
+
   userInput.value = ''
   scrollToBottom()
 
   isLoading.value = true
-  
+
   try {
     const response = await $fetch<any>('/api/chatbot', {
       method: 'POST',
@@ -145,15 +151,15 @@ const sendMessage = async () => {
     }
   } catch (error: any) {
     console.error('Chatbot error:', error)
-    
+
     let errorMessage = '⚠️ Failed to connect to CaseBot server.'
-    
+
     if (error.statusCode === 429) {
       errorMessage = '⚠️ Too many requests. Please wait a moment before trying again.'
     } else if (error.statusCode === 400) {
       errorMessage = '⚠️ Invalid request. Please try rephrasing your question.'
     }
-    
+
     messages.value.push({
       text: errorMessage,
       type: 'bot',
@@ -288,9 +294,15 @@ const sendMessage = async () => {
   margin-top: 0;
 }
 
-.message-bubble h1 { font-size: 1.5rem; }
-.message-bubble h2 { font-size: 1.25rem; }
-.message-bubble h3 { font-size: 1.1rem; }
+.message-bubble h1 {
+  font-size: 1.5rem;
+}
+.message-bubble h2 {
+  font-size: 1.25rem;
+}
+.message-bubble h3 {
+  font-size: 1.1rem;
+}
 
 .message-bubble p {
   margin: 0.75rem 0;
@@ -364,7 +376,9 @@ const sendMessage = async () => {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .input-area {

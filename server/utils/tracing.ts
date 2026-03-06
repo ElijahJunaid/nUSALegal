@@ -20,7 +20,7 @@ class TracingManager {
   startTrace(metadata: Record<string, any> = {}): string {
     const traceId = randomUUID()
     const spanId = randomUUID()
-    
+
     const context: TraceContext = {
       traceId,
       spanId,
@@ -30,31 +30,31 @@ class TracingManager {
         timestamp: new Date().toISOString()
       }
     }
-    
+
     this.traces.set(traceId, context)
     this.activeSpans.set(traceId, spanId)
-    
+
     return traceId
   }
 
   startSpan(traceId: string, name: string, metadata: Record<string, any> = {}): string | null {
     const trace = this.traces.get(traceId)
     if (!trace) return null
-    
+
     const spanId = randomUUID()
     const parentSpanId = this.activeSpans.get(traceId)
-    
+
     this.activeSpans.set(traceId, spanId)
-    
+
     return spanId
   }
 
   endSpan(traceId: string, spanId: string, metadata: Record<string, any> = {}) {
     const trace = this.traces.get(traceId)
     if (!trace) return
-    
+
     const duration = Date.now() - trace.startTime
-    
+
     trace.metadata = {
       ...trace.metadata,
       ...metadata,
@@ -66,18 +66,18 @@ class TracingManager {
   endTrace(traceId: string, metadata: Record<string, any> = {}) {
     const trace = this.traces.get(traceId)
     if (!trace) return
-    
+
     const duration = Date.now() - trace.startTime
-    
+
     trace.metadata = {
       ...trace.metadata,
       ...metadata,
       totalDuration: `${duration}ms`,
       completedAt: new Date().toISOString()
     }
-    
+
     this.activeSpans.delete(traceId)
-    
+
     setTimeout(() => {
       this.traces.delete(traceId)
     }, 60000)

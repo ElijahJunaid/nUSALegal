@@ -53,9 +53,8 @@ export function useLobbyConnection() {
 
   async function connect(lobbyCode: string, playerName: string, isLeader: boolean) {
     isConnecting.value = true
-    
+
     try {
-      
       ably = new Ably.Realtime({ authUrl: '/api/ably-auth' })
       channel = ably.channels.get(`lobby:${lobbyCode}`)
 
@@ -67,16 +66,18 @@ export function useLobbyConnection() {
         ably.connection.on('failed', reject)
         setTimeout(() => reject(new Error('Connection timeout')), 10000)
       })
-      
+
       lobbyState.value.lobbyCode = lobbyCode
-      lobbyState.value.players = [{
-        id: clientId || 'local',
-        name: playerName,
-        role: null,
-        isLeader,
-        lastSeen: Date.now()
-      }]
-      
+      lobbyState.value.players = [
+        {
+          id: clientId || 'local',
+          name: playerName,
+          role: null,
+          isLeader,
+          lastSeen: Date.now()
+        }
+      ]
+
       isConnected.value = true
       isConnecting.value = false
 
@@ -97,9 +98,9 @@ export function useLobbyConnection() {
       startHeartbeat()
 
       startActivityMonitoring()
-      
+
       success('Connected to lobby')
-      
+
       return true
     } catch (err) {
       console.error('Failed to connect to lobby:', err)
@@ -125,12 +126,12 @@ export function useLobbyConnection() {
       channel.unsubscribe()
       channel = null
     }
-    
+
     if (ably) {
       ably.close()
       ably = null
     }
-    
+
     clientId = null
     isConnected.value = false
     lobbyState.value = {
@@ -140,13 +141,13 @@ export function useLobbyConnection() {
       players: [],
       roles: {}
     }
-    
+
     info('Disconnected from lobby')
   }
 
   function startHeartbeat() {
     if (heartbeatInterval) return
-    
+
     heartbeatInterval = setInterval(() => {
       if (!isConnected.value) return
 
@@ -173,26 +174,26 @@ export function useLobbyConnection() {
 
   function startActivityMonitoring() {
     if (activityCheckInterval) return
-    
+
     activityCheckInterval = setInterval(() => {
       if (!isConnected.value) return
-      
+
       const now = Date.now()
-      const TIMEOUT = 15000 
+      const TIMEOUT = 15000
 
       lobbyState.value.players = lobbyState.value.players.filter(player => {
         const isInactive = now - player.lastSeen > TIMEOUT
-        
+
         if (isInactive && player.id !== clientId) {
           warning(`${player.name} disconnected (timeout)`)
 
           if (player.role) {
             lobbyState.value.roles[player.role] = null
           }
-          
+
           return false
         }
-        
+
         return true
       })
     }, 5000)
@@ -207,39 +208,36 @@ export function useLobbyConnection() {
 
   async function attemptReconnect() {
     if (isReconnecting.value || reconnectAttempts.value >= 3) return
-    
+
     isReconnecting.value = true
     reconnectAttempts.value++
     reconnectCountdown.value = 10
-    
+
     info(`Reconnecting... (${reconnectAttempts.value}/3)`)
 
     reconnectCountdownInterval = setInterval(() => {
       reconnectCountdown.value--
-      
+
       if (reconnectCountdown.value <= 0) {
         stopReconnection()
         isReconnecting.value = false
         error('Reconnection failed - returning to lobby selection')
-        
       }
     }, 1000)
 
     reconnectTimeout = setTimeout(async () => {
-      const success = await connect(
-        lobbyState.value.lobbyCode,
-        'You',
-        false
-      )
-      
+      const success = await connect(lobbyState.value.lobbyCode, 'You', false)
+
       if (success) {
         isReconnecting.value = false
         reconnectAttempts.value = 0
         stopReconnection()
       } else if (reconnectAttempts.value < 3) {
-        
         isReconnecting.value = false
-        setTimeout(() => attemptReconnect().catch(err => console.error('Reconnect attempt failed:', err)), 2000)
+        setTimeout(
+          () => attemptReconnect().catch(err => console.error('Reconnect attempt failed:', err)),
+          2000
+        )
       } else {
         isReconnecting.value = false
         error('Failed to reconnect after 3 attempts')
@@ -252,7 +250,7 @@ export function useLobbyConnection() {
       clearTimeout(reconnectTimeout)
       reconnectTimeout = null
     }
-    
+
     if (reconnectCountdownInterval) {
       clearInterval(reconnectCountdownInterval)
       reconnectCountdownInterval = null
@@ -269,7 +267,7 @@ export function useLobbyConnection() {
     const { id, name, isLeader } = message.data
 
     if (id === clientId) return
-    
+
     const existingPlayer = lobbyState.value.players.find(p => p.id === id)
     if (!existingPlayer) {
       lobbyState.value.players.push({
@@ -282,10 +280,10 @@ export function useLobbyConnection() {
       info(`${name} joined the lobby`)
     }
   }
-  
+
   function onPlayerLeft(message: any) {
     const { id } = message.data
-    
+
     const player = lobbyState.value.players.find(p => p.id === id)
     if (player) {
       lobbyState.value.players = lobbyState.value.players.filter(p => p.id !== id)
@@ -293,49 +291,47 @@ export function useLobbyConnection() {
       if (player.role) {
         lobbyState.value.roles[player.role] = null
       }
-      
+
       warning(`${player.name} left the lobby`)
     }
   }
-  
+
   function onRoleClaimed(message: any) {
     const { playerId, playerName, roleId, roleName } = message.data
 
     const player = lobbyState.value.players.find(p => p.id === playerId)
     if (player) {
-      
       if (player.role) {
         lobbyState.value.roles[player.role] = null
       }
-      
+
       player.role = roleName
       lobbyState.value.roles[roleId] = playerName
-      
+
       if (playerId !== clientId) {
         info(`${playerName} claimed ${roleName}`)
       }
     }
   }
-  
+
   function onCaseSelected(message: any) {
     const { case: selectedCase } = message.data
     lobbyState.value.selectedCase = selectedCase
-    
+
     if (message.clientId !== clientId) {
       info(`Case selected: ${selectedCase.title}`)
     }
   }
-  
-  function onTrialStart(message: any) {
 
+  function onTrialStart(message: any) {
     if (message.clientId !== clientId) {
       info('Trial is starting!')
     }
   }
-  
+
   function onHeartbeat(message: any) {
     const { playerId, timestamp } = message.data
-    
+
     const player = lobbyState.value.players.find(p => p.id === playerId)
     if (player) {
       player.lastSeen = timestamp
@@ -343,10 +339,8 @@ export function useLobbyConnection() {
   }
 
   function claimRole(roleId: string, roleName: string) {
-    
     const localPlayer = lobbyState.value.players.find(p => p.id === clientId)
     if (localPlayer) {
-      
       if (localPlayer.role) {
         lobbyState.value.roles[localPlayer.role] = null
       }
@@ -376,7 +370,6 @@ export function useLobbyConnection() {
   }
 
   function startTrial() {
-    
     if (channel) {
       channel.publish('trial-start', {
         case: lobbyState.value.selectedCase,
@@ -384,7 +377,7 @@ export function useLobbyConnection() {
         timestamp: Date.now()
       })
     }
-    
+
     return {
       case: lobbyState.value.selectedCase,
       roles: lobbyState.value.roles
@@ -394,9 +387,8 @@ export function useLobbyConnection() {
   onUnmounted(() => {
     disconnect()
   })
-  
+
   return {
-    
     isConnected,
     isConnecting,
     isReconnecting,

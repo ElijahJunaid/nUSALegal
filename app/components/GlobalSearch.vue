@@ -1,7 +1,7 @@
 <template>
   <div class="relative w-full max-w-md">
     <div class="relative">
-      <input 
+      <input
         v-model="searchQuery"
         @input="handleSearch"
         @focus="showResults = true"
@@ -10,32 +10,43 @@
         class="input input-bordered w-full pl-10 pr-10"
       />
       <Icon name="lucide:search" class="w-5 h-5 absolute left-3 top-3 text-gray-400" />
-      
-      <button 
+
+      <button
         v-if="searchQuery"
         @click="clearSearch"
+        @keydown.enter="clearSearch"
+        @keydown.space="clearSearch"
         class="btn btn-ghost btn-xs btn-circle absolute right-2 top-2"
+        aria-label="Clear search query"
       >
         <Icon name="lucide:x" class="w-4 h-4" />
       </button>
     </div>
 
-    <div v-if="isLoading" class="absolute top-full left-0 right-0 mt-2 bg-base-100 shadow-xl rounded-lg p-4 z-50">
+    <div
+      v-if="isLoading"
+      class="absolute top-full left-0 right-0 mt-2 bg-base-100 shadow-xl rounded-lg p-4 z-50"
+    >
       <div class="flex items-center justify-center gap-2">
         <Icon name="lucide:loader-2" class="w-5 h-5 animate-spin" />
         <span>Searching...</span>
       </div>
     </div>
 
-    <div 
-      v-else-if="showResults && results.length > 0" 
+    <div
+      v-else-if="showResults && results.length > 0"
       class="absolute top-full left-0 right-0 mt-2 bg-base-100 shadow-xl rounded-lg max-h-96 overflow-y-auto z-50 border border-base-300"
     >
-      <div 
-        v-for="result in results" 
-        :key="result.id || result.title" 
+      <div
+        v-for="result in results"
+        :key="result.id || result.title"
         class="p-3 hover:bg-base-200 cursor-pointer border-b border-base-200 last:border-b-0"
         @click="selectResult(result)"
+        @keydown.enter="selectResult(result)"
+        @keydown.space="selectResult(result)"
+        role="button"
+        tabindex="0"
+        :aria-label="`Select ${result.title}`"
       >
         <div class="flex items-center gap-2">
           <span class="badge badge-sm" :class="getBadgeClass(result.type)">
@@ -49,7 +60,7 @@
       </div>
     </div>
 
-    <div 
+    <div
       v-else-if="showResults && searchQuery.length >= 2 && results.length === 0 && !isLoading"
       class="absolute top-full left-0 right-0 mt-2 bg-base-100 shadow-xl rounded-lg p-4 z-50 border border-base-300"
     >
@@ -102,12 +113,12 @@ const handleClickOutside = (e: MouseEvent) => {
 
 const handleSearch = async () => {
   clearTimeout(searchTimeout!)
-  
+
   if (searchQuery.value.length < 2) {
     results.value = []
     return
   }
-  
+
   isLoading.value = true
   searchTimeout = setTimeout(async () => {
     try {
@@ -131,17 +142,16 @@ const clearSearch = () => {
 }
 
 const selectResult = (result: any) => {
-  
   showResults.value = false
-  
+
   console.log('Selected:', result)
 }
 
 const getBadgeClass = (type: string) => {
   const classes: Record<string, string> = {
-    'bill': 'badge-primary',
-    'law': 'badge-secondary',
-    'definition': 'badge-accent',
+    bill: 'badge-primary',
+    law: 'badge-secondary',
+    definition: 'badge-accent',
     'executive-order': 'badge-warning'
   }
   return classes[type] || 'badge-ghost'

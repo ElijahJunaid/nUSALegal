@@ -1,33 +1,33 @@
 <template>
   <div v-if="shouldShowChatbot">
-    
-    <button 
-      id="chat-toggle-btn" 
+    <button
+      id="chat-toggle-btn"
       @click="toggleChat"
+      @keydown.enter="toggleChat"
+      @keydown.space="toggleChat"
       :title="isOpen ? 'Close chat' : 'Open chat'"
       :aria-label="isOpen ? 'Close chat' : 'Open chat'"
+      :aria-expanded="isOpen"
     >
       💬
     </button>
 
-    <div 
-      v-if="isOpen"
-      id="chat-container" 
-      role="region" 
-      aria-label="Chatbot window"
-    >
+    <div v-if="isOpen" id="chat-container" role="region" aria-label="Chatbot window">
       <div id="chat-header">
         <span>🧑‍⚖️ CaseBot</span>
         <NuxtLink to="/ai-chat" class="expand-btn" title="Open full-page chat">
           <svg viewBox="0 0 24 24" width="20" height="20">
-            <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+            <path
+              fill="currentColor"
+              d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"
+            />
           </svg>
         </NuxtLink>
       </div>
-      
+
       <div id="chat-messages" ref="messagesContainer" aria-live="polite">
-        <div 
-          v-for="(message, index) in messages" 
+        <div
+          v-for="(message, index) in messages"
           :key="index"
           :class="['message', message.type]"
           role="log"
@@ -38,25 +38,27 @@
 
         <div v-if="isLoading" class="spinner"></div>
       </div>
-      
+
       <div id="chat-input">
-        <input 
+        <input
           v-model="userInput"
-          type="text" 
-          id="query-input" 
-          placeholder="Ask your legal question..." 
-          autocomplete="off" 
+          type="text"
+          id="query-input"
+          placeholder="Ask your legal question..."
+          autocomplete="off"
           aria-label="Chat input"
           @keyup.enter="sendMessage"
         />
         <button 
           id="send-btn" 
-          @click="sendMessage"
+          @click="sendMessage" 
+          @keydown.enter="sendMessage"
+          @keydown.space="sendMessage"
           aria-label="Send message" 
           type="button"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
           </svg>
         </button>
       </div>
@@ -70,7 +72,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const isOpen = ref(false)
 const userInput = ref('')
-const messages = ref<Array<{text: string, type: 'user' | 'bot', isMarkdown?: boolean}>>([])
+const messages = ref<Array<{ text: string; type: 'user' | 'bot'; isMarkdown?: boolean }>>([])
 const isLoading = ref(false)
 const messagesContainer = ref<HTMLElement | null>(null)
 const threadId = ref<string | null>(null)
@@ -115,7 +117,7 @@ const sanitizeInput = (input: string): string => {
 
 const parseMarkdown = (text: string): string => {
   if (!text) return ''
-  
+
   let html = text
 
   html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>')
@@ -125,7 +127,10 @@ const parseMarkdown = (text: string): string => {
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>')
 
-  html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+  html = html.replace(
+    /\[(.+?)\]\((.+?)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+  )
 
   html = html.replace(/^\* (.+)$/gm, '<li>$1</li>')
   html = html.replace(/(<li>.+<\/li>)(\n<li>)/g, '$1$2')
@@ -138,7 +143,7 @@ const parseMarkdown = (text: string): string => {
   html = html.replace(/(<\/h[1-3]>)<\/p>/g, '$1')
   html = html.replace(/<p>(<ul>)/g, '$1')
   html = html.replace(/(<\/ul>)<\/p>/g, '$1')
-  
+
   return html
 }
 
@@ -151,12 +156,12 @@ const sendMessage = async () => {
     type: 'user',
     isMarkdown: false
   })
-  
+
   userInput.value = ''
   scrollToBottom()
 
   isLoading.value = true
-  
+
   try {
     const response = await $fetch<any>('/api/chatbot', {
       method: 'POST',
@@ -179,15 +184,15 @@ const sendMessage = async () => {
     }
   } catch (error: any) {
     console.error('Chatbot error:', error)
-    
+
     let errorMessage = '⚠️ Failed to connect to CaseBot server.'
-    
+
     if (error.statusCode === 429) {
       errorMessage = '⚠️ Too many requests. Please wait a moment before trying again.'
     } else if (error.statusCode === 400) {
       errorMessage = '⚠️ Invalid request. Please try rephrasing your question.'
     }
-    
+
     messages.value.push({
       text: errorMessage,
       type: 'bot',
@@ -209,7 +214,7 @@ const sendMessage = async () => {
   height: 56px;
   background: #003366;
   border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   z-index: 10000;
   display: flex;
@@ -249,7 +254,7 @@ const sendMessage = async () => {
   display: flex;
   flex-direction: column;
   font-family: Arial, sans-serif;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   z-index: 9999;
 }
@@ -335,14 +340,22 @@ const sendMessage = async () => {
   color: #e2e8f0;
 }
 
-.message h1, .message h2, .message h3 {
+.message h1,
+.message h2,
+.message h3 {
   margin: 0.5em 0 0.3em 0;
   font-weight: bold;
 }
 
-.message h1 { font-size: 1.4em; }
-.message h2 { font-size: 1.2em; }
-.message h3 { font-size: 1.1em; }
+.message h1 {
+  font-size: 1.4em;
+}
+.message h2 {
+  font-size: 1.2em;
+}
+.message h3 {
+  font-size: 1.1em;
+}
 
 .message p {
   margin: 0.5em 0;
@@ -459,7 +472,9 @@ const sendMessage = async () => {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -469,11 +484,11 @@ const sendMessage = async () => {
     bottom: 90px;
     height: 400px;
   }
-  
+
   #chat-header {
     font-size: 15px;
   }
-  
+
   #query-input {
     font-size: 13px;
   }

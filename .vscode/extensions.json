@@ -1,0 +1,41 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    "Vue.volar",
+    "Vue.vscode-typescript-vue-plugin",
+
+    "ms-vscode.vscode-typescript-next",
+
+    "nuxtr.nuxtr-vscode",
+
+    "bradlc.vscode-tailwindcss",
+
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "eamodio.gitlens",
+    "GitHub.vscode-pull-request-github",
+
+    "ms-vscode.vscode-json",
+    "redhat.vscode-yaml",
+    "ms-vscode.vscode-markdown",
+    "yzhang.markdown-all-in-one",
+
+    "ms-vscode.vscode-node-azure-pack",
+    "ms-vscode-remote.remote-containers",
+    "ms-vscode.vscode-docker",
+
+    "SonarSource.sonarlint-vscode",
+    "ms-vscode.vscode-security-hotspots",
+
+    "ms-vscode.vscode-powershell",
+    "ms-vscode.vscode-shell-script",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "streetsidesoftware.code-spell-checker",
+
+    "ms-vscode.vscode-jest",
+    "vitest.explorer"
+  ]
+}

@@ -1,13 +1,13 @@
 import { defineEventHandler, getQuery } from 'h3'
 import { tracingManager } from '../utils/tracing'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(event => {
   const query = getQuery(event)
   const traceId = query.traceId as string | undefined
 
   if (traceId) {
     const trace = tracingManager.getTrace(traceId)
-    
+
     if (!trace) {
       return {
         success: false,
@@ -23,7 +23,7 @@ export default defineEventHandler((event) => {
   }
 
   const allTraces = tracingManager.getAllTraces()
-  
+
   return {
     success: true,
     count: allTraces.length,
