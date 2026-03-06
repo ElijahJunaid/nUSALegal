@@ -24,15 +24,17 @@
             <slot />
           </div>
         </div>
-        <label 
-          class="modal-backdrop" 
+        <label
+          class="modal-backdrop"
           @click="$emit('close')"
           @keydown.enter="$emit('close')"
           @keydown.space="$emit('close')"
           role="button"
           tabindex="0"
           aria-label="Close modal backdrop"
-        >Close</label>
+        >
+          Close
+        </label>
       </div>
     </Teleport>
   </ClientOnly>

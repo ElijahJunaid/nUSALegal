@@ -22,8 +22,8 @@
 
     <div v-else class="grid gap-4">
       <template v-for="(dt, index) in filteredLaws" :key="index">
-        <div 
-          @click="$emit('show-detail', dt)" 
+        <div
+          @click="$emit('show-detail', dt)"
           @keydown.enter="$emit('show-detail', dt)"
           @keydown.space="$emit('show-detail', dt)"
           class="card border border-base-300 h-fit"

@@ -98,8 +98,8 @@ const handleGoBack = () => {
         </div>
 
         <div class="card-actions justify-center gap-2">
-          <button 
-            @click="handleGoBack" 
+          <button
+            @click="handleGoBack"
             @keydown.enter="handleGoBack"
             @keydown.space="handleGoBack"
             class="btn btn-primary"

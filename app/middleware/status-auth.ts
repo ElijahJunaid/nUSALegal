@@ -1,6 +1,6 @@
 import { defineNuxtRouteMiddleware, navigateTo, useRuntimeConfig } from '#imports'
 
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(to => {
   const config = useRuntimeConfig()
   const adminKey = config.public.statusAdminKey || ''
 

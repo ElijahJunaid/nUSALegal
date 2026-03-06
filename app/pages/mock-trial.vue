@@ -222,9 +222,9 @@
             <span v-if="!isLoading">Start Trial</span>
             <span v-else class="loading">Starting...</span>
           </button>
-          <button 
-            class="leave-button" 
-            @click="leaveLobby" 
+          <button
+            class="leave-button"
+            @click="leaveLobby"
             @keydown.enter="leaveLobby"
             @keydown.space="leaveLobby"
             :disabled="isLoading"
@@ -427,20 +427,24 @@
               <p>{{ ev.description }}</p>
               <span class="evidence-status">{{ ev.admitted ? '✓ Admitted' : 'Pending' }}</span>
               <div v-if="setupRole === 'judge' && !ev.admitted" class="evidence-actions">
-                <button 
-                  @click="admitEvidence(ev.id)" 
+                <button
+                  @click="admitEvidence(ev.id)"
                   @keydown.enter="admitEvidence(ev.id)"
                   @keydown.space="admitEvidence(ev.id)"
                   class="btn-admit"
                   :aria-label="`Admit evidence: ${ev.description}`"
-                >Admit</button>
-                <button 
-                  @click="denyEvidence(ev.id)" 
+                >
+                  Admit
+                </button>
+                <button
+                  @click="denyEvidence(ev.id)"
                   @keydown.enter="denyEvidence(ev.id)"
                   @keydown.space="denyEvidence(ev.id)"
                   class="btn-deny"
                   :aria-label="`Deny evidence: ${ev.description}`"
-                >Deny</button>
+                >
+                  Deny
+                </button>
               </div>
             </div>
           </div>
@@ -454,15 +458,17 @@
               </p>
               <span v-if="obj.ruling" class="ruling">{{ obj.ruling.toUpperCase() }}</span>
               <div v-if="setupRole === 'judge' && !obj.ruling" class="objection-actions">
-                <button 
-                  @click="ruleOnObjection(obj.id, true)" 
+                <button
+                  @click="ruleOnObjection(obj.id, true)"
                   @keydown.enter="ruleOnObjection(obj.id, true)"
                   @keydown.space="ruleOnObjection(obj.id, true)"
                   class="btn-sustain"
                   :aria-label="`Sustain objection: ${obj.type}`"
-                >Sustain</button>
-                <button 
-                  @click="ruleOnObjection(obj.id, false)" 
+                >
+                  Sustain
+                </button>
+                <button
+                  @click="ruleOnObjection(obj.id, false)"
                   @keydown.enter="ruleOnObjection(obj.id, false)"
                   @keydown.space="ruleOnObjection(obj.id, false)"
                   class="btn-overrule"
@@ -478,8 +484,8 @@
             <h2>Jury Deliberation</h2>
             <p>Cast your verdict:</p>
             <div class="verdict-buttons">
-              <button 
-                @click="castVote('guilty')" 
+              <button
+                @click="castVote('guilty')"
                 @keydown.enter="castVote('guilty')"
                 @keydown.space="castVote('guilty')"
                 class="btn-verdict btn-guilty"
@@ -487,8 +493,8 @@
               >
                 {{ setupCaseType === 'criminal' ? 'Guilty' : 'Liable' }}
               </button>
-              <button 
-                @click="castVote('not-guilty')" 
+              <button
+                @click="castVote('not-guilty')"
                 @keydown.enter="castVote('not-guilty')"
                 @keydown.space="castVote('not-guilty')"
                 class="btn-verdict btn-not-guilty"
@@ -499,13 +505,15 @@
             </div>
             <div v-if="finalVerdict" class="final-verdict">
               <h2>Final Verdict: {{ finalVerdict }}</h2>
-              <button 
-                @click="endTrial()" 
+              <button
+                @click="endTrial()"
                 @keydown.enter="endTrial()"
                 @keydown.space="endTrial()"
                 class="btn-end-trial"
                 aria-label="End trial and return to main menu"
-              >End Trial</button>
+              >
+                End Trial
+              </button>
             </div>
           </div>
         </div>
@@ -524,12 +532,14 @@
               >
                 Call Witness
               </button>
-              <button 
-                @click="advanceTurn()" 
+              <button
+                @click="advanceTurn()"
                 @keydown.enter="advanceTurn()"
                 @keydown.space="advanceTurn()"
                 aria-label="Advance to next turn"
-              >Advance Turn</button>
+              >
+                Advance Turn
+              </button>
             </div>
 
             <div v-if="setupRole === 'prosecutor' || setupRole === 'defense'" class="role-actions">
@@ -588,8 +598,8 @@
             </div>
 
             <div v-if="setupRole === 'jury'" class="role-actions">
-              <button 
-                @click="performRoleAction('deliberate')" 
+              <button
+                @click="performRoleAction('deliberate')"
                 @keydown.enter="performRoleAction('deliberate')"
                 @keydown.space="performRoleAction('deliberate')"
                 aria-label="Begin jury deliberation"
@@ -598,13 +608,15 @@
               </button>
             </div>
 
-            <button 
-                @click="endTrial()" 
-                @keydown.enter="endTrial()"
-                @keydown.space="endTrial()"
-                class="btn-end-trial"
-                aria-label="End trial and return to main menu"
-              >End Trial</button>
+            <button
+              @click="endTrial()"
+              @keydown.enter="endTrial()"
+              @keydown.space="endTrial()"
+              class="btn-end-trial"
+              aria-label="End trial and return to main menu"
+            >
+              End Trial
+            </button>
           </div>
 
           <div id="chat-interface" class="chat-interface">
@@ -637,14 +649,16 @@
                 placeholder="Type your message..."
                 autocomplete="off"
               />
-              <button 
-                id="chat-send" 
+              <button
+                id="chat-send"
                 class="chat-send"
                 @click="sendChatMessage"
                 @keydown.enter="sendChatMessage"
                 @keydown.space="sendChatMessage"
                 aria-label="Send chat message"
-              >Send</button>
+              >
+                Send
+              </button>
             </div>
           </div>
         </div>

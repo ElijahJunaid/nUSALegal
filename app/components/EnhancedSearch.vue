@@ -22,18 +22,20 @@
             @input="onSearchInput"
             @focus="showResults = true"
           />
-          <button 
-            v-if="searchQuery" 
-            @click="clearSearch" 
+          <button
+            v-if="searchQuery"
+            @click="clearSearch"
             @keydown.enter="clearSearch"
             @keydown.space="clearSearch"
             class="clear-button"
             aria-label="Clear search query"
-          >✕</button>
+          >
+            ✕
+          </button>
         </div>
 
-        <button 
-          @click="showFilters = !showFilters" 
+        <button
+          @click="showFilters = !showFilters"
           @keydown.enter="showFilters = !showFilters"
           @keydown.space="showFilters = !showFilters"
           class="filter-toggle"

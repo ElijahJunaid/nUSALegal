@@ -47,11 +47,11 @@
       </div>
 
       <div class="actions">
-        <button 
-          @click="refreshStatus" 
+        <button
+          @click="refreshStatus"
           @keydown.enter="refreshStatus"
           @keydown.space="refreshStatus"
-          class="btn-refresh" 
+          class="btn-refresh"
           :disabled="loading"
           aria-label="Refresh system status"
         >

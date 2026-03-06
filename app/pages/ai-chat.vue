@@ -33,11 +33,11 @@
           @keydown.ctrl.enter="sendMessage"
           @keydown.meta.enter="sendMessage"
         ></textarea>
-        <button 
-          @click="sendMessage" 
+        <button
+          @click="sendMessage"
           @keydown.enter="sendMessage"
           @keydown.space="sendMessage"
-          class="send-button" 
+          class="send-button"
           :disabled="isLoading || !userInput.trim()"
           aria-label="Send message"
         >

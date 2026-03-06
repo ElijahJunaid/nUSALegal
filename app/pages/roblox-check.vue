@@ -12,13 +12,15 @@
           @keypress.enter="checkUser"
           aria-label="Roblox username"
         />
-        <button 
-          class="search-button" 
+        <button
+          class="search-button"
           @click="checkUser"
           @keydown.enter="checkUser"
           @keydown.space="checkUser"
           aria-label="Search for Roblox username"
-        >Search</button>
+        >
+          Search
+        </button>
       </div>
       <div v-if="loading" class="loading">Searching...</div>
       <div v-if="error" class="error">{{ error }}</div>
@@ -51,13 +53,15 @@
             <small>{{ assessments.ban.reason }}</small>
           </p>
         </div>
-        <button 
-          class="profile-toggle" 
-          :class="{ open: showProfile }" 
+        <button
+          class="profile-toggle"
+          :class="{ open: showProfile }"
           @click="toggleProfile"
           @keydown.enter="toggleProfile"
           @keydown.space="toggleProfile"
-          :aria-label="showProfile ? 'Hide full profile information' : 'View full profile information'"
+          :aria-label="
+            showProfile ? 'Hide full profile information' : 'View full profile information'
+          "
           :aria-expanded="showProfile"
         >
           {{ showProfile ? 'Hide Profile' : 'View Full Profile' }}

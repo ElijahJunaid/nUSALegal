@@ -113,14 +113,16 @@
                           {{ dt.description }}
                         </p>
                       </div>
-                      <button 
-                        v-if="dt.hasArticle" 
+                      <button
+                        v-if="dt.hasArticle"
                         class="btn"
                         @click="handleClick"
                         @keydown.enter="handleClick"
                         @keydown.space="handleClick"
                         :aria-label="`Read article: ${dt.title}`"
-                      >Read Article</button>
+                      >
+                        Read Article
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -158,9 +160,9 @@
                 <p class="text-sm text-center" v-html="articleContent.content"></p>
               </div>
               <div class="join">
-                <button 
-                  class="join-item btn" 
-                  :disabled="articlePage == 1" 
+                <button
+                  class="join-item btn"
+                  :disabled="articlePage == 1"
                   @click="--articlePage"
                   @keydown.enter="--articlePage"
                   @keydown.space="--articlePage"
@@ -168,7 +170,11 @@
                 >
                   «
                 </button>
-                <button class="join-item btn" disabled aria-label="Current page: {{ articleContent?.title || 'Content' }}">
+                <button
+                  class="join-item btn"
+                  disabled
+                  aria-label="Current page: {{ articleContent?.title || 'Content' }}"
+                >
                   {{ articleContent?.title || 'Content' }}
                 </button>
                 <button class="join-item btn" disabled aria-label="Next page (disabled)">»</button>

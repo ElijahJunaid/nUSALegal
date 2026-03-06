@@ -41,11 +41,11 @@
         <p>THIS IS NOT REAL LIFE!</p>
       </footer>
 
-      <button 
-        @click="toggleTheme" 
+      <button
+        @click="toggleTheme"
         @keydown.enter="toggleTheme"
         @keydown.space="toggleTheme"
-        class="theme-toggle" 
+        class="theme-toggle"
         aria-label="Toggle theme"
         :aria-pressed="theme === 'dark'"
       >

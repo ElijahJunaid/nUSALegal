@@ -87,8 +87,8 @@
         </div>
       </div>
 
-      <button 
-        @click="generateCitation" 
+      <button
+        @click="generateCitation"
         @keydown.enter="generateCitation"
         @keydown.space="generateCitation"
         class="btn btn-primary w-full mt-6"
@@ -101,8 +101,8 @@
         <div class="w-full">
           <div class="font-semibold mb-2">Generated Citation:</div>
           <div class="font-mono text-sm bg-base-200 p-3 rounded">{{ result }}</div>
-          <button 
-            @click="copyCitation" 
+          <button
+            @click="copyCitation"
             @keydown.enter="copyCitation"
             @keydown.space="copyCitation"
             class="btn btn-sm btn-outline mt-3"

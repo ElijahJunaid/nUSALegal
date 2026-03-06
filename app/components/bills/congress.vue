@@ -29,8 +29,8 @@
         <div class="card-body text-center">
           <div>
             <h3 class="text-center font-bold text-xl">{{ bill.number }}</h3>
-            <button 
-              @click="$emit('open-pdf', bill.pdfPath)" 
+            <button
+              @click="$emit('open-pdf', bill.pdfPath)"
               @keydown.enter="$emit('open-pdf', bill.pdfPath)"
               @keydown.space="$emit('open-pdf', bill.pdfPath)"
               class="btn hover:text-primary-focus"

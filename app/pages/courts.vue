@@ -5,15 +5,17 @@
         <div class="card">
           <div class="card-body">
             <div v-if="courtType === 'selection'" class="sub-menu-list">
-              <button 
-                @click="courtType = 'scotus'" 
+              <button
+                @click="courtType = 'scotus'"
                 @keydown.enter="courtType = 'scotus'"
                 @keydown.space="courtType = 'scotus'"
                 class="btn btn-primary"
                 aria-label="Select Supreme Court"
-              >Supreme Court</button>
-              <button 
-                @click="courtType = 'district'" 
+              >
+                Supreme Court
+              </button>
+              <button
+                @click="courtType = 'district'"
                 @keydown.enter="courtType = 'district'"
                 @keydown.space="courtType = 'district'"
                 class="btn btn-primary"
@@ -24,13 +26,15 @@
             </div>
 
             <div v-else-if="courtType === 'scotus'" class="sub-menu-list">
-              <button 
-                @click="courtType = 'selection'" 
+              <button
+                @click="courtType = 'selection'"
                 @keydown.enter="courtType = 'selection'"
                 @keydown.space="courtType = 'selection'"
                 class="btn btn-outline"
                 aria-label="Go back to court selection"
-              >← Back</button>
+              >
+                ← Back
+              </button>
               <button
                 v-for="vol in courtsStore.availableVolumes"
                 :key="vol.volume"
@@ -50,13 +54,15 @@
             </div>
 
             <div v-else-if="courtType === 'district'" class="sub-menu-list">
-              <button 
-                @click="courtType = 'selection'" 
+              <button
+                @click="courtType = 'selection'"
                 @keydown.enter="courtType = 'selection'"
                 @keydown.space="courtType = 'selection'"
                 class="btn btn-outline"
                 aria-label="Go back to court selection"
-              >← Back</button>
+              >
+                ← Back
+              </button>
             </div>
           </div>
         </div>
@@ -71,8 +77,8 @@
               <p class="text-center text-lg mb-8">Select which court to browse:</p>
 
               <div class="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
-                <button 
-                  @click="courtType = 'scotus'" 
+                <button
+                  @click="courtType = 'scotus'"
                   @keydown.enter="courtType = 'scotus'"
                   @keydown.space="courtType = 'scotus'"
                   class="court-selection-card"
@@ -83,8 +89,8 @@
                   <p class="text-sm opacity-80">Browse landmark SCOTUS decisions</p>
                 </button>
 
-                <button 
-                  @click="courtType = 'district'" 
+                <button
+                  @click="courtType = 'district'"
                   @keydown.enter="courtType = 'district'"
                   @keydown.space="courtType = 'district'"
                   class="court-selection-card"
@@ -108,8 +114,8 @@
               </div>
 
               <div class="sub-menu-list-mobile">
-                <button 
-                  @click="courtType = 'selection'" 
+                <button
+                  @click="courtType = 'selection'"
                   @keydown.enter="courtType = 'selection'"
                   @keydown.space="courtType = 'selection'"
                   class="btn btn-sm btn-outline"
@@ -229,8 +235,8 @@
               </div>
 
               <div class="sub-menu-list-mobile">
-                <button 
-                  @click="courtType = 'selection'" 
+                <button
+                  @click="courtType = 'selection'"
                   @keydown.enter="courtType = 'selection'"
                   @keydown.space="courtType = 'selection'"
                   class="btn btn-sm btn-outline"

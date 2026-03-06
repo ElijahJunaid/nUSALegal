@@ -45,11 +45,11 @@
         </label>
       </div>
 
-      <button 
-        @click="calculateSentencing" 
+      <button
+        @click="calculateSentencing"
         @keydown.enter="calculateSentencing"
         @keydown.space="calculateSentencing"
-        class="btn btn-primary w-full mt-6" 
+        class="btn btn-primary w-full mt-6"
         :disabled="!offense"
         aria-label="Calculate sentencing range"
       >

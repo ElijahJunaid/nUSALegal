@@ -29,7 +29,19 @@ export default [
         showError: 'readonly',
         clearError: 'readonly',
         $fetch: 'readonly',
-        useNuxtApp: 'readonly'
+        useNuxtApp: 'readonly',
+        Buffer: 'readonly',
+        TextDecoder: 'readonly',
+        TextEncoder: 'readonly',
+        fetch: 'readonly',
+        URL: 'readonly',
+        URLSearchParams: 'readonly',
+        AbortSignal: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        NodeJS: 'readonly'
       }
     },
     plugins: {
@@ -53,6 +65,57 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off'
+    }
+  },
+  {
+    files: ['app/**/*.{ts,vue}', 'app/plugins/**/*.ts'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        defineProps: 'readonly',
+        defineEmits: 'readonly',
+        defineExpose: 'readonly',
+        withDefaults: 'readonly',
+        defineNuxtRouteMiddleware: 'readonly',
+        useRuntimeConfig: 'readonly',
+        navigateTo: 'readonly',
+        abortNavigation: 'readonly',
+        createError: 'readonly',
+        showError: 'readonly',
+        clearError: 'readonly',
+        $fetch: 'readonly',
+        useNuxtApp: 'readonly',
+        window: 'readonly',
+        document: 'readonly',
+        localStorage: 'readonly',
+        sessionStorage: 'readonly',
+        navigator: 'readonly',
+        location: 'readonly',
+        history: 'readonly',
+        Event: 'readonly',
+        MouseEvent: 'readonly',
+        KeyboardEvent: 'readonly',
+        HTMLElement: 'readonly',
+        HTMLInputElement: 'readonly',
+        HTMLCanvasElement: 'readonly',
+        HTMLImageElement: 'readonly',
+        XMLHttpRequest: 'readonly',
+        WebSocket: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        NodeJS: 'readonly',
+        definePageMeta: 'readonly',
+        useHead: 'readonly',
+        onMounted: 'readonly',
+        computed: 'readonly',
+        watch: 'readonly',
+        alert: 'readonly'
+      }
     }
   },
   {
@@ -103,6 +166,13 @@ export default [
       'vue/require-default-prop': 'off',
       'vue/require-explicit-emits': 'off',
       'prettier/prettier': 'error'
+    }
+  },
+  {
+    files: ['postcss.config.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module'
     }
   },
   {

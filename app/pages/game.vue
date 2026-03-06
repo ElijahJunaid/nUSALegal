@@ -6,13 +6,15 @@
         <br />
         nUSA Quiz
       </h1>
-      <button 
-        id="start-btn" 
+      <button
+        id="start-btn"
         @click="startGame"
         @keydown.enter="startGame"
         @keydown.space="startGame"
         aria-label="Start the quiz game"
-      >Start the Quiz!</button>
+      >
+        Start the Quiz!
+      </button>
     </div>
 
     <div v-else id="game-container">
@@ -51,27 +53,31 @@
               @keyup.enter="checkAnswer(textAnswer)"
               aria-label="Answer input"
             />
-            <button 
-              id="submit-btn" 
-              @click="checkAnswer(textAnswer)" 
+            <button
+              id="submit-btn"
+              @click="checkAnswer(textAnswer)"
               @keydown.enter="checkAnswer(textAnswer)"
               @keydown.space="checkAnswer(textAnswer)"
               aria-label="Submit your answer"
-            >Submit</button>
+            >
+              Submit
+            </button>
           </template>
         </div>
       </div>
 
       <div v-if="isGameOver" class="game-over">Game Over!</div>
       <div v-if="isVictory" class="victory">Congratulations! You've Won!</div>
-      <button 
-        v-if="gameEnded" 
-        class="restart-btn" 
+      <button
+        v-if="gameEnded"
+        class="restart-btn"
         @click="restartGame"
         @keydown.enter="restartGame"
         @keydown.space="restartGame"
         aria-label="Play the quiz again"
-      >Play Again</button>
+      >
+        Play Again
+      </button>
     </div>
   </div>
 </template>

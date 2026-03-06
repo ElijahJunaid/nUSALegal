@@ -48,8 +48,8 @@ useHead({
         </div>
 
         <div class="card-actions justify-center mt-6">
-          <button 
-            @click="$router.go(0)" 
+          <button
+            @click="$router.go(0)"
             @keydown.enter="$router.go(0)"
             @keydown.space="$router.go(0)"
             class="btn btn-primary"

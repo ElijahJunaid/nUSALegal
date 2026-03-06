@@ -20,13 +20,15 @@
           <span v-else>ℹ</span>
         </div>
         <div class="toast-message">{{ toast.message }}</div>
-        <button 
-          class="toast-close" 
+        <button
+          class="toast-close"
           @click.stop="remove(toast.id)"
           @keydown.enter.stop="remove(toast.id)"
           @keydown.space.stop="remove(toast.id)"
           aria-label="Close notification"
-        >×</button>
+        >
+          ×
+        </button>
       </div>
     </TransitionGroup>
   </div>

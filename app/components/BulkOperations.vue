@@ -6,8 +6,8 @@
     </label>
     <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-1">
       <li>
-        <button 
-          @click="exportData('json')" 
+        <button
+          @click="exportData('json')"
           @keydown.enter="exportData('json')"
           @keydown.space="exportData('json')"
           aria-label="Export data as JSON"
@@ -17,8 +17,8 @@
         </button>
       </li>
       <li>
-        <button 
-          @click="exportData('csv')" 
+        <button
+          @click="exportData('csv')"
           @keydown.enter="exportData('csv')"
           @keydown.space="exportData('csv')"
           aria-label="Export data as CSV"
@@ -28,8 +28,8 @@
         </button>
       </li>
       <li>
-        <button 
-          @click="showImportModal = true" 
+        <button
+          @click="showImportModal = true"
           @keydown.enter="showImportModal = true"
           @keydown.space="showImportModal = true"
           aria-label="Import data"
@@ -96,22 +96,26 @@
       </div>
 
       <div class="modal-action">
-        <button 
-          @click="closeModal" 
+        <button
+          @click="closeModal"
           @keydown.enter="closeModal"
           @keydown.space="closeModal"
           class="btn"
           aria-label="Close import modal"
-        >Close</button>
+        >
+          Close
+        </button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button 
-        @click="closeModal" 
+      <button
+        @click="closeModal"
         @keydown.enter="closeModal"
         @keydown.space="closeModal"
         aria-label="Close import modal"
-      >close</button>
+      >
+        close
+      </button>
     </form>
   </dialog>
 </template>

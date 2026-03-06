@@ -21,13 +21,15 @@
           <span>{{ countdown }}s remaining</span>
         </div>
       </div>
-      <button 
-        class="cancel-button" 
+      <button
+        class="cancel-button"
         @click="$emit('cancel')"
         @keydown.enter="$emit('cancel')"
         @keydown.space="$emit('cancel')"
         aria-label="Cancel reconnection and return to lobby selection"
-      >Return to Lobby Selection</button>
+      >
+        Return to Lobby Selection
+      </button>
     </div>
   </div>
 </template>

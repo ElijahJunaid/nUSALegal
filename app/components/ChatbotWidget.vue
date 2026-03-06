@@ -49,12 +49,12 @@
           aria-label="Chat input"
           @keyup.enter="sendMessage"
         />
-        <button 
-          id="send-btn" 
-          @click="sendMessage" 
+        <button
+          id="send-btn"
+          @click="sendMessage"
           @keydown.enter="sendMessage"
           @keydown.space="sendMessage"
-          aria-label="Send message" 
+          aria-label="Send message"
           type="button"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
