@@ -130,7 +130,10 @@
                   <div
                     v-for="(dt, dtIndex) in data.data"
                     :key="dtIndex"
-                    @click="showDetail = true; dataDetail = dt"
+                    @click="
+                      showDetail = true
+                      dataDetail = dt
+                    "
                     class="card border border-base-300"
                   >
                     <div class="card-body text-center">
@@ -151,7 +154,10 @@
         v-if="showDetail && dataDetail != null"
         :show="showDetail"
         max-width="max-w-3xl"
-        @close="showDetail = false; dataDetail = null"
+        @close="
+          showDetail = false
+          dataDetail = null
+        "
       >
         <div class="data-detail text-center">
           <h3 class="text-center font-bold text-xl">{{ dataDetail.title }}</h3>

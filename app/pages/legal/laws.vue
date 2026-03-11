@@ -182,7 +182,10 @@
         v-if="showDetail && dataDetail != null"
         :show="showDetail"
         max-width="max-w-3xl"
-        @close="showDetail = false; dataDetail = null"
+        @close="
+          showDetail = false
+          dataDetail = null
+        "
       >
         <div class="data-detail text-center">
           <h3 class="text-center font-bold text-xl">{{ dataDetail.title }}</h3>

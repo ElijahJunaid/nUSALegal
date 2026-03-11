@@ -46,7 +46,7 @@ export default defineEventHandler(async event => {
             excerpt: law.description?.replace(/<br>/g, ' ').substring(0, 150) + '...',
             category: 'Federal Laws',
             categoryColor: '#ef4444',
-            url: '/laws'
+            url: '/legal/laws'
           })
         }
       })
@@ -64,7 +64,7 @@ export default defineEventHandler(async event => {
             excerpt: law.description?.replace(/<br>/g, ' ').substring(0, 150) + '...',
             category: 'Municipal Laws',
             categoryColor: '#f59e0b',
-            url: '/laws'
+            url: '/legal/laws'
           })
         }
       })
@@ -83,7 +83,7 @@ export default defineEventHandler(async event => {
             excerpt: rule.description?.substring(0, 150) + '...',
             category: 'FRCP',
             categoryColor: '#3b82f6',
-            url: '/frcp-frcmp'
+            url: '/legal/frcp-frcmp'
           })
         }
       })
@@ -102,7 +102,7 @@ export default defineEventHandler(async event => {
             excerpt: rule.description?.substring(0, 150) + '...',
             category: 'FRCMP',
             categoryColor: '#8b5cf6',
-            url: '/frcp-frcmp'
+            url: '/legal/frcp-frcmp'
           })
         }
       })
@@ -120,7 +120,7 @@ export default defineEventHandler(async event => {
             excerpt: article.summary?.substring(0, 150) + '...',
             category: 'Constitution',
             categoryColor: '#3b82f6',
-            url: '/constitution'
+            url: '/legal/constitution'
           })
         }
       })
@@ -137,7 +137,7 @@ export default defineEventHandler(async event => {
             excerpt: amendment.summary?.substring(0, 150) + '...',
             category: 'Constitution',
             categoryColor: '#3b82f6',
-            url: '/constitution'
+            url: '/legal/constitution'
           })
         }
       })
@@ -156,7 +156,7 @@ export default defineEventHandler(async event => {
             excerpt: order.description?.substring(0, 150) + '...',
             category: 'Executive Orders',
             categoryColor: '#10b981',
-            url: '/bills'
+            url: '/legal/bills'
           })
         }
       })
@@ -177,7 +177,7 @@ export default defineEventHandler(async event => {
             excerpt: courtCase.summary?.substring(0, 150) + '...',
             category: 'District Court',
             categoryColor: '#8b5cf6',
-            url: '/courts'
+            url: '/legal/courts'
           })
         }
       })
@@ -195,7 +195,7 @@ export default defineEventHandler(async event => {
             excerpt: def.description?.substring(0, 150) + '...',
             category: 'Resources',
             categoryColor: '#ec4899',
-            url: '/resources'
+            url: '/legal/resources'
           })
         }
       })

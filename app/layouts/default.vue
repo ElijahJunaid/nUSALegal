@@ -4,7 +4,7 @@
     <div class="drawer-content">
       <div class="navbar custom-navbar">
         <div class="navbar-left">
-          <NuxtLink to="/" class="app-name">nUSA Legal</NuxtLink>
+          <NuxtLink to="/" class="app-name">{{ brandName }}</NuxtLink>
           <NuxtLink to="/game" class="game-icon" title="Play Game">🎮</NuxtLink>
         </div>
 
@@ -79,37 +79,69 @@ const route = useRoute()
 
 const isHome = computed(() => route.path == '/')
 
+const brandName = computed(() => {
+  if (route.path.startsWith('/legal')) return 'nUSA Legal'
+  if (route.path.startsWith('/congress')) return 'nUSA Congress'
+  if (route.path.startsWith('/docal')) return 'nUSA DOCAL'
+  if (route.path.startsWith('/news')) return 'nUSA News'
+  return 'nUSA'
+})
+
 interface Menu {
   to: string
   label: string
 }
 
-const menus: Menu[] = [
+const sectionMenus: Menu[] = [
+  {
+    label: 'Legal',
+    to: '/legal'
+  },
+  {
+    label: 'Congress',
+    to: '/congress'
+  },
+  {
+    label: 'DOCAL',
+    to: '/docal'
+  },
+  {
+    label: 'News',
+    to: '/news'
+  }
+]
+
+const legalMenus: Menu[] = [
   {
     label: 'Courts',
-    to: '/courts'
+    to: '/legal/courts'
   },
   {
     label: 'Bills',
-    to: '/bills'
+    to: '/legal/bills'
   },
   {
     label: 'FRCP/FRCMP',
-    to: '/frcp-frcmp'
+    to: '/legal/frcp-frcmp'
   },
   {
     label: 'Laws',
-    to: '/laws'
+    to: '/legal/laws'
   },
   {
     label: 'Constitution',
-    to: '/constitution'
+    to: '/legal/constitution'
   },
   {
     label: 'Mock Trial',
-    to: '/mock-trial'
+    to: '/legal/mock-trial'
   }
 ]
+
+const menus = computed<Menu[]>(() => {
+  if (route.path.startsWith('/legal/')) return legalMenus
+  return sectionMenus
+})
 
 const theme = ref<'light' | 'dark'>('light')
 
