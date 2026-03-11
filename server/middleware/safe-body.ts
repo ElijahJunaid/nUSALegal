@@ -1,7 +1,9 @@
-import { createError, type H3Event } from 'h3'
+import { createError, defineEventHandler, type H3Event } from 'h3'
 import { validateData } from '../utils/validation'
 import { z } from 'zod'
 import type { IncomingMessage } from 'node:http'
+
+export default defineEventHandler(() => {})
 
 type RequestWithBody = IncomingMessage & { body?: unknown }
 
