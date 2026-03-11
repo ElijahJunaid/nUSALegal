@@ -98,10 +98,7 @@
                 <div
                   v-for="(dt, index) in filteredData"
                   :key="index"
-                  @click="
-                    dataDetail = dt
-                    handleClick()
-                  "
+                  @click="selectDetail(dt)"
                   class="card border border-base-300"
                 >
                   <div class="card-body text-center">
@@ -136,10 +133,7 @@
         v-if="showDetail && dataDetail != null"
         :show="showDetail"
         max-width="max-w-3xl"
-        @close="
-          showDetail = false
-          dataDetail = null
-        "
+        @close="closeDetail"
       >
         <div class="detail-modal text-center" :class="{ 'min-h-[75vh]': dataDetail.hasArticle }">
           <h3 class="text-center font-bold text-xl">
@@ -219,6 +213,16 @@ const title = computed<string>(() => {
 
 const showDetail = ref<boolean>(false)
 const dataDetail = ref<Constitution | null>(null)
+
+function selectDetail(dt: Constitution) {
+  dataDetail.value = dt
+  handleClick()
+}
+
+function closeDetail() {
+  showDetail.value = false
+  dataDetail.value = null
+}
 
 const article = ref<ConstitutionArticle | null>(null)
 

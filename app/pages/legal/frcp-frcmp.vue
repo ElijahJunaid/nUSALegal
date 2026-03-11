@@ -130,10 +130,7 @@
                   <div
                     v-for="(dt, dtIndex) in data.data"
                     :key="dtIndex"
-                    @click="
-                      showDetail = true
-                      dataDetail = dt
-                    "
+                    @click="openDetail(dt)"
                     class="card border border-base-300"
                   >
                     <div class="card-body text-center">
@@ -154,10 +151,7 @@
         v-if="showDetail && dataDetail != null"
         :show="showDetail"
         max-width="max-w-3xl"
-        @close="
-          showDetail = false
-          dataDetail = null
-        "
+        @close="closeDetail"
       >
         <div class="data-detail text-center">
           <h3 class="text-center font-bold text-xl">{{ dataDetail.title }}</h3>
@@ -196,6 +190,16 @@ const title = computed<string>(() => {
 
 const showDetail = ref<boolean>(false)
 const dataDetail = ref<FederalRules | null>(null)
+
+function openDetail(dt: FederalRules) {
+  showDetail.value = true
+  dataDetail.value = dt
+}
+
+function closeDetail() {
+  showDetail.value = false
+  dataDetail.value = null
+}
 
 useHead({
   title: 'FRCP/FRCMP - nUSA Legal',
