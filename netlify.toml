@@ -9,7 +9,7 @@ command = """
 """
 
 # Publish directory (Nuxt outputs to .output/public)
-publish = "dist"
+publish = ".output/public"
 
 # Functions directory for Nuxt server routes (production only)
 functions = ".netlify/functions-internal/server"
