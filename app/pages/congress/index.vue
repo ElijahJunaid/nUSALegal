@@ -47,7 +47,7 @@
       <div class="loc-stats-inner">
         <div class="loc-stat">
           <span class="loc-stat-icon">👥</span>
-          <span class="loc-stat-num">28</span>
+          <span class="loc-stat-num">{{ activeMemberCount }}</span>
           <span class="loc-stat-label">Congress Members</span>
         </div>
         <div class="loc-stat-divider" />
@@ -65,7 +65,7 @@
         <div class="loc-stat-divider" />
         <div class="loc-stat">
           <span class="loc-stat-icon">⭐</span>
-          <span class="loc-stat-num">1</span>
+          <span class="loc-stat-num">{{ congressStore.activeSessions }}</span>
           <span class="loc-stat-label">Active Sessions</span>
         </div>
       </div>
@@ -148,6 +148,10 @@ const congressStore = useCongressStore()
 
 const activeMembers = computed(() =>
   congressStore.members.filter(m => m.status === 'Active').slice(0, 4)
+)
+
+const activeMemberCount = computed(
+  () => congressStore.members.filter(m => m.status === 'Active').length
 )
 
 onMounted(async () => {

@@ -35,7 +35,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search by name, owner, or state..."
+            placeholder="Search by name or owner..."
             class="biz-search-input"
           />
         </div>
@@ -131,12 +131,7 @@ const filteredBusinesses = computed(() => {
   }
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.toLowerCase()
-    list = list.filter(
-      b =>
-        b.name.toLowerCase().includes(q) ||
-        b.owner.toLowerCase().includes(q) ||
-        b.state.toLowerCase().includes(q)
-    )
+    list = list.filter(b => b.name.toLowerCase().includes(q) || b.owner.toLowerCase().includes(q))
   }
   return list
 })

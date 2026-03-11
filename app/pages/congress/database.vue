@@ -315,6 +315,7 @@ const stateGrid = computed<StateCell[]>(() => {
 })
 
 function stateAbbr(name: string): string {
+  if (name.length === 2 && name === name.toUpperCase()) return name
   const map: Record<string, string> = {
     Alabama: 'AL',
     Alaska: 'AK',

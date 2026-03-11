@@ -15,6 +15,7 @@ export interface CongressMember {
 export const useCongressStore = defineStore('congress', {
   state: () => ({
     members: [] as CongressMember[],
+    activeSessions: 0,
     loaded: false,
     loading: false,
     error: null as string | null
@@ -36,13 +37,17 @@ export const useCongressStore = defineStore('congress', {
         const { getToken } = useApiToken()
         const token = await getToken('congress/members')
 
-        const data = await $fetch<CongressMember[]>('/api/congress/members', {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const data = await $fetch<{ members: CongressMember[]; activeSessions: number }>(
+          '/api/congress/members',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        })
+        )
 
-        this.members = data
+        this.members = data.members
+        this.activeSessions = data.activeSessions
         this.loaded = true
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
