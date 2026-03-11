@@ -28,7 +28,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "format:staged": "lint-staged --quiet",
-    "prepare": "husky install"
+    "prepare": "node -e \"if (!process.env.CI) require('child_process').execSync('husky install', {stdio: 'inherit'})\""
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1006.0",
