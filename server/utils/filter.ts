@@ -628,10 +628,10 @@ export function validateQuery(userInput: string, identifier: string = 'anonymous
 
   const intent = classifyIntent(userInput, score, flags)
 
-  let allowed = false
-  let severity: FilterResult['severity'] = 'block'
-  let confidence = 0
-  let reason = ''
+  let allowed: boolean
+  let severity: FilterResult['severity']
+  let confidence: number
+  let reason: string
   let suggestion = ''
 
   if (score >= THRESHOLD_ALLOW) {

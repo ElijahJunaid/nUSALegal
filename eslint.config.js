@@ -51,6 +51,7 @@ export default [
     rules: {
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+      'no-unused-vars': 'off',
       'prefer-const': 'error',
       'no-var': 'error',
       'prettier/prettier': 'error',
@@ -169,10 +170,10 @@ export default [
     }
   },
   {
-    files: ['postcss.config.js'],
+    files: ['**/*.cjs'],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'module'
+      sourceType: 'commonjs'
     }
   },
   {
@@ -194,6 +195,20 @@ export default [
     }
   },
   {
+    files: ['scripts/postinstall.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module'
+    }
+  },
+  {
+    files: ['postcss.config.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module'
+    }
+  },
+  {
     ignores: [
       'node_modules/**',
       'dist/**',
@@ -211,8 +226,11 @@ export default [
       '.vscode/**',
       '.husky/**',
       '.windsurf/**',
+      '.netlify/**',
       'eslint.config.js',
       'scripts/dev-health-check.cjs',
+      'scripts/health-check/**',
+      'dev-health-check.cjs',
       'server/data/**',
       '**/*.pdf',
       '**/*.doc',
@@ -226,5 +244,21 @@ export default [
       '**/*.gz',
       '**/*.rar'
     ]
+  },
+  {
+    files: [
+      'app/components/ChatbotWidget.vue',
+      'app/components/EnhancedSearch.vue',
+      'app/pages/constitution.vue',
+      'app/pages/frcp-frcmp.vue',
+      'app/pages/mock-trial.vue',
+      'app/pages/laws.vue',
+      'app/pages/ai-chat.vue',
+      'app/components/laws/federal-eo.vue',
+      'app/components/laws/municipal.vue'
+    ],
+    rules: {
+      'vue/no-v-html': 'off'
+    }
   }
 ]

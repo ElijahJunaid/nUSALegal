@@ -123,6 +123,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+interface ImportResult {
+  success: number
+  created: number
+  updated: number
+  failed: number
+  errors: string[]
+}
+
 interface Props {
   endpoint: string
   entityName: string
@@ -132,7 +140,7 @@ const props = defineProps<Props>()
 const emit = defineEmits<{ refresh: [] }>()
 
 const showImportModal = ref(false)
-const importResult = ref<any>(null)
+const importResult = ref<ImportResult | null>(null)
 const importing = ref(false)
 const error = ref('')
 const fileInput = ref<HTMLInputElement>()
@@ -141,7 +149,7 @@ const exportData = async (format: string) => {
   try {
     const url = `${props.endpoint}/export?format=${format}`
     window.open(url, '_blank')
-  } catch (e: any) {
+  } catch (_e: unknown) {
     error.value = 'Export failed'
   }
 }
@@ -157,10 +165,10 @@ const handleImportFile = async (event: Event) => {
 
   try {
     const text = await file.text()
-    let data: any
+    let data: Record<string, string>[] | Record<string, string>
 
     if (file.name.endsWith('.json')) {
-      data = JSON.parse(text)
+      data = JSON.parse(text) as Record<string, string>[] | Record<string, string>
     } else if (file.name.endsWith('.csv')) {
       const lines = text.split('\n').filter(l => l.trim())
       if (lines.length === 0) {
@@ -170,7 +178,7 @@ const handleImportFile = async (event: Event) => {
 
       data = lines.slice(1).map(line => {
         const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''))
-        const obj: any = {}
+        const obj: Record<string, string> = {}
         headers.forEach((header, i) => {
           obj[header] = values[i] || ''
         })
@@ -182,15 +190,16 @@ const handleImportFile = async (event: Event) => {
 
     const dataArray = Array.isArray(data) ? data : [data]
 
-    const response: any = await $fetch(`${props.endpoint}/import`, {
+    const response = await $fetch<ImportResult>(`${props.endpoint}/import`, {
       method: 'POST',
       body: { [props.entityName.toLowerCase()]: dataArray }
     })
 
     importResult.value = response
     emit('refresh')
-  } catch (e: any) {
-    error.value = e.data?.message || e.message || 'Import failed'
+  } catch (e: unknown) {
+    const err = e as { data?: { message?: string }; message?: string }
+    error.value = err.data?.message || err.message || 'Import failed'
   } finally {
     importing.value = false
   }

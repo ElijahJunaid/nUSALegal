@@ -1,5 +1,7 @@
 import winston from 'winston'
 
+type LogMeta = Record<string, unknown>
+
 const { combine, timestamp, json, printf, colorize, errors } = winston.format
 
 const devFormat = printf(({ level, message, timestamp, ...metadata }) => {
@@ -43,19 +45,19 @@ const logger = winston.createLogger({
 })
 
 export const log = {
-  debug: (message: string, meta?: Record<string, any>) => {
+  debug: (message: string, meta?: LogMeta) => {
     logger.debug(message, meta)
   },
 
-  info: (message: string, meta?: Record<string, any>) => {
+  info: (message: string, meta?: LogMeta) => {
     logger.info(message, meta)
   },
 
-  warn: (message: string, meta?: Record<string, any>) => {
+  warn: (message: string, meta?: LogMeta) => {
     logger.warn(message, meta)
   },
 
-  error: (message: string, error?: Error | unknown, meta?: Record<string, any>) => {
+  error: (message: string, error?: Error | unknown, meta?: LogMeta) => {
     const errorMeta =
       error instanceof Error
         ? {
@@ -71,13 +73,7 @@ export const log = {
     logger.error(message, errorMeta)
   },
 
-  http: (
-    method: string,
-    path: string,
-    statusCode: number,
-    duration: number,
-    meta?: Record<string, any>
-  ) => {
+  http: (method: string, path: string, statusCode: number, duration: number, meta?: LogMeta) => {
     logger.info('HTTP Request', {
       method,
       path,
@@ -87,7 +83,7 @@ export const log = {
     })
   },
 
-  api: (service: string, operation: string, success: boolean, meta?: Record<string, any>) => {
+  api: (service: string, operation: string, success: boolean, meta?: LogMeta) => {
     logger.info('API Call', {
       service,
       operation,
@@ -96,7 +92,7 @@ export const log = {
     })
   },
 
-  db: (operation: string, table: string, duration: number, meta?: Record<string, any>) => {
+  db: (operation: string, table: string, duration: number, meta?: LogMeta) => {
     logger.debug('Database Operation', {
       operation,
       table,
@@ -105,11 +101,7 @@ export const log = {
     })
   },
 
-  security: (
-    event: string,
-    severity: 'low' | 'medium' | 'high' | 'critical',
-    meta?: Record<string, any>
-  ) => {
+  security: (event: string, severity: 'low' | 'medium' | 'high' | 'critical', meta?: LogMeta) => {
     logger.warn('Security Event', {
       event,
       severity,
@@ -118,7 +110,7 @@ export const log = {
     })
   },
 
-  performance: (metric: string, value: number, unit: string, meta?: Record<string, any>) => {
+  performance: (metric: string, value: number, unit: string, meta?: LogMeta) => {
     logger.info('Performance Metric', {
       metric,
       value,

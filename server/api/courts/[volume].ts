@@ -1,12 +1,29 @@
 import { defineEventHandler, getRouterParam, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
 
+interface CourtCase {
+  title: string
+  description: string
+  ruling: string
+  type: string
+  docket: string
+  citation: string
+}
+
+interface VolumeData {
+  volume: number
+  title: string
+  cases: CourtCase[]
+  isEmpty?: boolean
+  emptyMessage?: string
+}
+
 export default defineEventHandler(event => {
   const volume = parseInt(getRouterParam(event, 'volume') || '2')
 
   validateApiAccess(event, `courts/${volume}`)
 
-  const volumesData: Record<number, any> = {
+  const volumesData: Record<number, VolumeData> = {
     2: {
       volume: 2,
       title: 'Supreme Court Board Volume 2',

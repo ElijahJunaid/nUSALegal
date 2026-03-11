@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { defaultRateLimiter } from '../utils/rateLimit'
-import { defineEventHandler, readBody, createError } from 'h3'
+import { defineEventHandler, createError } from 'h3'
 import { useRuntimeConfig } from '#imports'
+import { validationSchemas } from '../utils/validation'
+import { validateAndReplaceBody } from '../middleware/safe-body'
 
 interface CheckNusaBansRequestBody {
   userId: string
@@ -10,46 +12,12 @@ interface CheckNusaBansRequestBody {
 export default defineEventHandler(async event => {
   await defaultRateLimiter.middleware()(event)
 
-  let body: CheckNusaBansRequestBody
-
-  try {
-    const req = event.node?.req as any
-
-    if (req?.body) {
-      if (typeof req.body === 'string') {
-        body = JSON.parse(req.body) as CheckNusaBansRequestBody
-      } else if (req.body instanceof Buffer) {
-        body = JSON.parse(req.body.toString()) as CheckNusaBansRequestBody
-      } else if (typeof req.body === 'object') {
-        body = req.body as CheckNusaBansRequestBody
-      } else {
-        throw new Error('Invalid body type')
-      }
-    } else {
-      const chunks = []
-      for await (const chunk of req) {
-        chunks.push(chunk)
-      }
-      const rawBody = Buffer.concat(chunks).toString()
-      body = JSON.parse(rawBody) as CheckNusaBansRequestBody
-    }
-  } catch (error: any) {
-    console.error('Failed to parse body:', error.message)
-    throw createError({
-      status: 400,
-      statusText: 'Bad Request',
-      message: 'Invalid JSON in request body'
-    })
-  }
-  const { userId } = body
-
-  if (!userId || typeof userId !== 'string' || !/^[0-9]+$/.test(userId) || userId.length > 32) {
-    throw createError({
-      status: 400,
-      statusText: 'Bad Request',
-      message: 'Invalid user ID: must be a numeric string of 32 characters or less'
-    })
-  }
+  // Validate and replace body first to prevent unvalidated access detection
+  const validatedBody = await validateAndReplaceBody<CheckNusaBansRequestBody>(
+    event,
+    validationSchemas.checkNusaBans
+  )
+  const { userId } = validatedBody
 
   const config = useRuntimeConfig()
   const apiKey = config.nusaApiKey
@@ -88,14 +56,14 @@ export default defineEventHandler(async event => {
       result: 'PASS',
       reason: null
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         throw createError({
           status: error.response.status,
           statusText: 'API Error',
           message: 'nUSA API error'
-        }) as any
+        })
       } else if (error.request) {
         throw createError({
           status: 500,

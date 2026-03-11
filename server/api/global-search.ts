@@ -9,6 +9,15 @@ import { municipalLaws } from '../data/municipal-laws'
 import { definitions } from '../data/definitions'
 import { districtCourtCases } from '../data/district-court-cases'
 
+interface SearchResult {
+  title: string | undefined
+  subtitle: string | undefined
+  excerpt: string
+  category: string
+  categoryColor: string
+  url: string
+}
+
 export default defineEventHandler(async event => {
   validateApiAccess(event, 'global-search')
 
@@ -21,10 +30,10 @@ export default defineEventHandler(async event => {
       return []
     }
 
-    const results: any[] = []
+    const results: SearchResult[] = []
 
     if (category === 'all' || category === 'laws') {
-      federalLaws.forEach((law: any) => {
+      federalLaws.forEach(law => {
         const matchTitle = law.title?.toLowerCase().includes(searchTerm)
         const matchCode = law.uscode?.toLowerCase().includes(searchTerm)
         const matchDescription = law.description?.toLowerCase().includes(searchTerm)
@@ -42,7 +51,7 @@ export default defineEventHandler(async event => {
         }
       })
 
-      municipalLaws.forEach((law: any) => {
+      municipalLaws.forEach(law => {
         const matchTitle = law.title?.toLowerCase().includes(searchTerm)
         const matchCode = law.code?.toLowerCase().includes(searchTerm)
         const matchDescription = law.description?.toLowerCase().includes(searchTerm)
@@ -62,7 +71,7 @@ export default defineEventHandler(async event => {
     }
 
     if (category === 'all' || category === 'rules') {
-      frcpRules.forEach((rule: any) => {
+      frcpRules.forEach(rule => {
         const matchNumber = rule.number?.toLowerCase().includes(searchTerm)
         const matchTitle = rule.title?.toLowerCase().includes(searchTerm)
         const matchDescription = rule.description?.toLowerCase().includes(searchTerm)
@@ -81,7 +90,7 @@ export default defineEventHandler(async event => {
     }
 
     if (category === 'all' || category === 'rules') {
-      frcmpRules.forEach((rule: any) => {
+      frcmpRules.forEach(rule => {
         const matchNumber = rule.number?.toLowerCase().includes(searchTerm)
         const matchTitle = rule.title?.toLowerCase().includes(searchTerm)
         const matchDescription = rule.description?.toLowerCase().includes(searchTerm)
@@ -100,7 +109,7 @@ export default defineEventHandler(async event => {
     }
 
     if (category === 'all' || category === 'constitution') {
-      constitutionArticles.forEach((article: any) => {
+      constitutionArticles.forEach(article => {
         const matchTitle = article.title?.toLowerCase().includes(searchTerm)
         const matchSummary = article.summary?.toLowerCase().includes(searchTerm)
 
@@ -116,7 +125,7 @@ export default defineEventHandler(async event => {
         }
       })
 
-      constitutionAmendments.forEach((amendment: any) => {
+      constitutionAmendments.forEach(amendment => {
         const matchTitle = amendment.title?.toLowerCase().includes(searchTerm)
         const matchContent = amendment.content?.toLowerCase().includes(searchTerm)
         const matchSummary = amendment.summary?.toLowerCase().includes(searchTerm)
@@ -135,7 +144,7 @@ export default defineEventHandler(async event => {
     }
 
     if (category === 'all' || category === 'bills') {
-      executiveOrders.forEach((order: any) => {
+      executiveOrders.forEach(order => {
         const matchNumber = order.number?.toLowerCase().includes(searchTerm)
         const matchTitle = order.title?.toLowerCase().includes(searchTerm)
         const matchDescription = order.description?.toLowerCase().includes(searchTerm)
@@ -154,7 +163,7 @@ export default defineEventHandler(async event => {
     }
 
     if (category === 'all' || category === 'courts') {
-      districtCourtCases.forEach((courtCase: any) => {
+      districtCourtCases.forEach(courtCase => {
         const matchTitle = courtCase.title?.toLowerCase().includes(searchTerm)
         const matchCaseNumber = courtCase.caseNumber?.toLowerCase().includes(searchTerm)
         const matchCharge = courtCase.charge?.toLowerCase().includes(searchTerm)
@@ -175,7 +184,7 @@ export default defineEventHandler(async event => {
     }
 
     if (category === 'all' || category === 'resources') {
-      definitions.forEach((def: any) => {
+      definitions.forEach(def => {
         const matchTitle = def.title?.toLowerCase().includes(searchTerm)
         const matchDescription = def.description?.toLowerCase().includes(searchTerm)
 

@@ -2,12 +2,31 @@ import { municipalLaws } from '../../data/municipal-laws'
 import { defineEventHandler, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
 
+interface LawEntry {
+  title: string
+  subtitle: string
+  content: string
+  excerp: string
+}
+
+interface LawGroup {
+  label: string
+  data: LawEntry[]
+}
+
+interface MunicipalLaw {
+  category: string
+  code: string
+  title: string
+  description: string
+}
+
 export default defineEventHandler(async event => {
   validateApiAccess(event, 'laws/municipal')
 
   try {
-    const grouped = municipalLaws.reduce((acc: any, law) => {
-      const existing = acc.find((g: any) => g.label === law.category)
+    const grouped = municipalLaws.reduce((acc: LawGroup[], law: MunicipalLaw) => {
+      const existing = acc.find((g: LawGroup) => g.label === law.category)
       if (existing) {
         existing.data.push({
           title: law.code,

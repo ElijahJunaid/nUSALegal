@@ -53,8 +53,9 @@ export const useCourtProcedureStore = defineStore('resource-court-procedure', {
 
         this.data = data
         this.isLoaded = true
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch Court Procedure'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Court Procedure'
         console.error('Failed to fetch Court Procedure:', err)
       } finally {
         this.loading = false

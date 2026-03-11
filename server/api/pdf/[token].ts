@@ -49,14 +49,14 @@ export default defineEventHandler(async event => {
     })
 
     return pdfBuffer
-  } catch (error: any) {
-    if (error?.statusCode) {
+  } catch (error: unknown) {
+    if ((error as Record<string, unknown>)?.statusCode) {
       throw error
     }
 
     throw createError({
       status: 500,
       statusText: 'Error retrieving PDF file'
-    }) as any
+    })
   }
 })

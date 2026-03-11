@@ -407,7 +407,9 @@
         <div class="trial-content">
           <div class="case-info">
             <h2>Case Information</h2>
+            <!-- eslint-disable vue/no-v-html -->
             <div id="case-details" v-html="caseDetailsHtml"></div>
+            <!-- eslint-enable vue/no-v-html -->
           </div>
 
           <div v-if="currentTurn" class="turn-indicator">
@@ -669,24 +671,48 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick, defineAsyncComponent } from 'vue'
+
+interface TrialCaseRole {
+  objectives?: string[]
+  key_arguments?: string[]
+  key_decisions?: string[]
+}
+
+interface TrialCase {
+  id?: string
+  title: string
+  description: string
+  facts: string
+  statute?: string
+  difficulty: string
+  roles?: Record<string, TrialCaseRole>
+}
+
+type AvailableRole = { id: string; name: string; description: string; claimedBy: string | null }
+type EvidenceItem = { id: string; description: string; submittedBy: string; admitted: boolean }
+type ObjectionItem = {
+  id: string
+  type: string
+  reason: string
+  madeBy: string
+  ruling: string | null
+}
+type Player = { name: string; role: string | null; isLeader: boolean }
 import { useToast } from '~/composables/useToast'
 import { useLobbyConnection } from '~/composables/useLobbyConnection'
-import { useTrialState } from '~/composables/useTrialState'
 
 const ToastContainer = defineAsyncComponent(() => import('~/components/ToastContainer.vue'))
 const ReconnectionDialog = defineAsyncComponent(() => import('~/components/ReconnectionDialog.vue'))
 
 const { success, error, warning, info } = useToast()
 const lobbyConnection = useLobbyConnection()
-const trialState = useTrialState()
-
 const {
-  isConnected,
   isReconnecting,
   reconnectAttempts,
   reconnectCountdown,
-  connectionStatus,
-  lobbyState: connectedLobbyState
+  incomingObjection,
+  incomingRuling,
+  incomingVote
 } = lobbyConnection
 
 definePageMeta({
@@ -706,8 +732,8 @@ const lobbyCodeInput = ref('')
 const lobbyCode = ref('')
 const isLobbyLeader = ref(false)
 const selectedCaseType = ref<'criminal' | 'civil' | null>(null)
-const selectedCase = ref<any>(null)
-const availableCases = ref<any[]>([])
+const selectedCase = ref<TrialCase | null>(null)
+const availableCases = ref<TrialCase[]>([])
 const players = ref<Array<{ name: string; role: string | null; isLeader: boolean }>>([])
 const playerCount = computed(() => players.value.length)
 
@@ -769,7 +795,9 @@ const availableRoles = ref<
 ])
 
 const canStartTrial = computed(() => {
-  return selectedCase.value && availableRoles.value.some((r: any) => r.claimedBy === 'You')
+  return (
+    selectedCase.value && availableRoles.value.some((r: AvailableRole) => r.claimedBy === 'You')
+  )
 })
 
 function startSinglePlayer() {
@@ -858,7 +886,7 @@ function leaveLobby() {
   selectedCase.value = null
   availableCases.value = []
   players.value = []
-  availableRoles.value.forEach((role: any) => (role.claimedBy = null))
+  availableRoles.value.forEach((role: AvailableRole) => (role.claimedBy = null))
 
   info('Left the lobby')
 }
@@ -876,7 +904,7 @@ async function selectCaseType(type: 'criminal' | 'civil') {
     const response = (await $fetch('/api/mock-trial/cases?type=' + type)) as {
       success: boolean
       caseType: string
-      cases: any[]
+      cases: TrialCase[]
     }
     if (response.success) {
       availableCases.value = response.cases
@@ -889,7 +917,7 @@ async function selectCaseType(type: 'criminal' | 'civil') {
   }
 }
 
-function selectCase(caseItem: any) {
+function selectCase(caseItem: TrialCase) {
   selectedCase.value = caseItem
 
   lobbyConnection.selectCase(caseItem)
@@ -898,7 +926,7 @@ function selectCase(caseItem: any) {
 }
 
 function claimRole(roleId: string): void {
-  const role = availableRoles.value.find((r: any) => r.id === roleId)
+  const role = availableRoles.value.find((r: AvailableRole) => r.id === roleId)
   if (!role) return
 
   if (role.claimedBy && role.claimedBy !== 'You') {
@@ -906,14 +934,14 @@ function claimRole(roleId: string): void {
     return
   }
 
-  const previousRole = availableRoles.value.find((r: any) => r.claimedBy === 'You')
-  availableRoles.value.forEach((r: any) => {
+  const previousRole = availableRoles.value.find((r: AvailableRole) => r.claimedBy === 'You')
+  availableRoles.value.forEach((r: AvailableRole) => {
     if (r.claimedBy === 'You') r.claimedBy = null
   })
 
   role.claimedBy = 'You'
 
-  const player = players.value.find((p: any) => p.name === 'You')
+  const player = players.value.find((p: Player) => p.name === 'You')
   if (player) {
     player.role = role.name
   }
@@ -935,7 +963,7 @@ function startTrialFromLobby() {
 
   isLoading.value = true
 
-  const trialData = lobbyConnection.startTrial()
+  lobbyConnection.startTrial()
 
   setTimeout(() => {
     showLobby.value = false
@@ -1006,7 +1034,7 @@ async function confirmSetup() {
   }
 }
 
-function generateCaseDetailsHtml(caseData: any, role: string, caseType: string): string {
+function generateCaseDetailsHtml(caseData: TrialCase, role: string, caseType: string): string {
   let html = `
     <p><strong>Case Type:</strong> ${caseType.charAt(0).toUpperCase()}${caseType.slice(1)}</p>
     <p><strong>Your Role:</strong> ${role.charAt(0).toUpperCase()}${role.slice(1)}</p>
@@ -1194,7 +1222,7 @@ function admitEvidence(evidenceId: string) {
     return
   }
 
-  evidenceList.value.forEach((e: any) => {
+  evidenceList.value.forEach((e: EvidenceItem) => {
     if (e.id === evidenceId) {
       e.admitted = true
       console.log(`Evidence ${evidenceId} admitted`)
@@ -1208,11 +1236,9 @@ function denyEvidence(evidenceId: string) {
     return
   }
 
-  evidenceList.value = evidenceList.value.filter((e: any) => e.id !== evidenceId)
+  evidenceList.value = evidenceList.value.filter((e: EvidenceItem) => e.id !== evidenceId)
   info('Evidence denied')
 }
-
-// ...
 
 function makeObjection(type: string) {
   const objection = {
@@ -1225,9 +1251,11 @@ function makeObjection(type: string) {
 
   pendingObjections.value.push(objection)
   info(`Objection: ${type}`)
-}
 
-// ...
+  if (!isSinglePlayer.value) {
+    lobbyConnection.sendObjection(objection)
+  }
+}
 
 function ruleOnObjection(objectionId: string, sustained: boolean) {
   if (setupRole.value !== 'judge') {
@@ -1235,15 +1263,17 @@ function ruleOnObjection(objectionId: string, sustained: boolean) {
     return
   }
 
-  pendingObjections.value.forEach((o: any) => {
+  pendingObjections.value.forEach((o: ObjectionItem) => {
     if (o.id === objectionId) {
       o.ruling = sustained ? 'sustained' : 'overruled'
       console.log(`Objection ${objectionId} ${o.ruling}`)
     }
   })
-}
 
-// ...
+  if (!isSinglePlayer.value) {
+    lobbyConnection.broadcastRuling(objectionId, sustained)
+  }
+}
 
 function castVote(vote: 'guilty' | 'not-guilty') {
   if (setupRole.value !== 'jury' && setupRole.value !== 'judge') {
@@ -1257,6 +1287,8 @@ function castVote(vote: 'guilty' | 'not-guilty') {
 
   if (isSinglePlayer.value) {
     finalizeVerdict()
+  } else {
+    lobbyConnection.broadcastVote(vote, setupRole.value || 'Unknown')
   }
 }
 
@@ -1297,7 +1329,27 @@ function endTrial() {
   success('Trial ended')
 }
 
-// ...
+watch(incomingObjection, objection => {
+  if (objection) {
+    pendingObjections.value.push(objection)
+  }
+})
+
+watch(incomingRuling, ruling => {
+  if (ruling) {
+    for (const o of pendingObjections.value) {
+      if (o.id === ruling.objectionId) {
+        o.ruling = ruling.sustained ? 'sustained' : 'overruled'
+      }
+    }
+  }
+})
+
+watch(incomingVote, vote => {
+  if (vote) {
+    verdictVotes.value[vote.playerId] = vote.vote
+  }
+})
 
 watch(showSimulation, (newValue: boolean) => {
   if (newValue && !currentTurn.value) {
@@ -1310,7 +1362,7 @@ watch(showSimulation, (newValue: boolean) => {
 onMounted(() => {
   const chatInputEl = document.getElementById('chat-input')
   if (chatInputEl) {
-    chatInputEl.addEventListener('keypress', handleChatKeypress as any)
+    chatInputEl.addEventListener('keypress', (e: Event) => handleChatKeypress(e as KeyboardEvent))
   }
 
   const chatSendBtn = document.getElementById('chat-send')

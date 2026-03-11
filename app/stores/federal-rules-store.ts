@@ -99,8 +99,9 @@ export const useFederalRulesStore = defineStore('federal-rules', {
 
         this.frcp_group = data
         this.frcpLoaded = true
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch FRCP'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch FRCP'
         console.error('Failed to fetch FRCP:', err)
       } finally {
         this.loading = false
@@ -131,8 +132,9 @@ export const useFederalRulesStore = defineStore('federal-rules', {
 
         this.frcmp_group = data
         this.frcmpLoaded = true
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch FRCMP'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch FRCMP'
         console.error('Failed to fetch FRCMP:', err)
       } finally {
         this.loading = false

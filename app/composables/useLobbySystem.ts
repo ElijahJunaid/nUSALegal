@@ -19,7 +19,7 @@ export function useLobbySystem() {
   const PLAYER_TIMEOUT = 15000
 
   let heartbeatInterval: ReturnType<typeof setInterval> | null = null
-  let lastHeartbeat = Date.now()
+  let _lastHeartbeat = Date.now()
 
   function connect(code: string, asLeader: boolean) {
     lobbyCode.value = code
@@ -49,7 +49,7 @@ export function useLobbySystem() {
 
   function startHeartbeat() {
     heartbeatInterval = setInterval(() => {
-      lastHeartbeat = Date.now()
+      _lastHeartbeat = Date.now()
       checkPlayersActivity()
     }, HEARTBEAT_INTERVAL)
   }

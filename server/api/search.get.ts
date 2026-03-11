@@ -5,6 +5,15 @@ import { definitions } from '../data/definitions'
 import { executiveOrders } from '../data/executive-orders'
 import { defineEventHandler, getQuery, createError } from 'h3'
 
+interface SearchResult {
+  type: string
+  id: string | undefined
+  title: string | undefined
+  description: string | undefined
+  category?: string | undefined
+  data: unknown
+}
+
 export default defineEventHandler(async event => {
   const query = getQuery(event)
   const searchTerm = (query.q as string) || ''
@@ -15,7 +24,7 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const results: any[] = []
+    const results: SearchResult[] = []
     const searchLower = searchTerm.toLowerCase()
 
     if (!types.length || types.includes('bills')) {

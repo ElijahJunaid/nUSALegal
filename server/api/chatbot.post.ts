@@ -1,10 +1,12 @@
 import { OpenAI } from 'openai'
 import { tavily } from '@tavily/core'
-import { validateQuery, type FilterResult } from '../utils/filter'
+import { validateQuery } from '../utils/filter'
 import { apiRateLimiter } from '../utils/rateLimit'
-import { detectConversational } from '../utils/conversational-detector'
-import { defineEventHandler, createError, readBody } from 'h3'
+import { detectWithML } from '../utils/conversational-detector'
+import { defineEventHandler, createError } from 'h3'
 import { useRuntimeConfig } from '#imports'
+import { validationSchemas } from '../utils/validation'
+import { validateAndReplaceBody } from '../middleware/safe-body'
 
 interface ChatbotRequestBody {
   query?: string
@@ -52,56 +54,29 @@ export default defineEventHandler(async event => {
       status: 429,
       statusText: 'Too Many Requests',
       message: rateLimit.message || 'Too many requests, please try again later.'
-    }) as any
-  }
-
-  let body: ChatbotRequestBody
-
-  try {
-    const req = event.node?.req as any
-
-    if (req?.body) {
-      if (typeof req.body === 'string') {
-        body = JSON.parse(req.body) as ChatbotRequestBody
-      } else if (req.body instanceof Buffer) {
-        body = JSON.parse(req.body.toString()) as ChatbotRequestBody
-      } else if (typeof req.body === 'object') {
-        body = req.body as ChatbotRequestBody
-      } else {
-        throw new Error('Invalid body type')
-      }
-    } else {
-      const chunks = []
-      for await (const chunk of req) {
-        chunks.push(chunk)
-      }
-      const rawBody = Buffer.concat(chunks).toString()
-      body = JSON.parse(rawBody) as ChatbotRequestBody
-    }
-
-    if (!body) {
-      throw new Error('No body found')
-    }
-  } catch (error: any) {
-    console.error('Failed to parse body:', error.message)
-    throw createError({
-      status: 400,
-      statusText: 'Bad Request',
-      message: 'Invalid JSON in request body'
     })
   }
 
-  body = body || ({} as ChatbotRequestBody)
+  // Validate and replace body first to prevent unvalidated access detection
+  const validatedBody = await validateAndReplaceBody<ChatbotRequestBody>(
+    event,
+    validationSchemas.chatbot
+  )
+  let { query, thread_id } = validatedBody
 
-  const query = sanitizeInput(body.query || '')
-  let thread_id = body.thread_id
+  if (!query) {
+    throw createError({ status: 400, statusText: 'Bad Request', message: 'Query is required' })
+  }
+
+  // Apply additional sanitization for query
+  query = sanitizeInput(query)
 
   console.log(
     '[Chatbot] Received query:',
     JSON.stringify({ query, thread_id, queryLength: query.length })
   )
 
-  const conversationalResult = detectConversational(query)
+  const conversationalResult = await detectWithML(query)
 
   if (
     conversationalResult.isConversational &&
@@ -209,13 +184,14 @@ export default defineEventHandler(async event => {
 
       const results = response.results || []
       if (results.length > 0) {
-        return results.map((r: any) => `${r.title}: ${r.url}`).join('\n')
+        return results.map((r: { title: string; url: string }) => `${r.title}: ${r.url}`).join('\n')
       }
 
       return 'No relevant results found on the web.'
-    } catch (error: any) {
-      console.error('[Chatbot] Error performing Tavily search:', error.message)
-      return `Error performing Tavily search: ${error.message}`
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : 'Unknown error'
+      console.error('[Chatbot] Error performing Tavily search:', msg)
+      return `Error performing Tavily search: ${msg}`
     }
   }
 
@@ -242,35 +218,37 @@ export default defineEventHandler(async event => {
 
     if (run.required_action?.type === 'submit_tool_outputs') {
       const tool_outputs = await Promise.all(
-        run.required_action.submit_tool_outputs.tool_calls.map(async (action: any) => {
-          const functionName = action.function.name
-          const args = JSON.parse(action.function.arguments)
+        run.required_action.submit_tool_outputs.tool_calls.map(
+          async (action: { id: string; function: { name: string; arguments: string } }) => {
+            const functionName = action.function.name
+            const args = JSON.parse(action.function.arguments)
 
-          let result: string
-          if (functionName === 'tavily_search') {
-            result = await tavilySearch(args.query || '')
-          } else {
-            result = 'Unknown tool requested.'
-          }
+            let result: string
+            if (functionName === 'tavily_search') {
+              result = await tavilySearch(args.query || '')
+            } else {
+              result = 'Unknown tool requested.'
+            }
 
-          return {
-            tool_call_id: action.id,
-            output: result
+            return {
+              tool_call_id: action.id,
+              output: result
+            }
           }
-        })
+        )
       )
 
-      run = (await withTimeout(
+      run = await withTimeout(
         openai.beta.threads.runs.submitToolOutputs(run.id, {
           tool_outputs,
           thread_id: activeThreadId
         }),
         45000,
         'OpenAI API request timed out'
-      )) as any
+      )
 
       run = await withTimeout(
-        (openai.beta.threads.runs.retrieve as any)(activeThreadId, run.id),
+        openai.beta.threads.runs.retrieve(run.id, { thread_id: activeThreadId }),
         45000,
         'OpenAI API request timed out'
       )
@@ -288,19 +266,21 @@ export default defineEventHandler(async event => {
       })
     }
 
-    let assistantResponse = (assistantMessages[0]?.content?.[0] as any)?.text?.value || ''
+    let assistantResponse =
+      (assistantMessages[0]?.content?.[0] as { text?: { value?: string } } | undefined)?.text
+        ?.value || ''
     assistantResponse = removeCitations(assistantResponse)
 
     return {
       thread_id: activeThreadId,
       response: assistantResponse
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[Chatbot] Unhandled error:', error)
     throw createError({
       status: 500,
       statusText: 'Internal Server Error',
-      message: error.message || 'An unexpected error occurred'
+      message: error instanceof Error ? error.message : 'An unexpected error occurred'
     })
   }
 })

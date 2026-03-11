@@ -354,7 +354,7 @@ export async function detectWithML(text: string): Promise<ConversationalResult> 
           ? "I'm here to help with legal questions! What would you like to know?"
           : undefined
     }
-  } catch (error) {
+  } catch {
     return detectConversational(text)
   }
 }

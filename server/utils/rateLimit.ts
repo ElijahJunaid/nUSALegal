@@ -1,4 +1,4 @@
-import { createError, getHeaders } from 'h3'
+import { createError, type H3Event } from 'h3'
 
 interface RateLimitStore {
   [key: string]: {
@@ -12,7 +12,7 @@ interface RateLimitConfig {
   max: number
   message?: string
   skipSuccessfulRequests?: boolean
-  keyGenerator?: (event: any) => string
+  keyGenerator?: (event: H3Event) => string
 }
 
 class RateLimiter {
@@ -21,7 +21,7 @@ class RateLimiter {
   private max: number
   private message: string
   private skipSuccessfulRequests: boolean
-  private keyGenerator: (event: any) => string
+  private keyGenerator: (event: H3Event) => string
 
   constructor(config: RateLimitConfig) {
     this.windowMs = config.windowMs
@@ -33,7 +33,7 @@ class RateLimiter {
     setInterval(() => this.cleanup(), 60000)
   }
 
-  private defaultKeyGenerator(event: any): string {
+  private defaultKeyGenerator(event: H3Event): string {
     const headers = event.node?.req?.headers
     return (
       headers?.['x-forwarded-for']?.toString().split(',')[0]?.trim() ||
@@ -46,13 +46,13 @@ class RateLimiter {
   private cleanup(): void {
     const now = Date.now()
     Object.keys(this.store).forEach(key => {
-      if ((this.store[key]?.resetTime as number) < now) {
+      if ((this.store[key]?.resetTime ?? 0) < now) {
         delete this.store[key]
       }
     })
   }
 
-  async check(event: any): Promise<{
+  async check(event: H3Event): Promise<{
     allowed: boolean
     limit: number
     remaining: number
@@ -88,7 +88,7 @@ class RateLimiter {
   }
 
   middleware() {
-    return async (event: any) => {
+    return async (event: H3Event) => {
       const result = await this.check(event)
 
       event.node.res.setHeader('X-RateLimit-Limit', result.limit.toString())
@@ -104,7 +104,7 @@ class RateLimiter {
           status: 429,
           statusText: 'Too Many Requests',
           message: result.message || 'Too many requests, please try again later.'
-        }) as any
+        })
       }
     }
   }

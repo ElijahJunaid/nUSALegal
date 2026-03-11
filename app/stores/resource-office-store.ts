@@ -84,8 +84,9 @@ export const useResourceOfficeStore = defineStore('resource-office', {
 
         this.data = data
         this.isLoaded = true
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch office resource'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch office resource'
         console.error('Failed to fetch office resource:', err)
       } finally {
         this.loading = false

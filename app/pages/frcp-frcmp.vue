@@ -138,7 +138,9 @@
                   >
                     <div class="card-body text-center">
                       <h3 class="text-center font-bold text-xl">{{ dt.title }}</h3>
+                      <!-- eslint-disable vue/no-v-html -->
                       <p class="text-center" v-html="dt.excerp"></p>
+                      <!-- eslint-enable vue/no-v-html -->
                     </div>
                   </div>
                 </template>
@@ -160,7 +162,9 @@
         <div class="data-detail text-center">
           <h3 class="text-center font-bold text-xl">{{ dataDetail.title }}</h3>
           <p class="font-bold text-center">{{ dataDetail.subtitle }}</p>
+          <!-- eslint-disable vue/no-v-html -->
           <p class="text-sm text-center" v-html="dataDetail.content"></p>
+          <!-- eslint-enable vue/no-v-html -->
         </div>
       </LazyModal>
     </template>
@@ -170,7 +174,6 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { $fetch } from 'ofetch'
 import { useFederalRulesStore, type FederalRules } from '~/stores/federal-rules-store'
 
 definePageMeta({

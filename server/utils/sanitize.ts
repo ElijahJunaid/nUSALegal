@@ -10,7 +10,7 @@ export function sanitizeInput(input: string): string {
     .replace(/\//g, '&#x2F;')
 }
 
-export function sanitizeObject<T extends Record<string, any>>(obj: T): T {
+export function sanitizeObject<T extends Record<string, unknown>>(obj: T): T {
   if (!obj || typeof obj !== 'object') return obj
 
   const sanitized = {} as T
@@ -23,13 +23,13 @@ export function sanitizeObject<T extends Record<string, any>>(obj: T): T {
         typeof item === 'string'
           ? sanitizeInput(item)
           : typeof item === 'object'
-            ? sanitizeObject(item)
+            ? sanitizeObject(item as Record<string, unknown>)
             : item
       ) as T[keyof T]
     } else if (typeof value === 'object' && value !== null) {
-      sanitized[key as keyof T] = sanitizeObject(value) as T[keyof T]
+      sanitized[key as keyof T] = sanitizeObject(value as Record<string, unknown>) as T[keyof T]
     } else {
-      sanitized[key as keyof T] = value
+      sanitized[key as keyof T] = value as T[keyof T]
     }
   }
 

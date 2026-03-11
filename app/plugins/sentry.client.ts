@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/vue'
 import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
 
-export default defineNuxtPlugin((nuxtApp: any) => {
+export default defineNuxtPlugin(nuxtApp => {
   const config = useRuntimeConfig()
 
   if (config.public.environment === 'development') {
@@ -26,6 +26,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
 
       integrations: [
         Sentry.browserTracingIntegration({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           router: nuxtApp.$router as any
         }),
         Sentry.replayIntegration({
@@ -71,7 +72,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
       denyUrls: [/extensions\//i, /^chrome:\/\//, /^chrome-extension:\/\//]
     })
 
-    nuxtApp.vueApp.config.errorHandler = (error: any, instance: any, info: any) => {
+    nuxtApp.vueApp.config.errorHandler = (error: unknown, instance, info: string) => {
       console.error('Vue Error:', error, info)
 
       Sentry.withScope(scope => {

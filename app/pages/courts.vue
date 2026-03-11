@@ -436,7 +436,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useCourtsStore } from '~/stores/courts-store'
+import { useCourtsStore, type CourtCase } from '~/stores/courts-store'
 
 definePageMeta({
   layout: false
@@ -449,10 +449,25 @@ const { loading } = storeToRefs(courtsStore)
 
 const courtType = ref<'selection' | 'scotus' | 'district'>('selection')
 
-const showCaseDetail = ref(false)
-const selectedCase = ref<any>(null)
+interface DistrictCase {
+  title: string
+  caseNumber: string
+  charge: string
+  judge: string
+  prosecutor: string
+  defense: string
+  outcome: string
+  date: string
+  plaintiff: string
+  defendant: string
+  summary: string
+  sentence: string
+}
 
-const openCaseModal = (courtCase: any) => {
+const showCaseDetail = ref(false)
+const selectedCase = ref<CourtCase | null>(null)
+
+const openCaseModal = (courtCase: CourtCase) => {
   selectedCase.value = courtCase
   showCaseDetail.value = true
 }
@@ -462,11 +477,11 @@ const closeCaseModal = () => {
   selectedCase.value = null
 }
 
-const districtCases = ref<any[]>([])
+const districtCases = ref<DistrictCase[]>([])
 const loadingDistrict = ref(false)
 const districtSearchQuery = ref('')
 const showDistrictCaseDetail = ref(false)
-const selectedDistrictCase = ref<any>(null)
+const selectedDistrictCase = ref<DistrictCase | null>(null)
 
 const filteredDistrictCases = computed(() => {
   if (!districtSearchQuery.value.trim()) {
@@ -486,7 +501,7 @@ const filteredDistrictCases = computed(() => {
   )
 })
 
-const openDistrictCaseModal = (courtCase: any) => {
+const openDistrictCaseModal = (courtCase: DistrictCase) => {
   selectedDistrictCase.value = courtCase
   showDistrictCaseDetail.value = true
 }

@@ -1,7 +1,7 @@
 import noblox from 'noblox.js'
 import { checkTrelloBoards } from '../utils/trelloConfig'
 import { checkGroupBans } from '../utils/groupConfig'
-import { defineEventHandler, getQuery, createError } from 'h3'
+import { defineEventHandler, createError } from 'h3'
 
 async function getFriendCount(userId: number): Promise<number | null> {
   try {
@@ -70,7 +70,8 @@ export default defineEventHandler(async event => {
       }
     }
 
-    const nusaGroup = groups.find((g: any) => g.Id === 758071) || null
+    const nusaGroup =
+      groups.find((g: { Id: number; Role: string; Name: string }) => g.Id === 758071) || null
     const nusaRank = nusaGroup
       ? await noblox.getRankInGroup(758071, userId).catch(() => null)
       : null
@@ -101,7 +102,7 @@ export default defineEventHandler(async event => {
       is_banned: userInfo.isBanned,
       friends_count: friendsCount,
       badges_count: badges.length,
-      groups: groups.map((g: any) => ({
+      groups: groups.map((g: { Id: number; Role: string; Name: string }) => ({
         group_name: g.Name,
         role_name: g.Role
       })),
@@ -133,13 +134,14 @@ export default defineEventHandler(async event => {
         limitedGroupCount: groupBanResults.limitedGroupCount
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Roblox check error:', error)
-    const status = error.message === 'User not found' ? 404 : 500
+    const message = error instanceof Error ? error.message : 'Failed to check user'
+    const status = message === 'User not found' ? 404 : 500
     throw createError({
       status,
       statusText: status === 404 ? 'Not Found' : 'Internal Server Error',
-      message: error.message || 'Failed to check user'
+      message
     })
   }
 })

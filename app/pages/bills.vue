@@ -137,14 +137,7 @@ definePageMeta({
 const billsStore = useBillsStore()
 
 const { setSection, fetchCongressBills } = billsStore
-const {
-  loading,
-  searchQuery,
-  selectedSection,
-  filterType,
-  filteredCongressBills,
-  filteredDCBills
-} = storeToRefs(billsStore)
+const { searchQuery, selectedSection, filterType } = storeToRefs(billsStore)
 
 onMounted(fetchCongressBills)
 
@@ -165,14 +158,19 @@ async function openPDF(pdfPath: string) {
     if (!opened || opened.closed || typeof opened.closed === 'undefined') {
       alert('Pop-up was blocked. Please allow pop-ups for this site to view PDFs.')
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to open PDF:', error)
 
-    const errorMessage = error?.data?.statusMessage || error?.message || 'Failed to open PDF'
+    const err = error as {
+      data?: { statusMessage?: string }
+      message?: string
+      statusCode?: number
+    }
+    const errorMessage = err?.data?.statusMessage || err?.message || 'Failed to open PDF'
 
-    if (error?.statusCode === 403) {
+    if (err?.statusCode === 403) {
       alert('⏱️ Access Denied\n\nThis PDF link may have expired or is invalid. Please try again.')
-    } else if (error?.statusCode === 404) {
+    } else if (err?.statusCode === 404) {
       alert('🔍 PDF Not Found\n\nThe requested PDF file could not be found.')
     } else {
       alert(`❌ Error\n\n${errorMessage}\n\nPlease try again or contact support.`)

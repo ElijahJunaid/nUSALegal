@@ -5,7 +5,7 @@ interface TraceContext {
   spanId: string
   parentSpanId?: string
   startTime: number
-  metadata: Record<string, any>
+  metadata: Record<string, unknown>
 }
 
 class TracingManager {
@@ -17,7 +17,7 @@ class TracingManager {
     this.activeSpans = new Map()
   }
 
-  startTrace(metadata: Record<string, any> = {}): string {
+  startTrace(metadata: Record<string, unknown> = {}): string {
     const traceId = randomUUID()
     const spanId = randomUUID()
 
@@ -37,19 +37,23 @@ class TracingManager {
     return traceId
   }
 
-  startSpan(traceId: string, name: string, metadata: Record<string, any> = {}): string | null {
+  startSpan(
+    traceId: string,
+    _name: string,
+    _metadata: Record<string, unknown> = {}
+  ): string | null {
     const trace = this.traces.get(traceId)
     if (!trace) return null
 
     const spanId = randomUUID()
-    const parentSpanId = this.activeSpans.get(traceId)
+    const _parentSpanId = this.activeSpans.get(traceId)
 
     this.activeSpans.set(traceId, spanId)
 
     return spanId
   }
 
-  endSpan(traceId: string, spanId: string, metadata: Record<string, any> = {}) {
+  endSpan(traceId: string, _spanId: string, metadata: Record<string, unknown> = {}) {
     const trace = this.traces.get(traceId)
     if (!trace) return
 
@@ -63,7 +67,7 @@ class TracingManager {
     }
   }
 
-  endTrace(traceId: string, metadata: Record<string, any> = {}) {
+  endTrace(traceId: string, metadata: Record<string, unknown> = {}) {
     const trace = this.traces.get(traceId)
     if (!trace) return
 
@@ -91,12 +95,12 @@ class TracingManager {
     return Array.from(this.traces.values())
   }
 
-  getTraceMetadata(traceId: string): Record<string, any> | null {
+  getTraceMetadata(traceId: string): Record<string, unknown> | null {
     const trace = this.traces.get(traceId)
     return trace ? trace.metadata : null
   }
 
-  addMetadata(traceId: string, key: string, value: any) {
+  addMetadata(traceId: string, key: string, value: unknown) {
     const trace = this.traces.get(traceId)
     if (trace) {
       trace.metadata[key] = value

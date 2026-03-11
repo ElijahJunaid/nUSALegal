@@ -98,8 +98,9 @@ export const useResourceVIPStore = defineStore('resource-vips', {
         this.loading = false
 
         await this.enrichVIPData()
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch VIP resource'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch VIP resource'
         console.error('Failed to fetch VIP resource:', err)
         this.loading = false
       }

@@ -15,18 +15,30 @@ export interface PaginatedResponse<T> {
   }
 }
 
-export function getPaginationParams(query: Record<string, any>): Required<PaginationParams> {
+export function getPaginationParams(
+  query: PaginationParams | Record<string, unknown>
+): Required<PaginationParams> {
   const page = Math.max(1, parseInt(query.page as string) || 1)
   const limit = Math.min(100, Math.max(1, parseInt(query.limit as string) || 50))
 
   return { page, limit }
 }
 
+interface PaginationModel<T> {
+  count: (args: { where: Record<string, unknown> }) => Promise<number>
+  findMany: (args: {
+    where: Record<string, unknown>
+    orderBy: Record<string, unknown>
+    skip: number
+    take: number
+  }) => Promise<T[]>
+}
+
 export async function paginate<T>(
-  model: any,
+  model: PaginationModel<T>,
   params: PaginationParams,
-  where: any = {},
-  orderBy: any = {}
+  where: Record<string, unknown> = {},
+  orderBy: Record<string, unknown> = {}
 ): Promise<PaginatedResponse<T>> {
   const { page, limit } = getPaginationParams(params)
   const skip = (page - 1) * limit

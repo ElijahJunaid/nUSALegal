@@ -10,6 +10,7 @@ export interface Law {
   subtitle: string
   content: string
   excerp: string
+  category?: string
 }
 
 export const useLawsStore = defineStore('laws-rules', {
@@ -30,9 +31,7 @@ export const useLawsStore = defineStore('laws-rules', {
 
   getters: {
     filterFederalList(state): string[] {
-      const categories = [
-        ...new Set(state.federal.map(law => (law as any).category || 'Uncategorized'))
-      ]
+      const categories = [...new Set(state.federal.map(law => law.category || 'Uncategorized'))]
       return categories.filter(c => c)
     },
     filterEOList(): string[] {
@@ -50,12 +49,10 @@ export const useLawsStore = defineStore('laws-rules', {
         const categoryIndex = state.filterType as number
         const categories =
           state.selectedSection == 'federal'
-            ? [
-                ...new Set(state.federal.map(law => (law as any).category || 'Uncategorized'))
-              ].filter(c => c)
+            ? [...new Set(state.federal.map(law => law.category || 'Uncategorized'))].filter(c => c)
             : []
         if (categories[categoryIndex]) {
-          data = data.filter(law => (law as any).category === categories[categoryIndex])
+          data = data.filter(law => law.category === categories[categoryIndex])
         }
       }
 
@@ -139,8 +136,9 @@ export const useLawsStore = defineStore('laws-rules', {
 
         this.federal = data
         this.federalLoaded = true
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch Federal'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Federal'
         console.error('Failed to fetch Federal:', err)
       } finally {
         this.loading = false
@@ -170,8 +168,9 @@ export const useLawsStore = defineStore('laws-rules', {
 
         this.eo = data
         this.eoLoaded = true
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch EO data'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch EO data'
         console.error('Failed to fetch EO data:', err)
       } finally {
         this.loading = false
@@ -201,8 +200,9 @@ export const useLawsStore = defineStore('laws-rules', {
 
         this.municipal = data
         this.municipalLoaded = true
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch Municipal'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Municipal'
         console.error('Failed to fetch Municipal:', err)
       } finally {
         this.loading = false

@@ -110,12 +110,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
+
+interface RobloxUserGroupBans {
+  hasLimitedRanks: boolean
+  tooManyGroups: boolean
+  has_minor_bans: boolean
+  has_severe_bans: boolean
+  limitedGroupCount: number
+}
+
+interface RobloxUserTrelloChecks {
+  hasSevereBans: boolean
+  has_blacklists: boolean
+  has_bans: boolean
+  hasMinorBans: boolean
+}
+
+interface RobloxUser {
+  id: number | string
+  userId: number | string
+  name: string
+  display_name: string
+  created: string
+  is_banned: boolean
+  friends_count: number
+  badges_count: number
+  description: string
+  nusa_info: boolean
+  federal_prisoner: boolean
+  group_bans: RobloxUserGroupBans
+  trello_checks: RobloxUserTrelloChecks
+  groups: Array<{ group_name: string; role_name: string }>
+}
 
 const username = ref('')
 const loading = ref(false)
 const error = ref('')
-const result = ref<any>(null)
+const result = ref<RobloxUser | null>(null)
 const showProfile = ref(false)
 
 interface Assessment {
@@ -158,20 +190,23 @@ async function checkUser() {
   showProfile.value = false
 
   try {
-    const response = await $fetch(`/api/robloxcheck?username=${encodeURIComponent(username.value)}`)
+    const response = await $fetch<RobloxUser>(
+      `/api/robloxcheck?username=${encodeURIComponent(username.value)}`
+    )
     result.value = response
 
     assessments.value.hiring = await hiringAssessment(response)
     assessments.value.eos = eosAssessment(response)
     assessments.value.ban = banAssessment(response)
-  } catch (err: any) {
-    error.value = err.statusCode === 404 ? 'User not found' : 'Error checking user'
+  } catch (err: unknown) {
+    const fetchErr = err as { statusCode?: number }
+    error.value = fetchErr.statusCode === 404 ? 'User not found' : 'Error checking user'
   } finally {
     loading.value = false
   }
 }
 
-async function hiringAssessment(data: any): Promise<Assessment> {
+async function hiringAssessment(data: RobloxUser): Promise<Assessment> {
   const created = new Date(data.created)
   const now = new Date()
   const ageInDays = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24))
@@ -194,7 +229,9 @@ async function hiringAssessment(data: any): Promise<Assessment> {
         return { result: banResponse.result, reason: banResponse.reason }
       }
     }
-  } catch (error) {}
+  } catch (_error) {
+    /* noop */
+  }
 
   if (!data.nusa_info) return { result: 'DO NOT HIRE', reason: 'Tier 2: Not a member of nUSA' }
   if (data.federal_prisoner)
@@ -222,16 +259,16 @@ async function hiringAssessment(data: any): Promise<Assessment> {
   return { result: 'CONSIDER HIRING', reason: 'All background checks passed' }
 }
 
-function eosAssessment(data: any): Assessment {
+function eosAssessment(data: RobloxUser): Assessment {
   const suspiciousGroups = data.groups.some(
-    (g: any) =>
+    (g: { group_name: string; role_name: string }) =>
       g.group_name.toLowerCase().includes('hack') || g.group_name.toLowerCase().includes('exploit')
   )
   if (suspiciousGroups) return { result: 'WARNING', reason: 'Membership in suspicious groups' }
   return { result: 'PASS', reason: 'No obvious EOS violations detected' }
 }
 
-function banAssessment(data: any): Assessment {
+function banAssessment(data: RobloxUser): Assessment {
   if (data.is_banned) return { result: 'BANNED', reason: 'Account currently banned' }
   return { result: 'CLEAN', reason: 'No current bans' }
 }

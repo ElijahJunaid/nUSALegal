@@ -13,7 +13,7 @@ export interface LobbyPlayer {
 export interface LobbyState {
   lobbyCode: string
   selectedCaseType: 'criminal' | 'civil' | null
-  selectedCase: any
+  selectedCase: Record<string, unknown> | null
   players: LobbyPlayer[]
   roles: { [key: string]: string | null }
 }
@@ -21,8 +21,8 @@ export interface LobbyState {
 export function useLobbyConnection() {
   const { success, error, warning, info } = useToast()
 
-  let ably: any | null = null
-  let channel: any | null = null
+  let ably: Ably.Realtime | null = null
+  let channel: ReturnType<Ably.Realtime['channels']['get']> | null = null
   let clientId: string | null = null
 
   const isConnected = ref(false)
@@ -30,6 +30,16 @@ export function useLobbyConnection() {
   const isReconnecting = ref(false)
   const reconnectAttempts = ref(0)
   const reconnectCountdown = ref(10)
+
+  const incomingObjection = ref<{
+    id: string
+    type: string
+    reason: string
+    madeBy: string
+    ruling: string | null
+  } | null>(null)
+  const incomingRuling = ref<{ objectionId: string; sustained: boolean } | null>(null)
+  const incomingVote = ref<{ playerId: string; vote: 'guilty' | 'not-guilty' } | null>(null)
 
   let heartbeatInterval: NodeJS.Timeout | null = null
   let activityCheckInterval: NodeJS.Timeout | null = null
@@ -87,6 +97,9 @@ export function useLobbyConnection() {
       channel.subscribe('case-selected', onCaseSelected)
       channel.subscribe('trial-start', onTrialStart)
       channel.subscribe('heartbeat', onHeartbeat)
+      channel.subscribe('objection-raised', onObjectionRaised)
+      channel.subscribe('objection-ruled', onObjectionRuled)
+      channel.subscribe('vote-cast', onVoteCast)
 
       await channel.publish('player-joined', {
         id: clientId,
@@ -263,7 +276,7 @@ export function useLobbyConnection() {
     attemptReconnect().catch(err => console.error('Reconnect failed:', err))
   }
 
-  function onPlayerJoined(message: any) {
+  function onPlayerJoined(message: Ably.Message) {
     const { id, name, isLeader } = message.data
 
     if (id === clientId) return
@@ -281,7 +294,7 @@ export function useLobbyConnection() {
     }
   }
 
-  function onPlayerLeft(message: any) {
+  function onPlayerLeft(message: Ably.Message) {
     const { id } = message.data
 
     const player = lobbyState.value.players.find(p => p.id === id)
@@ -296,7 +309,7 @@ export function useLobbyConnection() {
     }
   }
 
-  function onRoleClaimed(message: any) {
+  function onRoleClaimed(message: Ably.Message) {
     const { playerId, playerName, roleId, roleName } = message.data
 
     const player = lobbyState.value.players.find(p => p.id === playerId)
@@ -314,8 +327,8 @@ export function useLobbyConnection() {
     }
   }
 
-  function onCaseSelected(message: any) {
-    const { case: selectedCase } = message.data
+  function onCaseSelected(message: Ably.Message) {
+    const { case: selectedCase } = message.data as { case: Record<string, unknown> }
     lobbyState.value.selectedCase = selectedCase
 
     if (message.clientId !== clientId) {
@@ -323,18 +336,63 @@ export function useLobbyConnection() {
     }
   }
 
-  function onTrialStart(message: any) {
+  function onTrialStart(message: Ably.Message) {
     if (message.clientId !== clientId) {
       info('Trial is starting!')
     }
   }
 
-  function onHeartbeat(message: any) {
-    const { playerId, timestamp } = message.data
+  function onHeartbeat(message: Ably.Message) {
+    const { playerId, timestamp } = message.data as { playerId: string; timestamp: number }
 
     const player = lobbyState.value.players.find(p => p.id === playerId)
     if (player) {
       player.lastSeen = timestamp
+    }
+  }
+
+  function onObjectionRaised(message: Ably.Message) {
+    if (message.clientId === clientId) return
+    incomingObjection.value = message.data
+    info(`Objection raised: ${message.data.type}`)
+  }
+
+  function onObjectionRuled(message: Ably.Message) {
+    if (message.clientId === clientId) return
+    incomingRuling.value = {
+      objectionId: message.data.objectionId,
+      sustained: message.data.sustained
+    }
+    info(`Objection ${message.data.sustained ? 'sustained' : 'overruled'}`)
+  }
+
+  function onVoteCast(message: Ably.Message) {
+    if (message.clientId === clientId) return
+    incomingVote.value = { playerId: message.data.playerId, vote: message.data.vote }
+    info(`${message.data.playerName} cast a vote`)
+  }
+
+  function sendObjection(objection: {
+    id: string
+    type: string
+    reason: string
+    madeBy: string
+    ruling: null
+  }) {
+    if (channel && clientId) {
+      channel.publish('objection-raised', objection)
+    }
+  }
+
+  function broadcastRuling(objectionId: string, sustained: boolean) {
+    if (channel && clientId) {
+      channel.publish('objection-ruled', { objectionId, sustained })
+    }
+  }
+
+  function broadcastVote(vote: 'guilty' | 'not-guilty', playerName: string) {
+    if (channel && clientId) {
+      channel.publish('vote-cast', { playerId: clientId, playerName, vote })
     }
   }
 
@@ -359,7 +417,7 @@ export function useLobbyConnection() {
     }
   }
 
-  function selectCase(caseItem: any) {
+  function selectCase(caseItem: Record<string, unknown>) {
     lobbyState.value.selectedCase = caseItem
 
     if (channel) {
@@ -396,12 +454,18 @@ export function useLobbyConnection() {
     reconnectCountdown,
     connectionStatus,
     lobbyState,
+    incomingObjection,
+    incomingRuling,
+    incomingVote,
 
     connect,
     disconnect,
     claimRole,
     selectCase,
     startTrial,
+    sendObjection,
+    broadcastRuling,
+    broadcastVote,
     onConnectionLost,
     attemptReconnect
   }

@@ -61,7 +61,9 @@ async function getBoardLists(boardId: string, key: string, token: string) {
 async function getBoardCards(boardId: string, key: string, token: string): Promise<TrelloCard[]> {
   const lists = await getBoardLists(boardId, key, token)
   const targetListName = boardListNames[boardId]
-  const targetList = lists.find((list: any) => list.name === targetListName)
+  const targetList = lists.find(
+    (list: { id: string; name: string }) => list.name === targetListName
+  )
 
   if (!targetList) {
     return []
@@ -82,7 +84,7 @@ async function checkBoardCategory(
 
   for (const boardId of boards) {
     try {
-      const boardName = await getBoardName(boardId, key, token)
+      const _boardName = await getBoardName(boardId, key, token)
       const cards = await getBoardCards(boardId, key, token)
 
       const matches = cards.filter(card => {
@@ -100,10 +102,10 @@ async function checkBoardCategory(
           description: card.desc
         }))
       )
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(
         `Error accessing board ${boardId}:`,
-        error.response?.statusText || error.message
+        axios.isAxiosError(error) ? error.response?.statusText || error.message : String(error)
       )
     }
   }

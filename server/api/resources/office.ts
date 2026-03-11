@@ -2,12 +2,28 @@ import { offices } from '../../data/offices'
 import { defineEventHandler, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
 
+interface Office {
+  name: string
+  description: string
+  category: string
+}
+
+interface OfficeEntry {
+  title: string
+  description: string
+}
+
+interface OfficeGroup {
+  label: string
+  data: OfficeEntry[]
+}
+
 export default defineEventHandler(async event => {
   validateApiAccess(event, 'resources/office')
 
   try {
-    const grouped = offices.reduce((acc: any, office: any) => {
-      const existing = acc.find((g: any) => g.label === office.category)
+    const grouped = offices.reduce((acc: OfficeGroup[], office: Office) => {
+      const existing = acc.find((g: OfficeGroup) => g.label === office.category)
       if (existing) {
         existing.data.push({
           title: office.name,

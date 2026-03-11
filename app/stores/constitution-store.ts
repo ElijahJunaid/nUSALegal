@@ -80,8 +80,9 @@ export const useConstitutionStore = defineStore('constitution', {
 
         this.constitution = data
         this.constitutionLoaded = true
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch Constitution'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Constitution'
         console.error('Failed to fetch Constitution:', err)
       } finally {
         this.loading = false
@@ -111,9 +112,10 @@ export const useConstitutionStore = defineStore('constitution', {
 
         this.constitutionAmendments = data
         this.constitutionAmendmentsLoaded = true
-      } catch (err: any) {
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error =
-          err?.data?.statusMessage || err?.message || 'Failed to fetch Constitution Amendments'
+          e?.data?.statusMessage || e?.message || 'Failed to fetch Constitution Amendments'
         console.error('Failed to fetch Constitution Amendments:', err)
       } finally {
         this.loading = false

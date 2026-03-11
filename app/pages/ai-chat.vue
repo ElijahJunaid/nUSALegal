@@ -13,7 +13,7 @@
           :class="['message-wrapper', message.type]"
         >
           <div class="message-bubble">
-            <div v-if="message.isMarkdown" v-html="parseMarkdown(message.text)"></div>
+            <div v-if="message.isMarkdown" v-html="sanitizeHtml(parseMarkdown(message.text))"></div>
             <div v-else class="message-text">{{ message.text }}</div>
           </div>
         </div>
@@ -54,12 +54,14 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue'
+import { useSanitize } from '~/composables/useSanitize'
 
 definePageMeta({
   title: 'AI Legal Assistant',
   description: 'Chat with CaseBot AI for comprehensive legal assistance'
 })
 
+const { sanitizeHtml } = useSanitize()
 const userInput = ref('')
 const messages = ref<Array<{ text: string; type: 'user' | 'bot'; isMarkdown?: boolean }>>([])
 const isLoading = ref(false)
@@ -130,7 +132,7 @@ const sendMessage = async () => {
   isLoading.value = true
 
   try {
-    const response = await $fetch<any>('/api/chatbot', {
+    const response = await $fetch<{ thread_id?: string; response?: string }>('/api/chatbot', {
       method: 'POST',
       body: {
         query: text,
@@ -149,14 +151,15 @@ const sendMessage = async () => {
         isMarkdown: true
       })
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Chatbot error:', error)
 
     let errorMessage = '⚠️ Failed to connect to CaseBot server.'
+    const e = error as { statusCode?: number }
 
-    if (error.statusCode === 429) {
+    if (e.statusCode === 429) {
       errorMessage = '⚠️ Too many requests. Please wait a moment before trying again.'
-    } else if (error.statusCode === 400) {
+    } else if (e.statusCode === 400) {
       errorMessage = '⚠️ Invalid request. Please try rephrasing your question.'
     }
 

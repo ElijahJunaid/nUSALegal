@@ -98,7 +98,13 @@
             </span>
           </div>
           <div v-if="result.subtitle" class="result-subtitle">{{ result.subtitle }}</div>
-          <div v-if="result.excerpt" class="result-excerpt" v-html="result.excerpt"></div>
+          <!-- eslint-disable vue/no-v-html -->
+          <div
+            v-if="result.excerpt"
+            class="result-excerpt"
+            v-html="sanitizeExcerpt(result.excerpt)"
+          ></div>
+          <!-- eslint-enable vue/no-v-html -->
         </div>
       </div>
 
@@ -110,16 +116,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useApiToken } from '~/composables/useApiToken'
+import { useSanitize } from '~/composables/useSanitize'
+
+interface SearchResult {
+  title: string
+  category: string
+  categoryColor: string
+  subtitle?: string
+  excerpt?: string
+  url: string
+}
 
 const router = useRouter()
 const { getToken } = useApiToken()
+const { sanitizeExcerpt } = useSanitize()
 
 const searchQuery = ref('')
 const selectedCategory = ref('all')
-const searchResults = ref<any[]>([])
+const searchResults = ref<SearchResult[]>([])
 const isSearching = ref(false)
 const showResults = ref(false)
 const showFilters = ref(false)
@@ -161,7 +178,7 @@ const performSearch = async () => {
       }
     })
 
-    searchResults.value = results as any[]
+    searchResults.value = results as SearchResult[]
     showResults.value = true
   } catch (error) {
     console.error('Search error:', error)
@@ -177,7 +194,7 @@ const clearSearch = () => {
   showResults.value = false
 }
 
-const navigateToResult = (result: any) => {
+const navigateToResult = (result: SearchResult) => {
   router.push(result.url)
   clearSearch()
 }

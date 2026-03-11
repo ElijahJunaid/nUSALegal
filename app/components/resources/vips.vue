@@ -40,8 +40,8 @@
               <div v-if="vip.isLoading" class="skeleton w-32 h-32 rounded-full"></div>
               <img
                 v-else
-                :src="vip.avatar.imageUrl"
                 :alt="vip.user.username"
+                :src="vip.avatar.imageUrl"
                 @error="handleImageError"
                 loading="lazy"
               />

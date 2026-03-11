@@ -11,8 +11,8 @@ const countdown = ref(5)
 const autoRedirect = ref(false)
 
 const getErrorDetails = () => {
-  const statusCode = (props.error as any)?.statusCode || 500
-  const message = (props.error as any)?.message || 'An unexpected error occurred'
+  const statusCode = props.error?.statusCode || 500
+  const message = props.error?.message || 'An unexpected error occurred'
 
   if (statusCode === 403) {
     if (message.includes('expired token') || message.includes('Invalid or expired token')) {

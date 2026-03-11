@@ -1,6 +1,6 @@
 import { defineEventHandler, createError } from 'h3'
 
-export default defineEventHandler(async event => {
+export default defineEventHandler(async () => {
   const startTime = Date.now()
 
   const health = {
@@ -22,8 +22,9 @@ export default defineEventHandler(async event => {
     } else {
       health.checks.cache = 'not_configured'
     }
-  } catch (error) {
+  } catch {
     health.checks.cache = 'disconnected'
+    health.status = 'unhealthy'
   }
 
   health.responseTime = Date.now() - startTime
@@ -32,7 +33,7 @@ export default defineEventHandler(async event => {
     throw createError({
       status: 503,
       statusText: 'Service Unavailable'
-    }) as any
+    })
   }
 
   return health

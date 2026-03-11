@@ -245,7 +245,28 @@ const mostActiveDepts = ref([])
 
 onMounted(async () => {
   try {
-    const data = (await $fetch('/api/statistics')) as any
+    const data = await $fetch<{
+      caseStats: {
+        totalCases: number
+        convictionRate: number
+        avgSentence: number
+        activeTrials: number
+      }
+      topCharges: unknown[]
+      caseOutcomes: unknown[]
+      departmentStats: unknown[]
+      commonDefenses: unknown[]
+      sentencingTrends: {
+        avgLength: number
+        mostCommon: string
+        pleaRate: number
+        appealRate: number
+      }
+      topProsecutors: unknown[]
+      topDefense: unknown[]
+      topJudges: unknown[]
+      mostActiveDepts: unknown[]
+    }>('/api/statistics')
 
     caseStats.value = data.caseStats
     topCharges.value = data.topCharges

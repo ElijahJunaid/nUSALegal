@@ -35,7 +35,7 @@ export function createSelect<T extends Record<string, boolean>>(
     return fields
   }
 
-  const { createdAt, updatedAt, ...rest } = fields
+  const { createdAt: _createdAt, updatedAt: _updatedAt, ...rest } = fields
   return rest as T
 }
 
@@ -55,7 +55,10 @@ export async function processBatches<T, R>(
   return results
 }
 
-export function createTextSearchWhere(searchTerm: string, fields: string[]): any {
+export function createTextSearchWhere(
+  searchTerm: string,
+  fields: string[]
+): Record<string, unknown> {
   if (!searchTerm || fields.length === 0) {
     return {}
   }
@@ -70,7 +73,7 @@ export function createTextSearchWhere(searchTerm: string, fields: string[]): any
   }
 }
 
-export function optimizeIncludes<T extends Record<string, any>>(
+export function optimizeIncludes<T extends Record<string, unknown>>(
   includes: T,
   selectFields?: Record<string, boolean>
 ): T {
@@ -84,7 +87,7 @@ export function optimizeIncludes<T extends Record<string, any>>(
     if (value === true && selectFields) {
       optimized[key as keyof T] = { select: selectFields } as T[keyof T]
     } else {
-      optimized[key as keyof T] = value
+      optimized[key as keyof T] = value as T[keyof T]
     }
   }
 
@@ -105,7 +108,7 @@ export function createCursorPagination(cursor: string | undefined, limit: number
   }
 }
 
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {

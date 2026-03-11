@@ -2,13 +2,28 @@ import { frcmpRules } from '../../data/federal-rules-frcmp'
 import { defineEventHandler, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
 
+interface FrcmpRule {
+  number: string
+  type: string
+  titleGroup: string
+  title: string
+  description: string
+}
+
+interface GroupedRuleEntry {
+  title: string
+  subtitle: string
+  content: string
+  excerp: string
+}
+
 export default defineEventHandler(async event => {
   validateApiAccess(event, 'federal-rules/frcmp')
 
   try {
-    const groupedRules: Record<string, any[]> = {}
+    const groupedRules: Record<string, GroupedRuleEntry[]> = {}
 
-    frcmpRules.forEach((rule: any) => {
+    frcmpRules.forEach((rule: FrcmpRule) => {
       const group = rule.titleGroup || 'Other'
       if (!groupedRules[group]) {
         groupedRules[group] = []

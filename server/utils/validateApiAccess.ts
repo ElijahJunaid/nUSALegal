@@ -1,6 +1,5 @@
 import { validateApiToken } from './apiTokens'
-import type { H3Event } from 'h3'
-import { getHeader, createError } from 'h3'
+import { createError, type H3Event } from 'h3'
 
 export function validateApiAccess(event: H3Event, endpoint: string) {
   console.log(' [DEBUG] Validating access for endpoint:', endpoint)

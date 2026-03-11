@@ -15,7 +15,11 @@ export default defineNuxtPlugin(nuxtApp => {
       }
 
       if (config.public.sentryDsn && nuxtApp.$sentry) {
-        const Sentry = nuxtApp.$sentry as any
+        const Sentry = nuxtApp.$sentry as {
+          setMeasurement: (name: string, value: number, unit: string) => void
+          setContext: (key: string, ctx: Record<string, unknown>) => void
+          addBreadcrumb: (breadcrumb: Record<string, unknown>) => void
+        }
         Sentry.setMeasurement(metric.name, metric.value, 'millisecond')
 
         Sentry.setContext('web-vitals', {

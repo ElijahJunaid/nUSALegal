@@ -57,7 +57,7 @@ export function validateApiToken(token: string, expectedEndpoint: string): boole
     }
 
     return true
-  } catch (error) {
+  } catch {
     return false
   }
 }

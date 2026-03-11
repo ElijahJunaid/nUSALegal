@@ -1,32 +1,179 @@
 import { ref, onUnmounted } from 'vue'
 
+interface BabylonVector3 {
+  x: number
+  y: number
+  z: number
+  clone(): BabylonVector3
+}
+
+interface BabylonColor3 {
+  r: number
+  g: number
+  b: number
+}
+
+interface BabylonTextureContext {
+  fillStyle: string
+  fillRect(x: number, y: number, width: number, height: number): void
+}
+
+interface BabylonTexture {
+  getContext(): BabylonTextureContext
+  drawText(
+    text: string,
+    x: number | null,
+    y: number | null,
+    font: string,
+    color: string,
+    clearColor: string,
+    invertY: boolean
+  ): void
+}
+
+interface BabylonMaterial {
+  diffuseColor: BabylonColor3
+  emissiveColor: BabylonColor3
+  backFaceCulling: boolean
+  alpha: number
+  diffuseTexture: BabylonTexture | null
+}
+
+interface BabylonMesh {
+  position: BabylonVector3
+  scaling: BabylonVector3
+  receiveShadows: boolean
+  material: BabylonMaterial | null
+  billboardMode: number
+  dispose(): void
+}
+
+interface BabylonLight {
+  intensity: number
+  position: BabylonVector3
+}
+
+interface BabylonEngine {
+  runRenderLoop(callback: () => void): void
+  resize(): void
+  dispose(): void
+}
+
+interface BabylonScene {
+  clearColor: BabylonColor3
+  render(): void
+  dispose(): void
+}
+
+interface BabylonCamera {
+  setPosition(vector: BabylonVector3): void
+  attachControl(canvas: HTMLCanvasElement, preventDefault: boolean): void
+  setTarget(vector: BabylonVector3): void
+  radius: number
+}
+
+interface BabylonSceneLoader {
+  IsPluginForExtensionAvailable(extension: string): boolean
+  ImportMesh(
+    meshesNames: string,
+    rootUrl: string,
+    sceneFilename: string,
+    scene: BabylonScene,
+    onSuccess: (meshes: BabylonMesh[]) => void,
+    onProgress: null,
+    onError: (scene: BabylonScene, message: string, exception: Error | null) => void
+  ): void
+  RegisterPlugin?: unknown
+}
+
+interface BabylonMeshBuilder {
+  CreateSphere(name: string, options: { diameter: number }, scene: BabylonScene): BabylonMesh
+  CreateGround(
+    name: string,
+    options: { width: number; height: number },
+    scene: BabylonScene
+  ): BabylonMesh
+  CreatePlane(
+    name: string,
+    options: { width: number; height: number },
+    scene: BabylonScene
+  ): BabylonMesh
+}
+
+interface BabylonNamespace {
+  Engine: new (canvas: HTMLCanvasElement, antialias: boolean) => BabylonEngine
+  Scene: new (engine: BabylonEngine) => BabylonScene
+  ArcRotateCamera: new (
+    name: string,
+    alpha: number,
+    beta: number,
+    radius: number,
+    target: BabylonVector3,
+    scene: BabylonScene
+  ) => BabylonCamera
+  HemisphericLight: new (
+    name: string,
+    direction: BabylonVector3,
+    scene: BabylonScene
+  ) => BabylonLight
+  DirectionalLight: new (
+    name: string,
+    direction: BabylonVector3,
+    scene: BabylonScene
+  ) => BabylonLight
+  PointLight: new (name: string, position: BabylonVector3, scene: BabylonScene) => BabylonLight
+  Color3: new (r: number, g: number, b: number) => BabylonColor3
+  Vector3: {
+    Zero(): BabylonVector3
+    new (x: number, y: number, z: number): BabylonVector3
+  }
+  StandardMaterial: new (name: string, scene: BabylonScene) => BabylonMaterial
+  DynamicTexture: new (
+    name: string,
+    options: { width: number; height: number },
+    scene: BabylonScene,
+    generateMipMaps: boolean
+  ) => BabylonTexture
+  MeshBuilder: BabylonMeshBuilder
+  Mesh: { BILLBOARDMODE_ALL: number }
+  SceneLoader: BabylonSceneLoader
+}
+
+type BabylonWindow = typeof window & { BABYLON?: BabylonNamespace }
+
 export interface RolePositions {
-  judge: any
-  prosecutor: any
-  defense: any
-  witness: any
-  jury: any
-  spectator: any
+  judge: BabylonVector3
+  prosecutor: BabylonVector3
+  defense: BabylonVector3
+  witness: BabylonVector3
+  jury: BabylonVector3
+  spectator: BabylonVector3
+}
+
+interface Avatar {
+  mesh: BabylonMesh
+  role: string
+  name: string
 }
 
 export function useCourtroomScene() {
   const canvas = ref<HTMLCanvasElement | null>(null)
-  const engine = ref<any>(null)
-  const scene = ref<any>(null)
-  const camera = ref<any>(null)
+  const engine = ref<BabylonEngine | null>(null)
+  const scene = ref<BabylonScene | null>(null)
+  const camera = ref<BabylonCamera | null>(null)
   const isInitialized = ref(false)
   const isLoading = ref(false)
   const hasError = ref(false)
   const babylonScriptsLoaded = ref(false)
 
-  const avatars = ref<Record<string, any>>({})
+  const avatars = ref<Record<string, Avatar>>({})
   const localPlayerId = ref<string | null>(null)
   const playerRole = ref<string | null>(null)
   const rolePositions = ref<RolePositions | null>(null)
-  const chatBubbles = ref<Record<string, any>>({})
+  const chatBubbles = ref<Record<string, BabylonMesh>>({})
 
-  const inputMap = ref<Record<string, boolean>>({})
-  const movementEnabled = ref(false)
+  const _inputMap = ref<Record<string, boolean>>({})
+  const _movementEnabled = ref(false)
 
   async function loadBabylonScripts(): Promise<void> {
     if (babylonScriptsLoaded.value) {
@@ -34,10 +181,11 @@ export function useCourtroomScene() {
     }
 
     return new Promise((resolve, reject) => {
+      const babylonWin = window as BabylonWindow
       if (
-        typeof (window as any).BABYLON !== 'undefined' &&
-        (window as any).BABYLON.SceneLoader &&
-        (window as any).BABYLON.SceneLoader.RegisterPlugin
+        typeof babylonWin.BABYLON !== 'undefined' &&
+        babylonWin.BABYLON?.SceneLoader &&
+        babylonWin.BABYLON?.SceneLoader.RegisterPlugin
       ) {
         babylonScriptsLoaded.value = true
         resolve()
@@ -86,7 +234,7 @@ export function useCourtroomScene() {
     }
 
     try {
-      const BABYLON = (window as any).BABYLON
+      const BABYLON = (window as BabylonWindow).BABYLON!
       engine.value = new BABYLON.Engine(canvas.value, true)
       isInitialized.value = true
       return true
@@ -96,17 +244,17 @@ export function useCourtroomScene() {
     }
   }
 
-  async function createScene(): Promise<any> {
+  async function createScene(): Promise<BabylonScene | null> {
     isLoading.value = true
     hasError.value = false
 
-    const BABYLON = (window as any).BABYLON
+    const BABYLON = (window as BabylonWindow).BABYLON
 
     if (typeof BABYLON === 'undefined') {
       console.error('Babylon.js is not loaded. Attempting to load scripts again.')
       await loadBabylonScripts()
 
-      if (typeof (window as any).BABYLON === 'undefined') {
+      if (typeof (window as BabylonWindow).BABYLON === 'undefined') {
         console.error('Failed to load Babylon.js after retry.')
         hasError.value = true
         isLoading.value = false
@@ -161,7 +309,7 @@ export function useCourtroomScene() {
           '/models/',
           'law_court.glb',
           scene.value,
-          (meshes: any[]) => {
+          (meshes: BabylonMesh[]) => {
             if (meshes && meshes.length > 0) {
               const rootMesh = meshes[0]
               rootMesh.scaling = new BABYLON.Vector3(1, 1, 1)
@@ -172,7 +320,7 @@ export function useCourtroomScene() {
             }
           },
           null,
-          (sceneObj: any, message: string, exception: any) => {
+          (_sceneObj: BabylonScene, message: string, exception: Error | null) => {
             const errorMsg = exception
               ? exception.message || String(exception)
               : message || 'Unknown error'
@@ -186,8 +334,11 @@ export function useCourtroomScene() {
         hasError.value = true
         isLoading.value = false
       }
-    } catch (error: any) {
-      console.error('Error in scene creation:', error?.message || String(error))
+    } catch (error: unknown) {
+      console.error(
+        'Error in scene creation:',
+        error instanceof Error ? error.message : String(error)
+      )
       hasError.value = true
       isLoading.value = false
     }
@@ -224,7 +375,7 @@ export function useCourtroomScene() {
     role: string,
     options: { name: string; isLocal: boolean }
   ) {
-    const BABYLON = (window as any).BABYLON
+    const BABYLON = (window as BabylonWindow).BABYLON!
     if (!scene.value || !rolePositions.value) return
 
     const avatar = BABYLON.MeshBuilder.CreateSphere(
@@ -233,11 +384,12 @@ export function useCourtroomScene() {
       scene.value
     )
 
-    const position = (rolePositions.value as any)[role] || rolePositions.value.spectator
+    const position =
+      rolePositions.value[role as keyof RolePositions] || rolePositions.value.spectator
     avatar.position = position.clone()
 
     const material = new BABYLON.StandardMaterial(`material-${playerId}`, scene.value)
-    const roleColors: Record<string, any> = {
+    const roleColors: Record<string, BabylonColor3> = {
       judge: new BABYLON.Color3(0.5, 0, 0.5),
       prosecutor: new BABYLON.Color3(0, 0, 1),
       defense: new BABYLON.Color3(1, 0, 0),
@@ -292,7 +444,7 @@ export function useCourtroomScene() {
   }
 
   function showChatBubble(playerId: string, message: string) {
-    const BABYLON = (window as any).BABYLON
+    const BABYLON = (window as BabylonWindow).BABYLON!
     if (!scene.value || !avatars.value[playerId]) return
 
     const avatar = avatars.value[playerId]

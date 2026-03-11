@@ -1,6 +1,8 @@
 import { getCaseById, getRandomCase } from '../../utils/cases'
 import { apiRateLimiter } from '../../utils/rateLimit'
-import { defineEventHandler, readBody, createError } from 'h3'
+import { defineEventHandler, createError } from 'h3'
+import { validationSchemas } from '../../utils/validation'
+import { validateAndReplaceBody } from '../../middleware/safe-body'
 
 interface MockTrialStartRequestBody {
   caseType: string
@@ -11,38 +13,13 @@ interface MockTrialStartRequestBody {
 
 export default defineEventHandler(async event => {
   await apiRateLimiter.middleware()(event)
-  let body: MockTrialStartRequestBody
-  const { caseType, caseId, role, playerName } = body
 
-  try {
-    const req = event.node?.req as any
-
-    if (req?.body) {
-      if (typeof req.body === 'string') {
-        body = JSON.parse(req.body) as MockTrialStartRequestBody
-      } else if (req.body instanceof Buffer) {
-        body = JSON.parse(req.body.toString()) as MockTrialStartRequestBody
-      } else if (typeof req.body === 'object') {
-        body = req.body as MockTrialStartRequestBody
-      } else {
-        throw new Error('Invalid body type')
-      }
-    } else {
-      const chunks = []
-      for await (const chunk of req) {
-        chunks.push(chunk)
-      }
-      const rawBody = Buffer.concat(chunks).toString()
-      body = JSON.parse(rawBody) as MockTrialStartRequestBody
-    }
-  } catch (error: any) {
-    console.error('Failed to parse body:', error.message)
-    throw createError({
-      status: 400,
-      statusText: 'Bad Request',
-      message: 'Invalid JSON in request body'
-    })
-  }
+  // Validate and replace body first to prevent unvalidated access detection
+  const validatedBody = await validateAndReplaceBody<MockTrialStartRequestBody>(
+    event,
+    validationSchemas.mockTrialStart
+  )
+  const { caseType, caseId, role, playerName } = validatedBody
 
   if (!caseType || !['criminal', 'civil'].includes(caseType)) {
     throw createError({

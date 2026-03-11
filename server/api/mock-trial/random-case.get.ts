@@ -38,12 +38,13 @@ export default defineEventHandler(async event => {
       success: true,
       case: caseData
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as Record<string, unknown>
     console.error(' [ERROR] Mock trial endpoint failed:', {
-      message: error?.message,
-      status: error?.statusCode,
-      statusText: error?.statusText,
-      stack: error?.stack
+      message: err?.message,
+      status: err?.statusCode,
+      statusText: err?.statusText,
+      stack: err?.stack
     })
     throw error
   }

@@ -141,7 +141,7 @@ const clearSearch = () => {
   showResults.value = false
 }
 
-const selectResult = (result: any) => {
+const selectResult = (result: SearchResult) => {
   showResults.value = false
 
   console.log('Selected:', result)

@@ -32,7 +32,9 @@
           :class="['message', message.type]"
           role="log"
         >
-          <div v-if="message.isMarkdown" v-html="parseMarkdown(message.text)"></div>
+          <!-- eslint-disable vue/no-v-html -->
+          <div v-if="message.isMarkdown" v-html="sanitizeHtml(parseMarkdown(message.text))"></div>
+          <!-- eslint-enable vue/no-v-html -->
           <div v-else>{{ message.text }}</div>
         </div>
 
@@ -69,7 +71,9 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
+import { useSanitize } from '~/composables/useSanitize'
 const route = useRoute()
+const { sanitizeHtml } = useSanitize()
 const isOpen = ref(false)
 const userInput = ref('')
 const messages = ref<Array<{ text: string; type: 'user' | 'bot'; isMarkdown?: boolean }>>([])
@@ -105,7 +109,7 @@ const scrollToBottom = () => {
   })
 }
 
-const sanitizeInput = (input: string): string => {
+const _sanitizeInput = (input: string): string => {
   if (!input) return ''
   return input
     .replace(/&/g, '&amp;')
@@ -147,9 +151,32 @@ const parseMarkdown = (text: string): string => {
   return html
 }
 
+const isQuestionValid = (input: string): { valid: boolean; reason?: string } => {
+  if (!input || !input.trim()) return { valid: false, reason: 'Please enter a question.' }
+  if (input.trim().length < 3)
+    return { valid: false, reason: 'Your question is too short. Please provide more detail.' }
+  if (input.trim().length > 500)
+    return {
+      valid: false,
+      reason: 'Your question is too long. Please keep it under 500 characters.'
+    }
+  return { valid: true }
+}
+
 const sendMessage = async () => {
   const text = userInput.value.trim()
   if (!text || isLoading.value) return
+
+  const validation = isQuestionValid(text)
+  if (!validation.valid) {
+    messages.value.push({
+      text: `⚠️ ${validation.reason}`,
+      type: 'bot',
+      isMarkdown: false
+    })
+    scrollToBottom()
+    return
+  }
 
   messages.value.push({
     text: text,
@@ -163,7 +190,7 @@ const sendMessage = async () => {
   isLoading.value = true
 
   try {
-    const response = await $fetch<any>('/api/chatbot', {
+    const response = await $fetch<{ thread_id?: string; response?: string }>('/api/chatbot', {
       method: 'POST',
       body: {
         query: text,
@@ -182,14 +209,15 @@ const sendMessage = async () => {
         isMarkdown: true
       })
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Chatbot error:', error)
 
     let errorMessage = '⚠️ Failed to connect to CaseBot server.'
 
-    if (error.statusCode === 429) {
+    const err = error as { statusCode?: number }
+    if (err.statusCode === 429) {
       errorMessage = '⚠️ Too many requests. Please wait a moment before trying again.'
-    } else if (error.statusCode === 400) {
+    } else if (err.statusCode === 400) {
       errorMessage = '⚠️ Invalid request. Please try rephrasing your question.'
     }
 

@@ -8,7 +8,7 @@
           :class="maxWidth"
         >
           <div
-            class="rounded-xl bg-base-100 border-1 p-4 relative shadow-lg shadow-black/40 h-min max-h-full overflow-y-auto"
+            class="rounded-xl bg-base-100 border p-4 relative shadow-lg shadow-black/40 h-min max-h-full overflow-y-auto"
           >
             <div class="modal-top flex justify-end">
               <button
@@ -44,7 +44,7 @@
 import { ref, watchEffect } from 'vue'
 import { LucideX } from 'lucide-vue-next'
 
-const emit = defineEmits(['close'])
+defineEmits(['close'])
 
 interface Props {
   show: boolean

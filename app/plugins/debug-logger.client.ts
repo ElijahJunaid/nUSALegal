@@ -1,6 +1,6 @@
 import { defineNuxtPlugin, useRouter } from '#imports'
 
-export default defineNuxtPlugin((nuxtApp: any) => {
+export default defineNuxtPlugin(nuxtApp => {
   console.log('🔷 [DEBUG] Plugin initialized')
 
   const router = useRouter()
@@ -59,6 +59,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
       })
 
       return ws
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any
 
     WebSocketProxy.prototype = OriginalWebSocket.prototype
@@ -82,6 +83,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
         password?: string | null
       ): void {
         console.log('🔷 [DEBUG] XHR request:', method, url)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return originalOpen.call(this, method, url, async as any, username as any, password as any)
       }
 
@@ -94,6 +96,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
       })
 
       return xhr
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any
 
     XMLHttpRequestProxy.prototype = OriginalXMLHttpRequest.prototype
@@ -113,7 +116,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
       console.error('🔷 [DEBUG] Unhandled promise rejection:', event.reason)
     })
 
-    router.beforeEach((to: any, from: any) => {
+    router.beforeEach((to, from) => {
       console.log('🔷 [DEBUG] Route navigation:', from.path, '->', to.path)
     })
 

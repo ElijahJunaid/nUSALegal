@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-interface CourtCase {
+export interface CourtCase {
   title: string
   description: string
   ruling?: string
@@ -93,8 +93,9 @@ export const useCourtsStore = defineStore('courts', {
         })
 
         this.volumesCache[vol] = data
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || `Failed to fetch volume ${vol}`
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || `Failed to fetch volume ${vol}`
         console.error(`Failed to fetch volume ${vol}:`, err)
       } finally {
         this.loading = false

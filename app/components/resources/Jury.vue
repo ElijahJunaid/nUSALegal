@@ -56,7 +56,12 @@ const chargeTitle = ref('')
 const instructions = ref('')
 const copied = ref(false)
 
-const juryInstructionsData: Record<string, any> = {
+interface JuryInstruction {
+  title: string
+  text: string
+}
+
+const juryInstructionsData: Record<string, JuryInstruction> = {
   murder: {
     title: 'Murder in the First Degree',
     text: `Elements of First Degree Murder (18 USC § 1111):

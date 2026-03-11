@@ -39,8 +39,11 @@ class FileSystemStorageAdapter implements StorageAdapter {
       }
 
       return await fs.readFile(fullPath)
-    } catch (error: any) {
-      console.error('❌ [PDF Storage] Erro ao ler arquivo do sistema:', error?.message)
+    } catch (error: unknown) {
+      console.error(
+        '❌ [PDF Storage] Erro ao ler arquivo do sistema:',
+        error instanceof Error ? error.message : String(error)
+      )
       return null
     }
   }
@@ -61,12 +64,15 @@ class NetlifyBlobsStorageAdapter implements StorageAdapter {
   }
 
   async getPdf(filePath: string): Promise<Buffer | null> {
+    type BlobStore = {
+      get: (key: string, options: { type: string }) => Promise<ArrayBuffer | null>
+    }
+    type BlobsModule = { getStore: (options: { name: string; consistency: string }) => BlobStore }
     try {
-      let getStore: any
+      let blobsModule: BlobsModule
       try {
-        const blobsModule = await import('@netlify/blobs')
-        getStore = blobsModule.getStore
-      } catch (importError: any) {
+        blobsModule = (await import('@netlify/blobs')) as unknown as BlobsModule
+      } catch {
         console.error(
           '❌ [PDF Storage] @netlify/blobs não está instalado. Instale com: npm install @netlify/blobs'
         )
@@ -77,7 +83,7 @@ class NetlifyBlobsStorageAdapter implements StorageAdapter {
       console.log('🔍 [PDF Storage] Store name:', this.storeName)
       console.log('🔍 [PDF Storage] FilePath:', filePath)
 
-      const store = getStore({
+      const store = blobsModule.getStore({
         name: this.storeName,
         consistency: 'strong'
       })
@@ -92,8 +98,11 @@ class NetlifyBlobsStorageAdapter implements StorageAdapter {
       }
 
       return Buffer.from(data)
-    } catch (error: any) {
-      console.error('❌ [PDF Storage] Erro ao buscar PDF do Netlify Blobs:', error?.message)
+    } catch (error: unknown) {
+      console.error(
+        '❌ [PDF Storage] Erro ao buscar PDF do Netlify Blobs:',
+        error instanceof Error ? error.message : String(error)
+      )
       return null
     }
   }
@@ -122,18 +131,26 @@ class S3StorageAdapter implements StorageAdapter {
   }
 
   async getPdf(filePath: string): Promise<Buffer | null> {
+    type S3SendResult = { Body?: AsyncIterable<Uint8Array> }
+    type S3Module = {
+      S3Client: new (config: {
+        region: string
+        credentials?: { accessKeyId: string; secretAccessKey: string }
+      }) => { send: (command: unknown) => Promise<S3SendResult> }
+      GetObjectCommand: new (input: { Bucket: string; Key: string }) => unknown
+    }
     try {
-      let S3Client: any, GetObjectCommand: any
+      let s3Module: S3Module
       try {
-        const s3Module = await import('@aws-sdk/client-s3')
-        S3Client = s3Module.S3Client
-        GetObjectCommand = s3Module.GetObjectCommand
-      } catch (importError: any) {
+        s3Module = (await import('@aws-sdk/client-s3')) as unknown as S3Module
+      } catch {
         console.error(
           '❌ [PDF Storage] @aws-sdk/client-s3 não está instalado. Instale com: npm install @aws-sdk/client-s3'
         )
         return null
       }
+
+      const { S3Client, GetObjectCommand } = s3Module
 
       const s3Client = new S3Client({
         region: this.region,
@@ -158,15 +175,17 @@ class S3StorageAdapter implements StorageAdapter {
       }
 
       const chunks: Uint8Array[] = []
-      const stream = response.Body as any
 
-      for await (const chunk of stream) {
+      for await (const chunk of response.Body) {
         chunks.push(chunk)
       }
 
       return Buffer.concat(chunks)
-    } catch (error: any) {
-      console.error('❌ [PDF Storage] Erro ao buscar PDF do S3:', error?.message)
+    } catch (error: unknown) {
+      console.error(
+        '❌ [PDF Storage] Erro ao buscar PDF do S3:',
+        error instanceof Error ? error.message : String(error)
+      )
       return null
     }
   }

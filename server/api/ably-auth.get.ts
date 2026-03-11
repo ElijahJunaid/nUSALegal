@@ -34,10 +34,10 @@ export default defineEventHandler(async event => {
     console.log('✅ [DEBUG] Generated Ably token for client:', tokenData.clientId)
 
     return tokenData
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ [ERROR] Ably auth failed:', error)
 
-    if (error.statusCode) {
+    if ((error as Record<string, unknown>)?.statusCode) {
       throw error
     }
 

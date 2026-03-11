@@ -98,8 +98,9 @@ export const useBillsStore = defineStore('bills', {
 
         this.congressBills = data
         this.congressLoaded = true
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch congress bills'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch congress bills'
         console.error('Failed to fetch congress bills:', err)
       } finally {
         this.loading = false
@@ -130,8 +131,9 @@ export const useBillsStore = defineStore('bills', {
 
         this.dcBills = data
         this.dcLoaded = true
-      } catch (err: any) {
-        this.error = err?.data?.statusMessage || err?.message || 'Failed to fetch DC bills'
+      } catch (err: unknown) {
+        const e = err as { data?: { statusMessage?: string }; message?: string }
+        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch DC bills'
         console.error('Failed to fetch DC bills:', err)
       } finally {
         this.loading = false

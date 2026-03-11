@@ -111,7 +111,6 @@ function fixH3ImportsInDirectory(dirPath) {
       fixH3ImportsInDirectory(fullPath)
     } else if (file.name.endsWith('.mjs') || file.name.endsWith('.js')) {
       let content = fs.readFileSync(fullPath, 'utf8')
-      let modified = false
 
       if (content.includes('send') && content.includes('from "h3"')) {
         const originalContent = content
@@ -128,7 +127,6 @@ function fixH3ImportsInDirectory(dirPath) {
         if (content !== originalContent) {
           fs.writeFileSync(fullPath, content)
           console.log(`Fixed h3 import in ${fullPath}`)
-          modified = true
         }
       }
 
@@ -147,7 +145,6 @@ function fixH3ImportsInDirectory(dirPath) {
         if (content !== originalContent) {
           fs.writeFileSync(fullPath, content)
           console.log(`Fixed createEvent import in ${fullPath}`)
-          modified = true
         }
       }
 
@@ -171,7 +168,6 @@ function fixH3ImportsInDirectory(dirPath) {
         if (content !== originalContent) {
           fs.writeFileSync(fullPath, content)
           console.log(`Fixed splitCookiesString import in ${fullPath}`)
-          modified = true
         }
       }
     }

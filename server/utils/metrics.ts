@@ -95,8 +95,14 @@ class MetricsCollector {
   getMetrics() {
     this.metrics.uptime = Date.now() - this.metrics.startTime
 
+    interface SummaryEntry {
+      count: number
+      avgDuration: number | undefined
+      lastUpdated: string
+    }
+
     const summarize = (data: Record<string, MetricData>) => {
-      const summary: Record<string, any> = {}
+      const summary: Record<string, SummaryEntry> = {}
 
       Object.entries(data).forEach(([key, value]) => {
         summary[key] = {

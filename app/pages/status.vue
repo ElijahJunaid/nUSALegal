@@ -103,7 +103,7 @@ const uptime = computed(() => {
 async function checkHealth() {
   try {
     const start = Date.now()
-    const response = await $fetch('/api/health')
+    await $fetch('/api/health')
     const end = Date.now()
 
     responseTime.value = end - start
@@ -111,7 +111,7 @@ async function checkHealth() {
       status: 'healthy',
       lastChecked: new Date().toLocaleTimeString()
     }
-  } catch (error) {
+  } catch (_error) {
     healthStatus.value = {
       status: 'error',
       lastChecked: new Date().toLocaleTimeString()

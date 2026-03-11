@@ -53,11 +53,11 @@ export default defineEventHandler(async event => {
       status: userResponse.status,
       statusText: 'Roblox API request failed'
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.warn(`Failed to fetch Roblox user ${userId}:`, error)
     throw createError({
       status: 500,
-      statusText: error.message || 'Failed to fetch user data'
+      statusText: error instanceof Error ? error.message : 'Failed to fetch user data'
     })
   }
 })

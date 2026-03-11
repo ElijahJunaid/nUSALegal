@@ -8,7 +8,8 @@ export default defineNuxtConfig({
   srcDir: 'app/',
   css: ['~/assets/css/main.css'],
   vite: {
-    plugins: [tailwindcss() as any],
+    // @ts-ignore: dual-Vite version type mismatch between Nuxt internals and node_modules/vite
+    plugins: [tailwindcss()],
     build: {
       sourcemap: false
     },
@@ -17,7 +18,6 @@ export default defineNuxtConfig({
       ws: false
     }
   },
-  // @ts-expect-error Nuxt 4 types not fully stable
   nitro: {
     preset: 'netlify',
     devServer: {

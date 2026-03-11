@@ -1,5 +1,4 @@
-import type { H3Event } from 'h3'
-import { getHeader, setResponseHeader, createError } from 'h3'
+import { createError, type H3Event } from 'h3'
 
 function getAllowedOrigins(): string[] {
   const originsEnv = process.env.ALLOWED_ORIGINS || ''
@@ -24,27 +23,6 @@ export function validateOrigin(event: H3Event) {
   const headers = event.node?.req?.headers
   let origin = headers?.origin
   const referer = headers?.referer
-
-  fetch('http://127.0.0.1:7243/ingest/40d307ea-752f-424c-a179-ca112dd9b564', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'eb4175' },
-    body: JSON.stringify({
-      sessionId: 'eb4175',
-      id: `log_${Date.now()}_validateOrigin_entry`,
-      timestamp: Date.now(),
-      runId: 'pre-fix',
-      hypothesisId: 'H1',
-      location: 'server/utils/validateOrigin.ts:21',
-      message: 'validateOrigin entry',
-      data: {
-        host: headers?.host,
-        origin,
-        referer,
-        allowedOrigins,
-        nodeEnv: process.env.NODE_ENV
-      }
-    })
-  }).catch(() => {})
 
   if (process.env.NODE_ENV === 'development') {
     const forwardedHost = headers?.['x-forwarded-host']
@@ -111,25 +89,6 @@ export function validateOrigin(event: H3Event) {
   }
 
   if (!requestOrigin) {
-    fetch('http://127.0.0.1:7243/ingest/40d307ea-752f-424c-a179-ca112dd9b564', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'eb4175' },
-      body: JSON.stringify({
-        sessionId: 'eb4175',
-        id: `log_${Date.now()}_validateOrigin_no_request_origin`,
-        timestamp: Date.now(),
-        runId: 'pre-fix',
-        hypothesisId: 'H1',
-        location: 'server/utils/validateOrigin.ts:90',
-        message: 'validateOrigin missing requestOrigin',
-        data: {
-          origin,
-          referer,
-          allowedOrigins
-        }
-      })
-    }).catch(() => {})
-
     throw createError({
       status: 403,
       statusText: 'Origin header required'
@@ -143,25 +102,6 @@ export function validateOrigin(event: H3Event) {
   })
 
   if (!isAllowed) {
-    fetch('http://127.0.0.1:7243/ingest/40d307ea-752f-424c-a179-ca112dd9b564', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'eb4175' },
-      body: JSON.stringify({
-        sessionId: 'eb4175',
-        id: `log_${Date.now()}_validateOrigin_not_allowed`,
-        timestamp: Date.now(),
-        runId: 'pre-fix',
-        hypothesisId: 'H1',
-        location: 'server/utils/validateOrigin.ts:103',
-        message: 'validateOrigin origin not allowed',
-        data: {
-          requestOrigin,
-          normalizedRequestOrigin,
-          allowedOrigins
-        }
-      })
-    }).catch(() => {})
-
     throw createError({
       status: 403,
       statusText: `Request not allowed`

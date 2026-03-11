@@ -87,9 +87,21 @@ import { ref } from 'vue'
 const offense = ref('')
 const history = ref('I')
 const acceptedResponsibility = ref(false)
-const result = ref<any>(null)
+interface SentencingGuideline {
+  base: number
+  range: string
+  description: string
+}
 
-const sentencingGuidelines: Record<string, any> = {
+interface SentencingResult {
+  range: string
+  description: string
+  offenseLevel: number
+}
+
+const result = ref<SentencingResult | null>(null)
+
+const sentencingGuidelines: Record<string, SentencingGuideline> = {
   'murder-1': {
     base: 43,
     range: 'Life imprisonment',

@@ -22,8 +22,8 @@ export function useTrialState() {
   )
 
   const messages = ref<Message[]>([])
-  const evidence = ref<any[]>([])
-  const objections = ref<any[]>([])
+  const evidence = ref<Array<{ id: string; [key: string]: unknown }>>([])
+  const objections = ref<Array<{ id: string; [key: string]: unknown }>>([])
 
   const participants = ref<Map<string, { name: string; role: string }>>(new Map())
 
@@ -106,14 +106,14 @@ export function useTrialState() {
     messages.value.push(newMessage)
   }
 
-  function addEvidence(evidence: any) {
-    evidence.id = `ev-${Date.now()}-${Math.random()}`
-    evidence.value.push(evidence)
+  function addEvidence(item: { id?: string; [key: string]: unknown }) {
+    item.id = `ev-${Date.now()}-${Math.random()}`
+    evidence.value.push(item as { id: string; [key: string]: unknown })
   }
 
-  function addObjection(objection: any) {
-    objection.id = `obj-${Date.now()}-${Math.random()}`
-    objections.value.push(objection)
+  function addObjection(item: { id?: string; [key: string]: unknown }) {
+    item.id = `obj-${Date.now()}-${Math.random()}`
+    objections.value.push(item as { id: string; [key: string]: unknown })
   }
 
   function advanceTurn() {

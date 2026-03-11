@@ -1,6 +1,6 @@
 import { defineNuxtRouteMiddleware, navigateTo, useRuntimeConfig } from '#imports'
 
-export default defineNuxtRouteMiddleware((to: any) => {
+export default defineNuxtRouteMiddleware(to => {
   const config = useRuntimeConfig()
   const isShutdown = config.public.isShutdown || false
   const shutdownPage = config.public.shutdownPage || '/shutdown'

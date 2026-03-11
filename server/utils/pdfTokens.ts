@@ -53,7 +53,7 @@ export function validatePdfToken(token: string): string | null {
     }
 
     return payload.filePath
-  } catch (error) {
+  } catch {
     return null
   }
 }

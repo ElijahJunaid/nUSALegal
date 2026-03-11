@@ -29,6 +29,7 @@ logs
 .DS_Store
 .fleet
 .idea
+DEP_COMMANDS.md
 
 # Local env files
 .env
@@ -55,8 +56,7 @@ prisma/migrations/
 next-server
 
 # Development-only scripts (never commit these)
-scripts/dev-health-check.js
-scripts/dev-health-check.cjs
+scripts/health-check/
 health-check-results.txt
 health-check.config.json
 scripts/upload-pdfs-to-blobs.js

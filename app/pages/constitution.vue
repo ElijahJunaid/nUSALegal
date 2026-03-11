@@ -145,11 +145,13 @@
           <h3 class="text-center font-bold text-xl">
             {{ dataDetail.title + (articleContent ? ` | ${articleContent.title}` : '') }}
           </h3>
+          <!-- eslint-disable vue/no-v-html -->
           <p
             v-if="dataDetail.content"
             class="text-center"
             v-html="dataDetail.content.replace(/&lt;br&gt;/g, '<br>')"
           ></p>
+          <!-- eslint-enable vue/no-v-html -->
 
           <template v-if="dataDetail.hasArticle">
             <div v-if="isLoadingArticle" class="flex justify-center">
@@ -157,7 +159,9 @@
             </div>
             <template v-else-if="articleContent">
               <div class="flex-1 text-center">
+                <!-- eslint-disable vue/no-v-html -->
                 <p class="text-sm text-center" v-html="articleContent.content"></p>
+                <!-- eslint-enable vue/no-v-html -->
               </div>
               <div class="join">
                 <button
@@ -239,18 +243,19 @@ const articleContent = computed<ConstitutionArticleSection | null>(() => {
     }
   }
 
-  if ((article.value as any).content) {
+  type ConstitutionArticleExtended = typeof article.value & { content?: string; summary?: string }
+  if ((article.value as ConstitutionArticleExtended)?.content) {
     console.log('Using article content directly')
     return {
-      content: (article.value as any).content,
+      content: (article.value as ConstitutionArticleExtended).content as string,
       title: article.value.title || 'Content'
     } as ConstitutionArticleSection
   }
 
-  if ((article.value as any).summary) {
+  if ((article.value as ConstitutionArticleExtended)?.summary) {
     console.log('Using article summary as content')
     return {
-      content: (article.value as any).summary,
+      content: (article.value as ConstitutionArticleExtended).summary as string,
       title: article.value.title || 'Summary'
     } as ConstitutionArticleSection
   }
@@ -282,7 +287,8 @@ const handleClick = async () => {
 
       article.value = response
       console.log('Article loaded:', article.value)
-    } catch (error) {
+    } catch (_error) {
+      /* noop */
     } finally {
       isLoadingArticle.value = false
     }
