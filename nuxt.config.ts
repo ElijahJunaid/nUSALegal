@@ -5,6 +5,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@pinia/nuxt', '@nuxtjs/i18n'],
+  i18n: {
+    defaultLocale: 'en',
+    locales: [{ code: 'en', language: 'en-US' }]
+  },
   srcDir: 'app/',
   css: ['~/assets/css/main.css'],
   vite: {
