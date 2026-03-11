@@ -182,10 +182,7 @@
         v-if="showDetail && dataDetail != null"
         :show="showDetail"
         max-width="max-w-3xl"
-        @close="
-          showDetail = false
-          dataDetail = null
-        "
+        @close="closeDetail"
       >
         <div class="data-detail text-center">
           <h3 class="text-center font-bold text-xl">{{ dataDetail.title }}</h3>
@@ -222,6 +219,11 @@ onMounted(fetchFederal)
 
 const showDetail = ref<boolean>(false)
 const dataDetail = ref<Law | null>(null)
+
+function closeDetail() {
+  showDetail.value = false
+  dataDetail.value = null
+}
 
 const title = computed<string>(() => {
   return selectedSection.value === 'federal'
