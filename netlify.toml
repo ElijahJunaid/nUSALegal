@@ -8,8 +8,8 @@ command = """
     npm run build
 """
 
-# Publish directory (Nuxt outputs to .output/public)
-publish = ".output/public"
+# Publish directory (Nitro netlify preset outputs static files to dist/)
+publish = "dist"
 
 # Functions directory for Nuxt server routes (production only)
 functions = ".netlify/functions-internal/server"
