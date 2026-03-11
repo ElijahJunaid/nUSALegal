@@ -13,7 +13,6 @@ interface MockTrialLobbyRequestBody {
 export default defineEventHandler(async event => {
   await apiRateLimiter.middleware()(event)
 
-  // Validate and replace body first to prevent unvalidated access detection
   const validatedBody = await validateAndReplaceBody<MockTrialLobbyRequestBody>(
     event,
     validationSchemas.mockTrialLobby

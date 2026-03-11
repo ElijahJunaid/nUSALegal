@@ -5,17 +5,11 @@ import type { IncomingMessage } from 'node:http'
 
 type RequestWithBody = IncomingMessage & { body?: unknown }
 
-// Re-export validation schemas for convenience
 export { validationSchemas }
 
-/**
- * Validation middleware factory
- * Validates request body before any processing
- */
 export function createValidationMiddleware<T>(schema: z.ZodSchema<T>) {
   return async (event: H3Event) => {
     try {
-      // Get request body early, before any other processing
       let body: unknown
 
       try {
@@ -33,7 +27,6 @@ export function createValidationMiddleware<T>(schema: z.ZodSchema<T>) {
           ) {
             body = req.body
           } else {
-            // Handle streams and other cases
             const chunks: Buffer[] = []
             for await (const chunk of req) {
               chunks.push(chunk)
@@ -42,7 +35,6 @@ export function createValidationMiddleware<T>(schema: z.ZodSchema<T>) {
             body = JSON.parse(rawBody)
           }
         } else {
-          // Try to read from stream
           const chunks: Buffer[] = []
           for await (const chunk of req) {
             chunks.push(chunk)
@@ -58,13 +50,10 @@ export function createValidationMiddleware<T>(schema: z.ZodSchema<T>) {
         })
       }
 
-      // Validate against schema
       const validatedData = validateData(schema, body)
 
-      // Store validated data for later use
       event.context.validatedBody = validatedData
 
-      // Replace the raw req.body with validated data to prevent unvalidated access
       if (event.node?.req) {
         ;(event.node.req as { body?: unknown }).body = validatedData
       }

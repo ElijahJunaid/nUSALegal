@@ -31,7 +31,7 @@
       >
         <div class="card-body">
           <div>
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

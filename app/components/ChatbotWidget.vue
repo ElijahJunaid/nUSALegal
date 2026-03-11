@@ -32,9 +32,7 @@
           :class="['message', message.type]"
           role="log"
         >
-          <!-- eslint-disable vue/no-v-html -->
           <div v-if="message.isMarkdown" v-html="sanitizeHtml(parseMarkdown(message.text))"></div>
-          <!-- eslint-enable vue/no-v-html -->
           <div v-else>{{ message.text }}</div>
         </div>
 

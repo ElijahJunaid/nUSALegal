@@ -13,7 +13,6 @@ export default defineEventHandler(async event => {
 
   setCorsHeaders(event)
 
-  // Validate and replace body first to prevent unvalidated access detection
   const validatedBody = await validateAndReplaceBody<PdfTokenRequestBody>(
     event,
     validationSchemas.pdfToken

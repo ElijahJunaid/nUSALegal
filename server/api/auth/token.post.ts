@@ -10,7 +10,6 @@ interface AuthTokenRequestBody {
 
 export default defineEventHandler(async event => {
   try {
-    // Validate and replace body first to prevent unvalidated access detection
     const validatedBody = await validateAndReplaceBody<AuthTokenRequestBody>(
       event,
       validationSchemas.authToken
@@ -34,7 +33,6 @@ export default defineEventHandler(async event => {
       name: e?.name,
       stack: e?.stack
     })
-    // Debug mode: return error in response body when X-Debug: 1
     if (getHeader(event, 'x-debug') === '1') {
       return {
         _debug: true,

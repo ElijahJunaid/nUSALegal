@@ -98,13 +98,11 @@
             </span>
           </div>
           <div v-if="result.subtitle" class="result-subtitle">{{ result.subtitle }}</div>
-          <!-- eslint-disable vue/no-v-html -->
           <div
             v-if="result.excerpt"
             class="result-excerpt"
             v-html="sanitizeExcerpt(result.excerpt)"
           ></div>
-          <!-- eslint-enable vue/no-v-html -->
         </div>
       </div>
 

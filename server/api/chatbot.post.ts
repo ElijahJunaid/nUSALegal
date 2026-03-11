@@ -57,7 +57,6 @@ export default defineEventHandler(async event => {
     })
   }
 
-  // Validate and replace body first to prevent unvalidated access detection
   const validatedBody = await validateAndReplaceBody<ChatbotRequestBody>(
     event,
     validationSchemas.chatbot
@@ -68,7 +67,6 @@ export default defineEventHandler(async event => {
     throw createError({ status: 400, statusText: 'Bad Request', message: 'Query is required' })
   }
 
-  // Apply additional sanitization for query
   query = sanitizeInput(query)
 
   console.log(

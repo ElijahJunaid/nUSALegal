@@ -12,7 +12,6 @@ interface CheckNusaBansRequestBody {
 export default defineEventHandler(async event => {
   await defaultRateLimiter.middleware()(event)
 
-  // Validate and replace body first to prevent unvalidated access detection
   const validatedBody = await validateAndReplaceBody<CheckNusaBansRequestBody>(
     event,
     validationSchemas.checkNusaBans

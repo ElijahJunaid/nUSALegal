@@ -1,4 +1,5 @@
 import { defineEventHandler, getQuery, createError } from 'h3'
+import Ably from 'ably'
 import { validateOrigin } from '../utils/validateOrigin'
 
 export default defineEventHandler(async event => {
@@ -10,7 +11,6 @@ export default defineEventHandler(async event => {
 
     console.log('🔐 [DEBUG] Ably auth endpoint called', { rnd })
 
-    // Check if Ably configuration exists
     if (!process.env.ABLY_API_KEY) {
       console.error('❌ [ERROR] ABLY_API_KEY not configured')
       throw createError({
@@ -19,21 +19,18 @@ export default defineEventHandler(async event => {
       })
     }
 
-    // Generate a simple token for Ably authentication
-    // In production, you might want to use proper Ably token generation
-    const tokenData = {
-      keyName: process.env.ABLY_API_KEY.split(':')[0] || 'default-key',
-      token: 'mock-token-' + Date.now(),
-      expires: Math.floor(Date.now() / 1000) + 3600, // 1 hour
-      capability: {
-        '*': ['subscribe', 'publish', 'presence']
-      },
-      clientId: `client-${rnd || 'unknown'}`
-    }
+    const clientId = `client-${rnd || 'unknown'}`
+    const client = new Ably.Rest({ key: process.env.ABLY_API_KEY })
 
-    console.log('✅ [DEBUG] Generated Ably token for client:', tokenData.clientId)
+    const tokenRequest = await client.auth.createTokenRequest({
+      clientId,
+      capability: { '*': ['subscribe', 'publish', 'presence'] },
+      ttl: 3600 * 1000
+    })
 
-    return tokenData
+    console.log('✅ [DEBUG] Generated Ably token request for client:', clientId)
+
+    return tokenRequest
   } catch (error: unknown) {
     console.error('❌ [ERROR] Ably auth failed:', error)
 

@@ -28,7 +28,6 @@ export default eventHandler(async event => {
     }
   } catch (error: unknown) {
     console.error('Rate limiting middleware error:', error)
-    // Debug mode: return error in response when X-Debug: 1
     if (getHeader(event, 'x-debug') === '1' && event.node?.res) {
       const e = error instanceof Error ? error : null
       event.node.res.setHeader('Content-Type', 'application/json')

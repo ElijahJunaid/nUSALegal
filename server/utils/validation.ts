@@ -1,11 +1,5 @@
 import { z } from 'zod'
 
-/**
- * Comprehensive validation schemas and utilities for API endpoints
- * Enhanced security features with proper error handling and sanitization
- */
-
-// Common validation patterns
 const patterns = {
   endpoint: /^[a-zA-Z0-9/_-]+$/,
   path: /^[a-zA-Z0-9/_.-]+$/,
@@ -21,7 +15,6 @@ const patterns = {
   jsonKey: /^[a-zA-Z_$][a-zA-Z0-9_$]*$/
 }
 
-// Custom validators
 const customValidators = {
   noPathTraversal: (value: string) => {
     const normalized = value.replace(/\\/g, '/')
@@ -62,7 +55,6 @@ const customValidators = {
     value.length >= min && value.length <= max
 }
 
-// Enhanced error messages
 const errorMessages = {
   required: 'This field is required',
   invalidFormat: 'Invalid format provided',
@@ -83,11 +75,7 @@ const errorMessages = {
   quotaExceeded: 'Request quota exceeded'
 }
 
-/**
- * Comprehensive validation schemas for API endpoints
- */
 export const validationSchemas = {
-  // Auth token endpoint validation
   authToken: z.object({
     endpoint: z.enum([
       'global-search',
@@ -126,7 +114,6 @@ export const validationSchemas = {
     ])
   }),
 
-  // PDF token endpoint validation with enhanced security
   pdfToken: z.object({
     pdfPath: z
       .string()
@@ -147,7 +134,6 @@ export const validationSchemas = {
       })
   }),
 
-  // Chatbot endpoint validation with comprehensive security
   chatbot: z.object({
     query: z
       .string()
@@ -164,7 +150,6 @@ export const validationSchemas = {
     thread_id: z.string().regex(patterns.threadId, errorMessages.invalidId).optional()
   }),
 
-  // nUSA bans check validation with enhanced security
   checkNusaBans: z.object({
     userId: z
       .string()
@@ -179,7 +164,6 @@ export const validationSchemas = {
       })
   }),
 
-  // File upload validation
   fileUpload: z.object({
     filename: z
       .string()
@@ -199,7 +183,6 @@ export const validationSchemas = {
       .min(1, 'File cannot be empty')
   }),
 
-  // Search query validation
   searchQuery: z.object({
     query: z
       .string()
@@ -218,7 +201,6 @@ export const validationSchemas = {
     offset: z.number().min(0, 'Invalid offset').max(1000, 'Offset too large').default(0).optional()
   }),
 
-  // Pagination validation
   pagination: z.object({
     page: z
       .number()
@@ -232,7 +214,6 @@ export const validationSchemas = {
       .default(20)
   }),
 
-  // Email validation
   email: z.object({
     email: z
       .string()
@@ -243,7 +224,6 @@ export const validationSchemas = {
       })
   }),
 
-  // URL validation
   url: z.object({
     url: z
       .string()
@@ -254,7 +234,6 @@ export const validationSchemas = {
       })
   }),
 
-  // Mock trial lobby validation
   mockTrialLobby: z.object({
     action: z.enum(['create', 'join', 'leave']),
     lobbyCode: z
@@ -277,7 +256,6 @@ export const validationSchemas = {
     role: z.enum(['prosecutor', 'defense', 'judge', 'witness']).optional()
   }),
 
-  // Mock trial start validation
   mockTrialStart: z
     .object({
       caseType: z.enum(['criminal', 'civil']),
@@ -297,7 +275,6 @@ export const validationSchemas = {
     })
     .refine(
       data => {
-        // If caseId is provided, it must be a valid ObjectId
         if (data.caseId && !patterns.objectId.test(data.caseId)) {
           return false
         }
@@ -350,9 +327,6 @@ export const sanitizers = {
   }
 }
 
-/**
- * Rate limiting configuration
- */
 export const rateLimits = {
   perMinute: {
     default: 100,
@@ -376,9 +350,6 @@ export const rateLimits = {
   }
 }
 
-/**
- * Enhanced validation function with comprehensive error handling
- */
 export function validateData<T>(schema: z.ZodSchema<T>, data: unknown): T {
   try {
     const result = schema.parse(data)
@@ -418,9 +389,6 @@ export function validateData<T>(schema: z.ZodSchema<T>, data: unknown): T {
   }
 }
 
-/**
- * Utility functions for common validation patterns
- */
 export const validators = {
   validateString: (
     value: unknown,
@@ -574,5 +542,4 @@ export const validators = {
   }
 }
 
-// Export patterns and utilities for external use
 export { patterns, customValidators, errorMessages }
