@@ -98,10 +98,7 @@
                 <div
                   v-for="(dt, index) in filteredData"
                   :key="index"
-                  @click="
-                    dataDetail = dt
-                    handleClick()
-                  "
+                  @click="dataDetail = dt; handleClick()"
                   class="card border border-base-300"
                 >
                   <div class="card-body text-center">
@@ -136,10 +133,7 @@
         v-if="showDetail && dataDetail != null"
         :show="showDetail"
         max-width="max-w-3xl"
-        @close="
-          showDetail = false
-          dataDetail = null
-        "
+        @close="showDetail = false; dataDetail = null"
       >
         <div class="detail-modal text-center" :class="{ 'min-h-[75vh]': dataDetail.hasArticle }">
           <h3 class="text-center font-bold text-xl">
