@@ -39,19 +39,13 @@
             class="biz-search-input"
           />
         </div>
-        <select v-model="filterType" class="biz-filter">
-          <option value="">All Types</option>
-          <option value="LLC">LLC</option>
-          <option value="Corporation">Corporation</option>
-          <option value="Sole Proprietorship">Sole Proprietorship</option>
-          <option value="Partnership">Partnership</option>
-          <option value="Non-Profit">Non-Profit</option>
-        </select>
         <select v-model="filterStatus" class="biz-filter">
           <option value="">All Status</option>
           <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
+          <option value="Special">Special</option>
           <option value="Pending">Pending</option>
+          <option value="Expired">Expired</option>
+          <option value="Revoked">Revoked</option>
         </select>
       </div>
 
@@ -70,16 +64,21 @@
               <div class="biz-card-icon">🏢</div>
               <div class="biz-card-titles">
                 <p class="biz-name">{{ b.name }}</p>
-                <p class="biz-owner">{{ b.owner }}</p>
+                <p class="biz-owner">@{{ b.ownerUsername }}</p>
               </div>
               <span :class="['biz-status', b.status.toLowerCase()]">
                 {{ b.status }}
               </span>
             </div>
-            <p v-if="b.description" class="biz-desc">{{ b.description }}</p>
             <div class="biz-tags">
-              <span v-if="b.type" class="biz-tag type">{{ b.type }}</span>
-              <span v-if="b.state" class="biz-tag state">{{ b.state }}</span>
+              <span v-if="b.sector" class="biz-tag type">{{ b.sector }}</span>
+              <span v-if="b.ownership" class="biz-tag ownership">{{ b.ownership }}</span>
+            </div>
+            <div v-if="b.issuingDate || b.expirationDate" class="biz-dates">
+              <span v-if="b.issuingDate" class="biz-date">📅 Issued: {{ b.issuingDate }}</span>
+              <span v-if="b.expirationDate" class="biz-date">
+                ⏳ Expires: {{ b.expirationDate }}
+              </span>
             </div>
           </div>
         </div>
@@ -91,7 +90,7 @@
         <p class="biz-empty-title">No businesses found</p>
         <p class="biz-empty-sub">
           {{
-            searchQuery || filterType || filterStatus
+            searchQuery || filterStatus
               ? 'No results match your filters.'
               : 'No businesses have been registered yet.'
           }}
@@ -117,21 +116,19 @@ definePageMeta({ layout: false })
 
 const docalStore = useDocalStore()
 const searchQuery = ref('')
-const filterType = ref('')
 const filterStatus = ref('')
 
 const filteredBusinesses = computed(() => {
   let list = docalStore.businesses
 
-  if (filterType.value) {
-    list = list.filter(b => b.type === filterType.value)
-  }
   if (filterStatus.value) {
     list = list.filter(b => b.status === filterStatus.value)
   }
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.toLowerCase()
-    list = list.filter(b => b.name.toLowerCase().includes(q) || b.owner.toLowerCase().includes(q))
+    list = list.filter(
+      b => b.name.toLowerCase().includes(q) || b.ownerUsername.toLowerCase().includes(q)
+    )
   }
   return list
 })
@@ -442,10 +439,22 @@ useHead({
   border: 1px solid #99f6e4;
 }
 
-.biz-tag.state {
+.biz-tag.ownership {
   background: #f3f4f6;
   color: #374151;
   border: 1px solid #d1d5db;
+}
+
+.biz-dates {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.biz-date {
+  font-size: 0.72rem;
+  color: #6b7280;
 }
 
 /* Empty */

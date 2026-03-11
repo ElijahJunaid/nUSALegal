@@ -60,6 +60,7 @@ scripts/health-check/
 health-check-results.txt
 health-check.config.json
 scripts/upload-pdfs-to-blobs.js
+scripts/sync-docal-businesses.js
 
 # Reports
 reports/

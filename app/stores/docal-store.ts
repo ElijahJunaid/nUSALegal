@@ -3,11 +3,18 @@ import { useApiToken } from '~/composables/useApiToken'
 
 export interface Business {
   name: string
-  owner: string
-  type: string
-  state: string
-  status: string
-  description: string
+  ownerUsername: string
+  ownerDiscord: string
+  representativeUsername: string
+  representativeDiscord: string
+  discord: string
+  group: string
+  sector: string
+  ownership: string
+  issuingAuthority: string
+  issuingDate: string
+  expirationDate: string
+  status: 'Active' | 'Pending' | 'Expired' | 'Revoked' | 'Special'
 }
 
 export const useDocalStore = defineStore('docal', {
