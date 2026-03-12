@@ -44,23 +44,14 @@
           No registered news organizations found.
         </div>
         <div v-else class="news-orgs-grid">
-          <component
-            :is="org.route ? 'a' : 'div'"
-            v-for="org in newsOrgs"
-            :key="org.name"
-            :href="org.route || undefined"
-            :target="org.route ? '_blank' : undefined"
-            :rel="org.route ? 'noopener noreferrer' : undefined"
-            class="news-org-card"
-            :class="{ 'no-link': !org.route }"
-          >
+          <NuxtLink v-for="org in newsOrgs" :key="org.name" :to="org.route" class="news-org-card">
             <div class="news-org-icon">📰</div>
             <div class="news-org-meta">
               <p class="news-org-name">{{ org.name }}</p>
               <p class="news-org-focus">{{ org.focus }}</p>
             </div>
-            <span v-if="org.route" class="news-org-cta">Visit →</span>
-          </component>
+            <span class="news-org-cta">View →</span>
+          </NuxtLink>
         </div>
       </div>
     </section>
@@ -89,27 +80,24 @@
 import { computed, onMounted } from 'vue'
 import { useDocalStore } from '~/stores/docal-store'
 import { useTheme } from '~/composables/useTheme'
+import { slugify } from '~/utils/slugify'
 
 definePageMeta({ layout: false })
 
 const { theme, toggleTheme } = useTheme()
 const docalStore = useDocalStore()
 
-function extractDiscordUrl(raw: string): string {
-  if (!raw) return ''
-  const m = raw.match(/\[([^\]]+)\]\(([^)]+)\)/)
-  if (m) return m[2].split(' ')[0]
-  if (raw.startsWith('http')) return raw
-  return ''
-}
+const NEWS_SECTORS = ['news media', 'news and media', 'news & media', 'media', 'news']
 
 const newsOrgs = computed(() =>
   docalStore.businesses
-    .filter(b => b.sector === 'News Media' && b.status === 'Active')
+    .filter(
+      b => NEWS_SECTORS.some(s => b.sector.toLowerCase().includes(s)) && b.status === 'Active'
+    )
     .map(b => ({
       name: b.name,
       focus: b.sector,
-      route: extractDiscordUrl(b.discord)
+      route: `/news/${slugify(b.name)}`
     }))
 )
 
