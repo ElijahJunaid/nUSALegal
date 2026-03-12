@@ -61,6 +61,7 @@ health-check-results.txt
 health-check.config.json
 scripts/upload-pdfs-to-blobs.js
 scripts/sync-docal-businesses.js
+scripts/sync-congress-laws.js
 
 # Reports
 reports/
