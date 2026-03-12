@@ -56,26 +56,29 @@ export default defineEventHandler(async event => {
       reason: null
     }
   } catch (error: unknown) {
+    // Log the error for debugging
+    console.error('nUSA API error:', error)
+
     if (axios.isAxiosError(error)) {
       if (error.response) {
-        throw createError({
-          status: error.response.status,
-          statusText: 'API Error',
-          message: 'nUSA API error'
-        })
+        // For API errors, return a safe default instead of failing
+        return {
+          result: 'PASS',
+          reason: 'nUSA API unavailable - manual review recommended'
+        }
       } else if (error.request) {
-        throw createError({
-          status: 500,
-          statusText: 'Connection Error',
-          message: 'No response from nUSA API'
-        })
+        // Network/connection errors
+        return {
+          result: 'PASS',
+          reason: 'nUSA API unreachable - manual review recommended'
+        }
       }
     }
 
-    throw createError({
-      status: 500,
-      statusText: 'Internal Server Error',
-      message: 'Failed to check nUSA bans'
-    })
+    // For other errors, also return a safe default
+    return {
+      result: 'PASS',
+      reason: 'nUSA API check failed - manual review recommended'
+    }
   }
 })

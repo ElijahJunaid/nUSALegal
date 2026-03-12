@@ -1,31 +1,10 @@
 <template>
   <NuxtLayout name="default">
-    <template #sub-menu>
+    <template #sub-menu v-if="courtType !== 'selection'">
       <div class="sub-menu-container">
         <div class="card">
           <div class="card-body">
-            <div v-if="courtType === 'selection'" class="sub-menu-list">
-              <button
-                @click="courtType = 'scotus'"
-                @keydown.enter="courtType = 'scotus'"
-                @keydown.space="courtType = 'scotus'"
-                class="btn btn-primary"
-                aria-label="Select Supreme Court"
-              >
-                Supreme Court
-              </button>
-              <button
-                @click="courtType = 'district'"
-                @keydown.enter="courtType = 'district'"
-                @keydown.space="courtType = 'district'"
-                class="btn btn-primary"
-                aria-label="Select District Court"
-              >
-                District Court
-              </button>
-            </div>
-
-            <div v-else-if="courtType === 'scotus'" class="sub-menu-list">
+            <div v-if="courtType === 'scotus'" class="sub-menu-list">
               <button
                 @click="courtType = 'selection'"
                 @keydown.enter="courtType = 'selection'"

@@ -87,19 +87,30 @@ onMounted(async () => {
   document.head.appendChild(linkEl)
 
   map = L.map(mapEl.value, {
-    center: [20, 0],
+    center: [0, 0],
     zoom: 2,
     minZoom: 2,
-    maxZoom: 8,
-    worldCopyJump: true,
-    zoomControl: true
+    maxZoom: 6,
+    worldCopyJump: false,
+    zoomControl: true,
+    crs: L.CRS.EPSG3857,
+    maxBounds: [
+      [-85, -180],
+      [85, 180]
+    ],
+    maxBoundsViscosity: 1.0,
+    bounceAtZoomLimits: false,
+    inertia: false,
+    zoomSnap: 0.25,
+    zoomDelta: 0.25
   })
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 20
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    subdomains: 'abc',
+    maxZoom: 19,
+    noWrap: true
   }).addTo(map)
 
   try {

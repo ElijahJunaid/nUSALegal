@@ -12,7 +12,8 @@ export default defineEventHandler(async event => {
       content: law.description,
       excerp:
         law.description?.substring(0, 200) +
-        (law.description && law.description.length > 200 ? '...' : '')
+        (law.description && law.description.length > 200 ? '...' : ''),
+      category: law.category
     }))
   } catch (error) {
     console.error('Error fetching federal laws:', error)

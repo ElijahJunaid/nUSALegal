@@ -104,13 +104,16 @@ export const validationSchemas = {
       'laws/eo',
       'laws/municipal',
       'constitution/constitution',
-      'constitution/constitution-amandements',
+      'constitution/constitution-amendments',
       'constitution/articles',
       'resources/definitions',
       'resources/files',
       'resources/court-procedure',
       'resources/office',
-      'resources/vips'
+      'resources/vips',
+      'news/index',
+      'news/slug',
+      'statistics'
     ])
   }),
 

@@ -77,9 +77,10 @@ import { computed, ref, onMounted } from 'vue'
 
 const route = useRoute()
 
-const isHome = computed(() => route.path == '/')
+const isHome = computed(() => route?.path == '/')
 
 const brandName = computed(() => {
+  if (!route?.path) return 'nUSA'
   if (route.path.startsWith('/legal')) return 'nUSA Legal'
   if (route.path.startsWith('/congress')) return 'nUSA Congress'
   if (route.path.startsWith('/docal')) return 'nUSA DOCAL'

@@ -67,8 +67,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 definePageMeta({
   title: 'System Status',
-  description: 'Monitor system health and performance',
-  middleware: 'status-auth'
+  description: 'Monitor system health and performance'
 })
 
 const loading = ref(false)

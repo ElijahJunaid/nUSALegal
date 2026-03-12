@@ -46,13 +46,20 @@ export const useLawsStore = defineStore('laws-rules', {
       let data: Law[] = state.selectedSection == 'federal' ? state.federal : state.eo
 
       if (state.filterType !== 'all') {
-        const categoryIndex = state.filterType as number
-        const categories =
-          state.selectedSection == 'federal'
-            ? [...new Set(state.federal.map(law => law.category || 'Uncategorized'))].filter(c => c)
-            : []
-        if (categories[categoryIndex]) {
-          data = data.filter(law => law.category === categories[categoryIndex])
+        if (state.selectedSection == 'federal') {
+          const categoryIndex = state.filterType as number
+          const categories = [
+            ...new Set(state.federal.map(law => law.category || 'Uncategorized'))
+          ].filter(c => c)
+          if (categories[categoryIndex]) {
+            data = data.filter(law => law.category === categories[categoryIndex])
+          }
+        } else if (state.selectedSection == 'eo') {
+          const categoryIndex = state.filterType as number
+          const categories = ['Administration EO', 'Law Enforcement EO', 'Organizational EO']
+          if (categories[categoryIndex]) {
+            data = data.filter(law => law.category === categories[categoryIndex])
+          }
         }
       }
 

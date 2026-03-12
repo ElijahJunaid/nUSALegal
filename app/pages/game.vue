@@ -19,7 +19,7 @@
 
     <div v-else id="game-container">
       <div id="lives">
-        <div v-for="(life, index) in currentLives" :key="index" class="life"></div>
+        <div v-for="(life, index) in Math.max(0, currentLives)" :key="index" class="life"></div>
       </div>
 
       <div id="progress-bar">

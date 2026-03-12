@@ -187,7 +187,9 @@
         <div class="data-detail text-center">
           <h3 class="text-center font-bold text-xl">{{ dataDetail.title }}</h3>
           <p class="font-bold text-center">{{ dataDetail.subtitle }}</p>
+          <!-- eslint-disable vue/no-v-html -->
           <p class="text-sm text-center" v-html="dataDetail.content"></p>
+          <!-- eslint-enable vue/no-v-html -->
         </div>
       </LazyModal>
     </template>

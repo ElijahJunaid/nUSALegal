@@ -28,7 +28,13 @@
       >
         <div class="card-body text-center">
           <div>
-            <h3 class="text-center font-bold text-xl">{{ bill.title || 'No Title' }}</h3>
+            <h3 class="text-center font-bold text-xl">
+              {{
+                bill.title ||
+                `${bill.type.charAt(0).toUpperCase() + bill.type.slice(1)} Bill` ||
+                'Untitled Bill'
+              }}
+            </h3>
             <button
               @click="$emit('open-pdf', bill.pdfPath)"
               @keydown.enter="$emit('open-pdf', bill.pdfPath)"

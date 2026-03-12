@@ -10,7 +10,8 @@ export default defineEventHandler(async event => {
       title: eo.number,
       subtitle: eo.title,
       content: eo.description,
-      excerp: eo.description
+      excerp: eo.description,
+      category: eo.category
     }))
   } catch (error) {
     console.error('Error fetching executive orders:', error)

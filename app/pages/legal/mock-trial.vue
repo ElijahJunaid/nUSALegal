@@ -671,6 +671,16 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick, defineAsyncComponent } from 'vue'
+import { useToast } from '~/composables/useToast'
+import { useLobbyConnection } from '~/composables/useLobbyConnection'
+
+const ToastContainer = defineAsyncComponent(() => import('~/components/ToastContainer.vue'))
+const ReconnectionDialog = defineAsyncComponent(() => import('~/components/ReconnectionDialog.vue'))
+
+definePageMeta({
+  title: 'Mock Trial Simulator',
+  description: 'Interactive AI-powered mock trial simulator for nUSA Legal'
+})
 
 interface TrialCaseRole {
   objectives?: string[]
@@ -686,6 +696,7 @@ interface TrialCase {
   statute?: string
   difficulty: string
   roles?: Record<string, TrialCaseRole>
+  [key: string]: unknown
 }
 
 type AvailableRole = { id: string; name: string; description: string; claimedBy: string | null }
@@ -698,11 +709,6 @@ type ObjectionItem = {
   ruling: string | null
 }
 type Player = { name: string; role: string | null; isLeader: boolean }
-import { useToast } from '~/composables/useToast'
-import { useLobbyConnection } from '~/composables/useLobbyConnection'
-
-const ToastContainer = defineAsyncComponent(() => import('~/components/ToastContainer.vue'))
-const ReconnectionDialog = defineAsyncComponent(() => import('~/components/ReconnectionDialog.vue'))
 
 const { success, error, warning, info } = useToast()
 const lobbyConnection = useLobbyConnection()
@@ -714,11 +720,6 @@ const {
   incomingRuling,
   incomingVote
 } = lobbyConnection
-
-definePageMeta({
-  title: 'Mock Trial Simulator',
-  description: 'Interactive AI-powered mock trial simulator for nUSA Legal'
-})
 
 const showLobby = ref(false)
 const showTrialSetup = ref(false)

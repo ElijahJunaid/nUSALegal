@@ -42,37 +42,6 @@
       <section>
         <div class="card">
           <div class="card-body">
-            <div class="sub-menu-list-mobile">
-              <button
-                @click="setSection('congress')"
-                @keydown.enter="setSection('congress')"
-                @keydown.space="setSection('congress')"
-                class="btn"
-                :class="{
-                  'btn-primary': selectedSection === 'congress',
-                  'btn-outline': selectedSection !== 'congress'
-                }"
-                aria-label="View Congress bills"
-                :aria-pressed="selectedSection === 'congress'"
-              >
-                Congress
-              </button>
-              <button
-                @click="setSection('city-council')"
-                @keydown.enter="setSection('city-council')"
-                @keydown.space="setSection('city-council')"
-                class="btn"
-                :class="{
-                  'btn-primary': selectedSection === 'city-council',
-                  'btn-outline': selectedSection !== 'city-council'
-                }"
-                aria-label="View City Council bills"
-                :aria-pressed="selectedSection === 'city-council'"
-              >
-                City Council
-              </button>
-            </div>
-
             <h2 class="section-title text-center">
               {{ selectedSection === 'congress' ? 'Congress' : 'City Council' }}
             </h2>
@@ -131,7 +100,8 @@ import { useBillsStore } from '~/stores/bills-store'
 import { useHead, definePageMeta, storeToRefs, onMounted } from '#imports'
 
 definePageMeta({
-  layout: false
+  title: 'Legislation & Bills',
+  description: 'View Congress and City Council bills and legislation'
 })
 
 const billsStore = useBillsStore()

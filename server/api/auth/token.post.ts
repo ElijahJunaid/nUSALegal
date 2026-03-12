@@ -33,7 +33,11 @@ export default defineEventHandler(async event => {
       name: e?.name,
       stack: e?.stack
     })
-    if (getHeader(event, 'x-debug') === '1') {
+    // Handle both old and new h3 header formats
+    const debugHeader =
+      getHeader(event, 'x-debug') ||
+      (event.node?.req?.headers as Record<string, string>)?.['x-debug']
+    if (debugHeader === '1') {
       return {
         _debug: true,
         error: e?.message,
