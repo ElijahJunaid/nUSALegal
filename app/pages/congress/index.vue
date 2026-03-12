@@ -132,6 +132,15 @@
       </div>
     </footer>
 
+    <button
+      @click="toggleTheme"
+      class="theme-toggle"
+      :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+    >
+      <span v-if="theme === 'light'">☀️</span>
+      <span v-else>🌙</span>
+    </button>
+
     <ChatbotWidget />
   </div>
 </template>
@@ -139,11 +148,13 @@
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue'
 import { useCongressStore } from '~/stores/congress-store'
+import { useTheme } from '~/composables/useTheme'
 
 definePageMeta({
   layout: false
 })
 
+const { theme, toggleTheme } = useTheme()
 const congressStore = useCongressStore()
 
 const activeMembers = computed(() =>
@@ -155,7 +166,7 @@ const activeMemberCount = computed(
 )
 
 onMounted(async () => {
-  document.documentElement.setAttribute('data-theme', 'light')
+  congressStore.loaded = false
   await congressStore.fetchMembers()
 })
 
@@ -596,5 +607,91 @@ useHead({
     align-items: flex-start;
     gap: 0.5rem;
   }
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: none;
+  background: #1e3a5f;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 200;
+  transition: background 0.2s;
+}
+.theme-toggle:hover {
+  background: #2d5282;
+}
+
+[data-theme='dark'] .loc-wrapper {
+  background: #111827;
+}
+[data-theme='dark'] .loc-nav {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .loc-nav-link {
+  color: #d1d5db;
+}
+[data-theme='dark'] .loc-nav-link:hover,
+[data-theme='dark'] .loc-nav-link.active {
+  color: #fff;
+}
+[data-theme='dark'] .loc-back-btn {
+  color: #9ca3af;
+}
+[data-theme='dark'] .loc-back-btn:hover {
+  color: #fff;
+}
+[data-theme='dark'] .loc-stats {
+  background: #1f2937;
+}
+[data-theme='dark'] .loc-stat-num {
+  color: #f3f4f6;
+}
+[data-theme='dark'] .loc-stat-label {
+  color: #9ca3af;
+}
+[data-theme='dark'] .loc-stat-divider {
+  background: #374151;
+}
+[data-theme='dark'] .loc-members {
+  background: #111827;
+}
+[data-theme='dark'] .loc-members-title {
+  color: #f3f4f6;
+}
+[data-theme='dark'] .loc-view-all {
+  color: #93c5fd;
+}
+[data-theme='dark'] .loc-member-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .loc-member-name {
+  color: #f3f4f6;
+}
+[data-theme='dark'] .loc-member-role {
+  color: #9ca3af;
+}
+[data-theme='dark'] .loc-tag-state {
+  background: #374151;
+  color: #d1d5db;
+  border-color: #4b5563;
+}
+[data-theme='dark'] .loc-footer {
+  background: #0a0f1a;
+}
+[data-theme='dark'] .loc-footer-bottom {
+  color: #6b7280;
 }
 </style>

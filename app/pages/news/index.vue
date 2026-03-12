@@ -39,15 +39,28 @@
           <p class="news-orgs-eyebrow">REGISTERED OUTLETS</p>
           <h2 class="news-orgs-title">News Organizations</h2>
         </div>
-        <div class="news-orgs-grid">
-          <NuxtLink v-for="org in newsOrgs" :key="org.name" :to="org.route" class="news-org-card">
-            <div class="news-org-icon">{{ org.icon }}</div>
+        <div v-if="docalStore.loading" class="news-orgs-loading">Loading…</div>
+        <div v-else-if="newsOrgs.length === 0" class="news-orgs-empty">
+          No registered news organizations found.
+        </div>
+        <div v-else class="news-orgs-grid">
+          <component
+            :is="org.route ? 'a' : 'div'"
+            v-for="org in newsOrgs"
+            :key="org.name"
+            :href="org.route || undefined"
+            :target="org.route ? '_blank' : undefined"
+            :rel="org.route ? 'noopener noreferrer' : undefined"
+            class="news-org-card"
+            :class="{ 'no-link': !org.route }"
+          >
+            <div class="news-org-icon">📰</div>
             <div class="news-org-meta">
               <p class="news-org-name">{{ org.name }}</p>
               <p class="news-org-focus">{{ org.focus }}</p>
             </div>
-            <span class="news-org-cta">View Page →</span>
-          </NuxtLink>
+            <span v-if="org.route" class="news-org-cta">Visit →</span>
+          </component>
         </div>
       </div>
     </section>
@@ -59,51 +72,50 @@
       </div>
     </footer>
 
+    <button
+      @click="toggleTheme"
+      class="theme-toggle"
+      :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+    >
+      <span v-if="theme === 'light'">☀️</span>
+      <span v-else>🌙</span>
+    </button>
+
     <ChatbotWidget />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useDocalStore } from '~/stores/docal-store'
+import { useTheme } from '~/composables/useTheme'
 
 definePageMeta({ layout: false })
 
-interface NewsOrg {
-  name: string
-  icon: string
-  focus: string
-  route: string
+const { theme, toggleTheme } = useTheme()
+const docalStore = useDocalStore()
+
+function extractDiscordUrl(raw: string): string {
+  if (!raw) return ''
+  const m = raw.match(/\[([^\]]+)\]\(([^)]+)\)/)
+  if (m) return m[2].split(' ')[0]
+  if (raw.startsWith('http')) return raw
+  return ''
 }
 
-const newsOrgs: NewsOrg[] = [
-  {
-    name: 'nUSA Tribune',
-    icon: '🗞️',
-    focus: 'Federal · Politics · General',
-    route: '/news/nusa-tribune'
-  },
-  {
-    name: 'The Capitol Dispatch',
-    icon: '📡',
-    focus: 'Congressional · Legislative',
-    route: '/news/capitol-dispatch'
-  },
-  {
-    name: 'nUSA Daily',
-    icon: '📋',
-    focus: 'Federal · Local · Mixed',
-    route: '/news/nusa-daily'
-  },
-  {
-    name: 'DC Local Post',
-    icon: '🏙️',
-    focus: 'Washington D.C. · Local',
-    route: '/news/dc-local-post'
-  }
-]
+const newsOrgs = computed(() =>
+  docalStore.businesses
+    .filter(b => b.sector === 'News Media' && b.status === 'Active')
+    .map(b => ({
+      name: b.name,
+      focus: b.sector,
+      route: extractDiscordUrl(b.discord)
+    }))
+)
 
-onMounted(() => {
-  document.documentElement.setAttribute('data-theme', 'light')
+onMounted(async () => {
+  docalStore.loaded = false
+  await docalStore.fetchBusinesses()
 })
 
 useHead({
@@ -440,5 +452,82 @@ useHead({
   .news-orgs-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.news-orgs-loading,
+.news-orgs-empty {
+  padding: 3rem;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.news-org-card.no-link {
+  cursor: default;
+  text-decoration: none;
+  color: inherit;
+}
+
+.news-org-card.no-link:hover {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: none;
+  background: #7f1d1d;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 200;
+  transition: background 0.2s;
+}
+.theme-toggle:hover {
+  background: #991b1b;
+}
+
+[data-theme='dark'] .news-wrapper {
+  background: #111827;
+}
+[data-theme='dark'] .news-nav {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .news-logo-top {
+  color: #9ca3af;
+}
+[data-theme='dark'] .news-logo-bottom {
+  color: #fca5a5;
+}
+[data-theme='dark'] .news-orgs {
+  background: #111827;
+}
+[data-theme='dark'] .news-orgs-title {
+  color: #f3f4f6;
+}
+[data-theme='dark'] .news-org-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .news-org-name {
+  color: #f3f4f6;
+}
+[data-theme='dark'] .news-org-focus {
+  color: #9ca3af;
+}
+[data-theme='dark'] .news-footer {
+  background: #0a0010;
+}
+[data-theme='dark'] .news-footer-bottom {
+  color: #6b7280;
 }
 </style>

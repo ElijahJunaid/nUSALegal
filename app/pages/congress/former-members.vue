@@ -79,6 +79,15 @@
       </div>
     </footer>
 
+    <button
+      @click="toggleTheme"
+      class="theme-toggle"
+      :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+    >
+      <span v-if="theme === 'light'">☀️</span>
+      <span v-else>🌙</span>
+    </button>
+
     <ChatbotWidget />
   </div>
 </template>
@@ -86,14 +95,19 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import { useCongressStore } from '~/stores/congress-store'
+import { useTheme } from '~/composables/useTheme'
 
 definePageMeta({ layout: false })
 
+const { theme, toggleTheme } = useTheme()
 const congressStore = useCongressStore()
 const searchQuery = ref('')
 
 const filteredFormer = computed(() => {
-  const former = congressStore.members.filter(m => m.status === 'Former')
+  const former = [
+    ...congressStore.formerMembers,
+    ...congressStore.members.filter(m => m.status === 'Former')
+  ]
   const q = searchQuery.value.toLowerCase()
   if (!q) return former
   return former.filter(
@@ -105,8 +119,8 @@ const filteredFormer = computed(() => {
 })
 
 onMounted(async () => {
-  document.documentElement.setAttribute('data-theme', 'light')
-  await congressStore.fetchMembers()
+  congressStore.formerLoaded = false
+  await congressStore.fetchFormerMembers()
 })
 
 useHead({
@@ -426,5 +440,97 @@ useHead({
   .loc-nav-links {
     display: none;
   }
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: none;
+  background: #1e3a5f;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 200;
+  transition: background 0.2s;
+}
+.theme-toggle:hover {
+  background: #2d5282;
+}
+
+[data-theme='dark'] .loc-wrapper {
+  background: #111827;
+}
+[data-theme='dark'] .loc-nav {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .loc-nav-link {
+  color: #d1d5db;
+}
+[data-theme='dark'] .loc-nav-link:hover,
+[data-theme='dark'] .loc-nav-link.active {
+  color: #fff;
+}
+[data-theme='dark'] .loc-back-btn {
+  color: #9ca3af;
+}
+[data-theme='dark'] .fm-page {
+  background: #111827;
+}
+[data-theme='dark'] .fm-header {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .fm-title {
+  color: #f3f4f6;
+}
+[data-theme='dark'] .fm-subtitle {
+  color: #9ca3af;
+}
+[data-theme='dark'] .fm-search-bar {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .fm-search-input {
+  background: #1f2937;
+  color: #f3f4f6;
+}
+[data-theme='dark'] .fm-search-input::placeholder {
+  color: #6b7280;
+}
+[data-theme='dark'] .fm-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .fm-name {
+  color: #f3f4f6;
+}
+[data-theme='dark'] .fm-role,
+[data-theme='dark'] .fm-user {
+  color: #9ca3af;
+}
+[data-theme='dark'] .fm-tag.state {
+  background: #374151;
+  color: #d1d5db;
+  border-color: #4b5563;
+}
+[data-theme='dark'] .fm-tag.former {
+  background: #374151;
+  color: #9ca3af;
+  border-color: #4b5563;
+}
+[data-theme='dark'] .loc-footer {
+  background: #0a0f1a;
+}
+[data-theme='dark'] .loc-footer-bottom {
+  color: #6b7280;
 }
 </style>

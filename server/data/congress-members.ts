@@ -7,20 +7,24 @@ export interface CongressMember {
   chamber: string
   status: string
   initials: string
+  term?: string
+  class?: string
 }
 
 export const activeSessions: number = 1
 
 export const congressMembers: CongressMember[] = [
   {
-    name: 'John Example',
-    username: 'john_example',
+    name: 'Claire Wolfewere',
+    username: 'ClaireWolfwere',
     role: 'Senator',
-    state: 'CA',
+    state: 'Minnesota',
     party: 'Forward',
     chamber: 'Senate',
     status: 'Active',
-    initials: 'JE'
+    initials: 'CW',
+    term: '1st',
+    class: 'Class I'
   },
   {
     name: 'Jane Sample',
@@ -30,6 +34,10 @@ export const congressMembers: CongressMember[] = [
     party: 'Pioneer',
     chamber: 'House',
     status: 'Active',
-    initials: 'JS'
+    initials: 'JS',
+    term: '1st',
+    class: ''
   }
 ]
+
+export const formerCongressMembers: CongressMember[] = []

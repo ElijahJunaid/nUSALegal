@@ -104,6 +104,15 @@
       </div>
     </footer>
 
+    <button
+      @click="toggleTheme"
+      class="theme-toggle"
+      :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+    >
+      <span v-if="theme === 'light'">☀️</span>
+      <span v-else>🌙</span>
+    </button>
+
     <ChatbotWidget />
   </div>
 </template>
@@ -111,9 +120,11 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import { useDocalStore } from '~/stores/docal-store'
+import { useTheme } from '~/composables/useTheme'
 
 definePageMeta({ layout: false })
 
+const { theme, toggleTheme } = useTheme()
 const docalStore = useDocalStore()
 const searchQuery = ref('')
 const filterStatus = ref('')
@@ -134,7 +145,6 @@ const filteredBusinesses = computed(() => {
 })
 
 onMounted(async () => {
-  document.documentElement.setAttribute('data-theme', 'light')
   await docalStore.fetchBusinesses()
 })
 
@@ -506,5 +516,86 @@ useHead({
   .biz-search-wrap {
     min-width: unset;
   }
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: none;
+  background: #0f4c5c;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 200;
+  transition: background 0.2s;
+}
+.theme-toggle:hover {
+  background: #0f5f70;
+}
+
+[data-theme='dark'] .docal-wrapper {
+  background: #111827;
+}
+[data-theme='dark'] .docal-nav {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .docal-nav-link {
+  color: #d1d5db;
+}
+[data-theme='dark'] .docal-nav-link:hover,
+[data-theme='dark'] .docal-nav-link.active {
+  color: #fff;
+}
+[data-theme='dark'] .biz-page {
+  background: #111827;
+}
+[data-theme='dark'] .biz-title {
+  color: #5eead4;
+}
+[data-theme='dark'] .biz-subtitle {
+  color: #9ca3af;
+}
+[data-theme='dark'] .biz-search-input {
+  background: #1f2937;
+  color: #f3f4f6;
+  border-color: #374151;
+}
+[data-theme='dark'] .biz-filter {
+  background: #1f2937;
+  color: #f3f4f6;
+  border-color: #374151;
+}
+[data-theme='dark'] .biz-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .biz-name {
+  color: #f3f4f6;
+}
+[data-theme='dark'] .biz-owner {
+  color: #9ca3af;
+}
+[data-theme='dark'] .biz-desc {
+  color: #d1d5db;
+}
+[data-theme='dark'] .biz-tag {
+  background: #374151;
+  color: #d1d5db;
+  border-color: #4b5563;
+}
+[data-theme='dark'] .docal-footer {
+  background: #0a1520;
+}
+[data-theme='dark'] .docal-footer-bottom {
+  color: #6b7280;
 }
 </style>

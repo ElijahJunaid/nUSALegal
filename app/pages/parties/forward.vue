@@ -32,18 +32,25 @@
       </div>
     </footer>
 
+    <button
+      @click="toggleTheme"
+      class="theme-toggle"
+      :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+    >
+      <span v-if="theme === 'light'">☀️</span>
+      <span v-else>🌙</span>
+    </button>
+
     <ChatbotWidget />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { useTheme } from '~/composables/useTheme'
 
 definePageMeta({ layout: false })
 
-onMounted(() => {
-  document.documentElement.setAttribute('data-theme', 'light')
-})
+const { theme, toggleTheme } = useTheme()
 
 useHead({ title: 'Forward Party - nUSA' })
 </script>
@@ -206,6 +213,54 @@ useHead({ title: 'Forward Party - nUSA' })
 
 .party-footer-bottom {
   font-size: 0.78rem;
+  color: #93c5fd;
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: none;
+  background: #1d4ed8;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 200;
+  transition: background 0.2s;
+}
+.theme-toggle:hover {
+  background: #2563eb;
+}
+
+[data-theme='dark'] .party-wrapper {
+  background: #0f172a;
+}
+[data-theme='dark'] .party-nav {
+  background: #1e3a5f;
+  border-color: #1e40af;
+}
+[data-theme='dark'] .party-content {
+  background: #0f172a;
+}
+[data-theme='dark'] .party-section-card {
+  background: #1e3a5f;
+  border-color: #1e40af;
+}
+[data-theme='dark'] .party-section-title,
+[data-theme='dark'] .party-section-text {
+  color: #dbeafe;
+}
+[data-theme='dark'] .party-footer {
+  background: #070f1a;
+}
+[data-theme='dark'] .party-footer-bottom {
   color: #93c5fd;
 }
 </style>

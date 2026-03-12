@@ -57,18 +57,25 @@
       </div>
     </footer>
 
+    <button
+      @click="toggleTheme"
+      class="theme-toggle"
+      :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+    >
+      <span v-if="theme === 'light'">☀️</span>
+      <span v-else>🌙</span>
+    </button>
+
     <ChatbotWidget />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { useTheme } from '~/composables/useTheme'
 
 definePageMeta({ layout: false })
 
-onMounted(() => {
-  document.documentElement.setAttribute('data-theme', 'light')
-})
+const { theme, toggleTheme } = useTheme()
 
 useHead({
   title: 'Political Parties - nUSA',
@@ -341,5 +348,66 @@ useHead({
   .parties-hero-title {
     font-size: 2rem;
   }
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: none;
+  background: #374151;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 200;
+  transition: background 0.2s;
+}
+.theme-toggle:hover {
+  background: #4b5563;
+}
+
+[data-theme='dark'] .parties-wrapper {
+  background: #111827;
+}
+[data-theme='dark'] .parties-nav {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .parties-logo-bottom {
+  color: #d1d5db;
+}
+[data-theme='dark'] .parties-back-btn {
+  background: #4b5563;
+}
+[data-theme='dark'] .parties-section {
+  background: #111827;
+}
+[data-theme='dark'] .party-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .party-card-name {
+  color: #f3f4f6;
+}
+[data-theme='dark'] .party-card-tagline {
+  color: #9ca3af;
+}
+[data-theme='dark'] .parties-note {
+  background: #1f2937;
+  border-color: #374151;
+  color: #9ca3af;
+}
+[data-theme='dark'] .parties-footer {
+  background: #0d1117;
+}
+[data-theme='dark'] .parties-footer-bottom {
+  color: #6b7280;
 }
 </style>

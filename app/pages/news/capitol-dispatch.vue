@@ -86,16 +86,23 @@
         <p>&copy; 2024 nUSA Press &amp; Media · THIS IS NOT REAL LIFE!</p>
       </div>
     </footer>
+    <button
+      @click="toggleTheme"
+      class="theme-toggle"
+      :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+    >
+      <span v-if="theme === 'light'">☀️</span>
+      <span v-else>🌙</span>
+    </button>
+
     <ChatbotWidget />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { useTheme } from '~/composables/useTheme'
 definePageMeta({ layout: false })
-onMounted(() => {
-  document.documentElement.setAttribute('data-theme', 'light')
-})
+const { theme, toggleTheme } = useTheme()
 useHead({ title: 'The Capitol Dispatch - nUSA News' })
 </script>
 

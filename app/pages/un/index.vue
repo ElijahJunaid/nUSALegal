@@ -100,18 +100,25 @@
       </div>
     </footer>
 
+    <button
+      @click="toggleTheme"
+      class="theme-toggle"
+      :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+    >
+      <span v-if="theme === 'light'">☀️</span>
+      <span v-else>🌙</span>
+    </button>
+
     <ChatbotWidget />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { useTheme } from '~/composables/useTheme'
 
 definePageMeta({ layout: false })
 
-onMounted(() => {
-  document.documentElement.setAttribute('data-theme', 'light')
-})
+const { theme, toggleTheme } = useTheme()
 
 useHead({
   title: 'United Nations - nUSA',
@@ -456,5 +463,65 @@ useHead({
   .un-footer-inner {
     grid-template-columns: 1fr;
   }
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: none;
+  background: #003e73;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 200;
+  transition: background 0.2s;
+}
+.theme-toggle:hover {
+  background: #0057a3;
+}
+
+[data-theme='dark'] .un-wrapper {
+  background: #111827;
+}
+[data-theme='dark'] .un-nav {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .un-nav-link {
+  color: #d1d5db;
+}
+[data-theme='dark'] .un-nav-link:hover,
+[data-theme='dark'] .un-nav-link.active {
+  color: #fff;
+}
+[data-theme='dark'] .un-back-btn {
+  background: #003e73;
+}
+[data-theme='dark'] .un-info {
+  background: #111827;
+}
+[data-theme='dark'] .un-info-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .un-info-title {
+  color: #7dd3fc;
+}
+[data-theme='dark'] .un-info-text {
+  color: #d1d5db;
+}
+[data-theme='dark'] .un-footer {
+  background: #020b14;
+}
+[data-theme='dark'] .un-footer-bottom {
+  color: #6b7280;
 }
 </style>
