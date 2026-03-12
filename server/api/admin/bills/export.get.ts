@@ -1,4 +1,4 @@
-import { congressBills } from '../../bills/congress'
+import { congressBills } from '../../../data/congress-bills'
 import { cityCouncilBills } from '../../bills/city-council'
 import { defineEventHandler, getQuery, createError, setHeader } from 'h3'
 
