@@ -73,8 +73,6 @@
 <script lang="ts" setup>
 import { useTheme } from '~/composables/useTheme'
 
-definePageMeta({ layout: false })
-
 const { theme, toggleTheme } = useTheme()
 
 useHead({

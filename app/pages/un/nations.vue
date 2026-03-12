@@ -69,8 +69,6 @@ import type { FeatureCollection } from 'geojson'
 import { useTheme } from '~/composables/useTheme'
 import { unNations } from '~/data/un-nations'
 
-definePageMeta({ layout: false })
-
 const { theme, toggleTheme } = useTheme()
 
 const mapEl = ref<HTMLElement | null>(null)

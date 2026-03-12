@@ -122,8 +122,6 @@ import { ref, computed, onMounted } from 'vue'
 import { useDocalStore } from '~/stores/docal-store'
 import { useTheme } from '~/composables/useTheme'
 
-definePageMeta({ layout: false })
-
 const { theme, toggleTheme } = useTheme()
 const docalStore = useDocalStore()
 const searchQuery = ref('')

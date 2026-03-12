@@ -250,8 +250,6 @@ import { useCongressStore } from '~/stores/congress-store'
 import type { CongressMember } from '~/stores/congress-store'
 import { useTheme } from '~/composables/useTheme'
 
-definePageMeta({ layout: false })
-
 const { theme, toggleTheme } = useTheme()
 const congressStore = useCongressStore()
 const { senateMembers, houseMembers } = storeToRefs(congressStore)

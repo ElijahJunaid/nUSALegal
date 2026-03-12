@@ -82,8 +82,6 @@ import { useDocalStore } from '~/stores/docal-store'
 import { useTheme } from '~/composables/useTheme'
 import { slugify } from '~/utils/slugify'
 
-definePageMeta({ layout: false })
-
 const { theme, toggleTheme } = useTheme()
 const docalStore = useDocalStore()
 

@@ -117,8 +117,6 @@ import { useDocalStore } from '~/stores/docal-store'
 import { useTheme } from '~/composables/useTheme'
 import { matchesSlug } from '~/utils/slugify'
 
-definePageMeta({ layout: false })
-
 const route = useRoute()
 const slug = computed(() => route.params.slug as string)
 
