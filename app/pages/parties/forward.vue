@@ -1,75 +1,88 @@
 <template>
-  <div class="party-wrapper">
-    <nav class="party-nav">
-      <div class="party-nav-inner">
-        <NuxtLink to="/parties" class="party-logo">
-          <span class="party-logo-icon">🔵</span>
-          <div class="party-logo-text">
-            <span class="party-logo-top">nUSA</span>
-            <span class="party-logo-bottom">Forward Party</span>
+  <div class="pw-root">
+    <!-- Nav -->
+    <nav class="pw-nav">
+      <div class="pw-nav-inner">
+        <NuxtLink to="/parties" class="pw-logo">
+          <span class="pw-logo-icon">🔵</span>
+          <div class="pw-logo-text">
+            <span class="pw-logo-top">nUSA</span>
+            <span class="pw-logo-bottom">Forward Party</span>
           </div>
         </NuxtLink>
-        <NuxtLink to="/parties" class="party-back-btn forward">← Back to Parties</NuxtLink>
+        <NuxtLink to="/parties" class="pw-back-btn">← Back to Parties</NuxtLink>
       </div>
     </nav>
 
-    <div class="party-masthead">
-      <div class="party-masthead-inner">
-        <div class="party-masthead-icon">🔵</div>
-        <h1 class="party-masthead-title">Forward Party</h1>
-        <p class="party-masthead-tagline">Progress, unity, and a forward-looking nUSA.</p>
+    <!-- Masthead -->
+    <div class="pw-masthead">
+      <div class="pw-masthead-inner">
+        <div class="pw-masthead-icon">🔵</div>
+        <h1 class="pw-masthead-title">Forward Party</h1>
+        <p class="pw-masthead-tagline">Progress, unity, and a forward-looking nUSA.</p>
       </div>
     </div>
 
-    <div class="party-content">
-      <div class="party-info-row">
-        <div class="party-facts-card">
-          <h2 class="party-card-title">Quick Facts</h2>
-          <div class="party-fact-item">
-            <span class="party-fact-label">Senate Seats</span>
-            <span class="party-fact-value">{{ senateCount }}</span>
+    <!-- Content -->
+    <div class="pw-content">
+      <!-- Two-column info row -->
+      <div class="pw-info-row">
+        <!-- Quick Facts -->
+        <div class="pw-card">
+          <h2 class="pw-card-label">Quick Facts</h2>
+          <div class="pw-fact">
+            <span class="pw-fact-key">Senate Seats</span>
+            <span class="pw-fact-val">{{ senateCount }}</span>
           </div>
-          <div class="party-fact-item">
-            <span class="party-fact-label">House Seats</span>
-            <span class="party-fact-value">{{ houseCount }}</span>
+          <div class="pw-fact">
+            <span class="pw-fact-key">House Seats</span>
+            <span class="pw-fact-val">{{ houseCount }}</span>
           </div>
-          <div class="party-fact-item party-fact-total">
-            <span class="party-fact-label">Total Members</span>
-            <span class="party-fact-value">{{ partyMembers.length }}</span>
-          </div>
-          <div class="party-fact-item">
-            <span class="party-fact-label">Ideology</span>
-            <span class="party-fact-value">Progressive</span>
-          </div>
-          <div class="party-fact-item">
-            <span class="party-fact-label">Status</span>
-            <span class="party-fact-value">Active</span>
+          <div class="pw-fact pw-fact-total">
+            <span class="pw-fact-key pw-fact-key-total">Total Members</span>
+            <span class="pw-fact-val pw-fact-val-total">{{ partyMembers.length }}</span>
           </div>
         </div>
 
-        <div class="party-about-card">
-          <h2 class="party-card-title">About the Forward Party</h2>
-          <p class="party-about-text">
+        <!-- About -->
+        <div class="pw-card pw-about-card">
+          <h2 class="pw-card-label">About the Forward Party</h2>
+          <p class="pw-about-text">
             The Forward Party champions progress, unity, and a modern vision for nUSA. Committed to
             building inclusive institutions and forward-thinking policy, Forward members serve
             across both chambers of Congress working toward a stronger, more connected nation.
           </p>
-          <p class="party-about-text">
+          <p class="pw-about-text">
             Founded on the principles of civic engagement and collaborative governance, the Forward
             Party represents those who believe that nUSA's best days are ahead.
           </p>
-          <a href="#" class="party-join-btn">Join the Forward Party →</a>
+          <div class="pw-meta-row">
+            <div class="pw-meta-item">
+              <span class="pw-meta-key">Founded</span>
+              <span class="pw-meta-val">2024</span>
+            </div>
+            <div class="pw-meta-item">
+              <span class="pw-meta-key">Ideology</span>
+              <span class="pw-meta-val">Progressive</span>
+            </div>
+            <div class="pw-meta-item">
+              <span class="pw-meta-key">Status</span>
+              <span class="pw-meta-val pw-meta-active">Active</span>
+            </div>
+          </div>
+          <a href="#" class="pw-join-btn">Join the Forward Party →</a>
         </div>
       </div>
 
-      <div class="party-roster">
-        <h2 class="party-roster-title">Current Members of Congress</h2>
-        <div v-if="congressStore.loading" class="party-roster-state">Loading members…</div>
-        <div v-else-if="partyMembers.length === 0" class="party-roster-state">
+      <!-- Roster -->
+      <div class="pw-card">
+        <h2 class="pw-roster-title">Current Members of Congress</h2>
+        <div v-if="congressStore.loading" class="pw-empty">Loading members…</div>
+        <div v-else-if="partyMembers.length === 0" class="pw-empty">
           No current members of Congress affiliated with the Forward Party.
         </div>
-        <div v-else class="party-roster-table-wrap">
-          <table class="party-roster-table">
+        <div v-else class="pw-table-wrap">
+          <table class="pw-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -81,14 +94,14 @@
             </thead>
             <tbody>
               <tr v-for="m in partyMembers" :key="m.username">
-                <td class="roster-name">{{ m.name }}</td>
+                <td class="pw-td-name">{{ m.name }}</td>
                 <td>{{ m.role }}</td>
                 <td>{{ m.state }}</td>
                 <td>
-                  <span class="roster-badge" :class="m.chamber.toLowerCase()">{{ m.chamber }}</span>
+                  <span class="pw-badge" :class="m.chamber.toLowerCase()">{{ m.chamber }}</span>
                 </td>
                 <td>
-                  <span class="roster-status" :class="m.status.toLowerCase()">{{ m.status }}</span>
+                  <span class="pw-status" :class="m.status.toLowerCase()">{{ m.status }}</span>
                 </td>
               </tr>
             </tbody>
@@ -97,15 +110,14 @@
       </div>
     </div>
 
-    <footer class="party-footer forward-footer">
-      <div class="party-footer-bottom">
-        <p>&copy; 2024 nUSA Political Parties · THIS IS NOT REAL LIFE!</p>
-      </div>
+    <!-- Footer -->
+    <footer class="pw-footer">
+      <p class="pw-footer-text">&copy; 2024 nUSA Political Parties · THIS IS NOT REAL LIFE!</p>
     </footer>
 
     <button
       @click="toggleTheme"
-      class="theme-toggle"
+      class="pw-theme-btn"
       :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
     >
       <span v-if="theme === 'light'">☀️</span>
@@ -139,25 +151,27 @@ useHead({ title: 'Forward Party - nUSA' })
 </script>
 
 <style scoped>
-.party-wrapper {
+/* ── Root ── */
+.pw-root {
   min-height: 100vh;
   background: #f0f6ff;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
   display: flex;
   flex-direction: column;
+  color: #1f2937;
 }
 
-/* Nav */
-.party-nav {
+/* ── Nav ── */
+.pw-nav {
   background: #ffffff;
-  border-bottom: 1px solid #bfdbfe;
+  border-bottom: 2px solid #bfdbfe;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
 }
-.party-nav-inner {
-  max-width: 1200px;
+.pw-nav-inner {
+  max-width: 960px;
   margin: 0 auto;
   padding: 0 1.5rem;
   height: 56px;
@@ -165,281 +179,291 @@ useHead({ title: 'Forward Party - nUSA' })
   align-items: center;
   justify-content: space-between;
 }
-.party-logo {
+.pw-logo {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  text-decoration: none;
+  gap: 0.5rem;
+  text-decoration: none !important;
+  color: inherit !important;
 }
-.party-logo-icon {
+.pw-logo-icon {
   font-size: 1.4rem;
 }
-.party-logo-text {
+.pw-logo-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.1;
+  line-height: 1.15;
 }
-.party-logo-top {
-  font-size: 0.65rem;
+.pw-logo-top {
+  font-size: 0.62rem;
   font-weight: 700;
   color: #6b7280;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
-.party-logo-bottom {
-  font-size: 0.85rem;
+.pw-logo-bottom {
+  font-size: 0.82rem;
   font-weight: 700;
   color: #1d4ed8;
 }
-.party-back-btn {
+.pw-back-btn {
   padding: 0.4rem 1rem;
   border-radius: 0.375rem;
   font-size: 0.8rem;
   font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background 0.15s;
-}
-.party-back-btn.forward {
+  text-decoration: none !important;
   background: #1d4ed8;
-  color: #ffffff;
+  color: #ffffff !important;
+  transition: background 0.15s;
+  white-space: nowrap;
 }
-.party-back-btn.forward:hover {
+.pw-back-btn:hover {
   background: #1e40af;
-  color: #fff;
-  text-decoration: none;
 }
 
-/* Masthead */
-.party-masthead {
+/* ── Masthead ── */
+.pw-masthead {
   background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
   padding: 3.5rem 1.5rem 3rem;
   text-align: center;
 }
-.party-masthead-inner {
-  max-width: 640px;
+.pw-masthead-inner {
+  max-width: 600px;
   margin: 0 auto;
 }
-.party-masthead-icon {
+.pw-masthead-icon {
   font-size: 3rem;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.75rem;
 }
-.party-masthead-title {
+.pw-masthead-title {
   font-size: 2.75rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #ffffff !important;
   line-height: 1.1;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.5rem;
 }
-.party-masthead-tagline {
+.pw-masthead-tagline {
   font-size: 1rem;
   color: #bfdbfe;
 }
 
-/* Content */
-.party-content {
+/* ── Content wrapper ── */
+.pw-content {
   flex: 1;
   max-width: 960px;
   margin: 0 auto;
-  padding: 2.5rem 1.5rem;
   width: 100%;
+  padding: 2.5rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.75rem;
 }
 
-/* Info row */
-.party-info-row {
+/* ── Two-column info row ── */
+.pw-info-row {
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 1.5rem;
   align-items: start;
 }
 
-/* Facts card */
-.party-facts-card {
+/* ── Card ── */
+.pw-card {
   background: #ffffff;
-  border: 1px solid #bfdbfe;
-  border-radius: 0.75rem;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 0.875rem;
   padding: 1.5rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
+  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.07);
 }
-.party-card-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin-bottom: 0.75rem;
-}
-.party-fact-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.55rem 0;
-  border-bottom: 1px solid #f0f6ff;
-}
-.party-fact-item:last-child {
-  border-bottom: none;
-}
-.party-fact-label {
-  font-size: 0.85rem;
-  color: #6b7280;
-}
-.party-fact-value {
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #1e3a8a;
-}
-.party-fact-total .party-fact-label {
-  color: #1d4ed8;
-  font-weight: 600;
-}
-.party-fact-total .party-fact-value {
-  font-size: 1rem;
-  color: #1d4ed8;
-  background: #dbeafe;
-  padding: 0.1rem 0.6rem;
-  border-radius: 9999px;
-}
-
-/* About card */
-.party-about-card {
-  background: #ffffff;
-  border: 1px solid #bfdbfe;
-  border-radius: 0.75rem;
-  padding: 1.75rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+.pw-about-card {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
-.party-about-text {
-  font-size: 0.9rem;
-  color: #374151;
-  line-height: 1.75;
-}
-.party-join-btn {
-  align-self: flex-start;
-  margin-top: 0.5rem;
-  padding: 0.55rem 1.25rem;
-  background: #1d4ed8;
-  color: #ffffff;
-  border-radius: 0.5rem;
-  font-size: 0.85rem;
+.pw-card-label {
+  font-size: 0.72rem;
   font-weight: 700;
-  text-decoration: none;
-  transition: background 0.15s;
-}
-.party-join-btn:hover {
-  background: #1e40af;
-  color: #fff;
-  text-decoration: none;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
 }
 
-/* Roster */
-.party-roster {
-  background: #ffffff;
-  border: 1px solid #bfdbfe;
-  border-radius: 0.75rem;
-  padding: 1.75rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+/* ── Quick Facts ── */
+.pw-fact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eff6ff;
 }
-.party-roster-title {
-  font-size: 1rem;
+.pw-fact:last-of-type {
+  border-bottom: none;
+}
+.pw-fact-key {
+  font-size: 0.84rem;
+  color: #6b7280;
+}
+.pw-fact-val {
+  font-size: 0.875rem;
   font-weight: 700;
   color: #1e3a8a;
-  margin-bottom: 1.25rem;
+}
+.pw-fact-key-total {
+  color: #1d4ed8;
+  font-weight: 600;
+}
+.pw-fact-val-total {
+  font-size: 0.875rem;
+  color: #1d4ed8;
+  background: #dbeafe;
+  padding: 0.15rem 0.65rem;
+  border-radius: 9999px;
+}
+
+/* ── About ── */
+.pw-about-text {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.75;
+  margin: 0;
+}
+.pw-meta-row {
+  display: flex;
+  gap: 1.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #eff6ff;
+  flex-wrap: wrap;
+}
+.pw-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.pw-meta-key {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.pw-meta-val {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+.pw-meta-active {
+  color: #065f46;
+}
+.pw-join-btn {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  padding: 0.5rem 1.2rem;
+  background: #1d4ed8;
+  color: #ffffff !important;
+  border-radius: 0.5rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none !important;
+  transition: background 0.15s;
+  display: inline-block;
+}
+.pw-join-btn:hover {
+  background: #1e40af;
+}
+
+/* ── Roster ── */
+.pw-roster-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e3a8a !important;
+  margin-bottom: 1rem;
   padding-bottom: 0.6rem;
   border-bottom: 2px solid #bfdbfe;
 }
-.party-roster-state {
+.pw-empty {
   font-size: 0.875rem;
   color: #9ca3af;
   padding: 1rem 0;
 }
-.party-roster-table-wrap {
+.pw-table-wrap {
   overflow-x: auto;
 }
-.party-roster-table {
+.pw-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
 }
-.party-roster-table th {
+.pw-table th {
   text-align: left;
-  padding: 0.6rem 0.75rem;
-  font-size: 0.75rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1.5px solid #e5e7eb;
 }
-.party-roster-table td {
-  padding: 0.75rem;
+.pw-table td {
+  padding: 0.7rem 0.75rem;
   border-bottom: 1px solid #f3f4f6;
   color: #374151;
 }
-.party-roster-table tbody tr:last-child td {
+.pw-table tbody tr:last-child td {
   border-bottom: none;
 }
-.party-roster-table tbody tr:hover td {
+.pw-table tbody tr:hover td {
   background: #eff6ff;
 }
-.roster-name {
+.pw-td-name {
   font-weight: 600;
   color: #1e3a8a;
 }
-.roster-badge {
+.pw-badge {
   display: inline-block;
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
   font-size: 0.72rem;
   font-weight: 700;
 }
-.roster-badge.senate {
+.pw-badge.senate {
   background: #dbeafe;
   color: #1d4ed8;
 }
-.roster-badge.house {
+.pw-badge.house {
   background: #e0e7ff;
   color: #4338ca;
 }
-.roster-status {
+.pw-status {
   display: inline-block;
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
   font-size: 0.72rem;
   font-weight: 700;
 }
-.roster-status.active {
+.pw-status.active {
   background: #d1fae5;
   color: #065f46;
 }
-.roster-status.inactive {
+.pw-status.inactive {
   background: #f3f4f6;
   color: #6b7280;
 }
 
-/* Footer */
-.party-footer {
+/* ── Footer ── */
+.pw-footer {
+  background: #1e3a8a;
   padding: 1.25rem 1.5rem;
   text-align: center;
 }
-.forward-footer {
-  background: #1e3a8a;
-}
-.party-footer-bottom {
+.pw-footer-text {
   font-size: 0.78rem;
   color: #93c5fd;
+  margin: 0;
 }
 
-/* Theme toggle */
-.theme-toggle {
+/* ── Theme toggle ── */
+.pw-theme-btn {
   position: fixed;
   bottom: 1rem;
   left: 1rem;
@@ -458,75 +482,79 @@ useHead({ title: 'Forward Party - nUSA' })
   z-index: 200;
   transition: background 0.2s;
 }
-.theme-toggle:hover {
+.pw-theme-btn:hover {
   background: #2563eb;
 }
 
-/* Dark mode */
-[data-theme='dark'] .party-wrapper {
+/* ── Dark mode ── */
+[data-theme='dark'] .pw-root {
   background: #0f172a;
+  color: #e2e8f0;
 }
-[data-theme='dark'] .party-nav {
-  background: #1e3a5f;
-  border-color: #1e40af;
-}
-[data-theme='dark'] .party-logo-bottom {
-  color: #93c5fd;
-}
-[data-theme='dark'] .party-content {
-  background: #0f172a;
-}
-[data-theme='dark'] .party-facts-card,
-[data-theme='dark'] .party-about-card,
-[data-theme='dark'] .party-roster {
+[data-theme='dark'] .pw-nav {
   background: #1e2d4a;
   border-color: #1e40af;
 }
-[data-theme='dark'] .party-card-title {
+[data-theme='dark'] .pw-logo-bottom {
   color: #93c5fd;
 }
-[data-theme='dark'] .party-fact-item {
+[data-theme='dark'] .pw-card {
+  background: #1e2d4a;
+  border-color: #1e40af;
+  box-shadow: none;
+}
+[data-theme='dark'] .pw-card-label {
+  color: #93c5fd;
+}
+[data-theme='dark'] .pw-fact {
   border-color: #1e3a5f;
 }
-[data-theme='dark'] .party-fact-label {
+[data-theme='dark'] .pw-fact-key {
   color: #9ca3af;
 }
-[data-theme='dark'] .party-fact-value {
+[data-theme='dark'] .pw-fact-val {
   color: #93c5fd;
 }
-[data-theme='dark'] .party-about-text {
+[data-theme='dark'] .pw-about-text {
   color: #d1d5db;
 }
-[data-theme='dark'] .party-roster-title {
+[data-theme='dark'] .pw-meta-row {
+  border-color: #1e3a5f;
+}
+[data-theme='dark'] .pw-meta-val {
   color: #93c5fd;
+}
+[data-theme='dark'] .pw-meta-active {
+  color: #6ee7b7;
+}
+[data-theme='dark'] .pw-roster-title {
+  color: #93c5fd !important;
   border-color: #1e40af;
 }
-[data-theme='dark'] .party-roster-table th {
+[data-theme='dark'] .pw-table th {
   color: #9ca3af;
   border-color: #1e3a5f;
 }
-[data-theme='dark'] .party-roster-table td {
+[data-theme='dark'] .pw-table td {
   border-color: #1e3a5f;
   color: #d1d5db;
 }
-[data-theme='dark'] .party-roster-table tbody tr:hover td {
+[data-theme='dark'] .pw-table tbody tr:hover td {
   background: #1e3a5f;
 }
-[data-theme='dark'] .roster-name {
+[data-theme='dark'] .pw-td-name {
   color: #93c5fd;
 }
-[data-theme='dark'] .party-footer {
+[data-theme='dark'] .pw-footer {
   background: #070f1a;
 }
-[data-theme='dark'] .party-footer-bottom {
-  color: #93c5fd;
-}
 
+/* ── Responsive ── */
 @media (max-width: 700px) {
-  .party-info-row {
+  .pw-info-row {
     grid-template-columns: 1fr;
   }
-  .party-masthead-title {
+  .pw-masthead-title {
     font-size: 2rem;
   }
 }
