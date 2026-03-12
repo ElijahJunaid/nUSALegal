@@ -5,4 +5,11 @@ console.warn = (...args: unknown[]) => {
   _warn(...args)
 }
 
+const _emitWarning = process.emitWarning.bind(process)
+process.emitWarning = (warning: string | Error, ...args: unknown[]) => {
+  const msg = typeof warning === 'string' ? warning : (warning?.message ?? '')
+  if (msg.includes('util._extend')) return
+  ;(_emitWarning as (...a: unknown[]) => void)(warning, ...args)
+}
+
 export default () => {}
