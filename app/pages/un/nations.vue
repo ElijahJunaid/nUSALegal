@@ -220,7 +220,8 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  text-decoration: none;
+  text-decoration: none !important;
+  color: #1f2937 !important;
   flex-shrink: 0;
 }
 .un-logo-icon {
@@ -498,5 +499,77 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   padding: 0.75rem 1rem;
   font-size: 0.85rem;
   color: #6b7280;
+}
+
+/* Dark mode */
+[data-theme='dark'] .un-wrapper {
+  background: #111827;
+  color: #e5e7eb;
+}
+[data-theme='dark'] .un-nav {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .un-logo {
+  color: #e5e7eb !important;
+}
+[data-theme='dark'] .un-logo-top {
+  color: #9ca3af;
+}
+[data-theme='dark'] .un-logo-bottom {
+  color: #60a5fa;
+}
+[data-theme='dark'] .un-nav-link {
+  color: #d1d5db;
+}
+[data-theme='dark'] .un-nav-link:hover {
+  background: #374151;
+  color: #60a5fa;
+}
+[data-theme='dark'] .un-nav-link.active {
+  color: #60a5fa;
+  background: #1e3a8a;
+}
+[data-theme='dark'] .un-back-btn {
+  background: #1e3a8a;
+  color: #e5e7eb;
+}
+[data-theme='dark'] .un-map {
+  background: #111827;
+}
+[data-theme='dark'] .map-legend {
+  background: #1f2937;
+  border-color: #374151;
+  color: #d1d5db;
+}
+[data-theme='dark'] .legend-dot {
+  border-color: #374151;
+}
+[data-theme='dark'] .un-footer {
+  background: #111827;
+}
+[data-theme='dark'] .un-footer-bottom {
+  color: #9ca3af;
+}
+[data-theme='dark'] .unp {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #e5e7eb;
+}
+[data-theme='dark'] .unp-flag {
+  background: #374151;
+  color: #e5e7eb;
+}
+[data-theme='dark'] .unp-name {
+  color: #e5e7eb;
+}
+[data-theme='dark'] .unp-lbl {
+  color: #9ca3af;
+}
+[data-theme='dark'] .unp-val {
+  color: #d1d5db;
+}
+[data-theme='dark'] .unp-nonmember {
+  color: #9ca3af;
 }
 </style>
