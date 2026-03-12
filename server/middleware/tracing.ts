@@ -1,7 +1,7 @@
-import { eventHandler } from 'h3'
+import { defineEventHandler } from 'h3'
 import { tracingManager } from '../utils/tracing'
 
-export default eventHandler(event => {
+export default defineEventHandler(event => {
   const method = event.node.req.method || 'GET'
   const url = event.node.req.url || '/'
 
