@@ -184,7 +184,7 @@ useHead({ title: 'Forward Party - nUSA' })
   align-items: center;
   gap: 0.5rem;
   text-decoration: none !important;
-  color: inherit !important;
+  color: #1f2937 !important;
 }
 .pw-logo-icon {
   font-size: 1.4rem;
@@ -494,6 +494,9 @@ useHead({ title: 'Forward Party - nUSA' })
 [data-theme='dark'] .pw-nav {
   background: #1e2d4a;
   border-color: #1e40af;
+}
+[data-theme='dark'] .pw-logo {
+  color: #e2e8f0 !important;
 }
 [data-theme='dark'] .pw-logo-bottom {
   color: #93c5fd;

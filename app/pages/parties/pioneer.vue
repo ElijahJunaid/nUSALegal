@@ -185,7 +185,7 @@ useHead({ title: 'Pioneer Party - nUSA' })
   align-items: center;
   gap: 0.5rem;
   text-decoration: none !important;
-  color: inherit !important;
+  color: #1f2937 !important;
 }
 .pp-logo-icon {
   font-size: 1.4rem;
@@ -495,6 +495,9 @@ useHead({ title: 'Pioneer Party - nUSA' })
 [data-theme='dark'] .pp-nav {
   background: #2d0a0a;
   border-color: #7f1d1d;
+}
+[data-theme='dark'] .pp-logo {
+  color: #e2e8f0 !important;
 }
 [data-theme='dark'] .pp-logo-bottom {
   color: #fca5a5;
