@@ -28,7 +28,6 @@
         </p>
       </div>
 
-      <!-- Search + Filters -->
       <div class="biz-toolbar">
         <div class="biz-search-wrap">
           <span class="biz-search-icon">🔍</span>
@@ -49,10 +48,8 @@
         </select>
       </div>
 
-      <!-- Loading -->
       <div v-if="docalStore.loading" class="biz-empty">Loading…</div>
 
-      <!-- Results -->
       <div v-else-if="filteredBusinesses.length > 0">
         <p class="biz-count">
           {{ filteredBusinesses.length }} business{{ filteredBusinesses.length !== 1 ? 'es' : '' }}
@@ -84,7 +81,6 @@
         </div>
       </div>
 
-      <!-- Empty -->
       <div v-else class="biz-empty">
         <p class="biz-empty-icon">🏢</p>
         <p class="biz-empty-title">No businesses found</p>
@@ -263,7 +259,6 @@ useHead({
   color: #fff;
 }
 
-/* Page */
 .biz-page {
   flex: 1;
   max-width: 1000px;
@@ -288,7 +283,6 @@ useHead({
   color: #6b7280;
 }
 
-/* Toolbar */
 .biz-toolbar {
   display: flex;
   gap: 0.75rem;
@@ -348,7 +342,6 @@ useHead({
   margin-bottom: 1rem;
 }
 
-/* Grid */
 .biz-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -465,7 +458,6 @@ useHead({
   color: #6b7280;
 }
 
-/* Empty */
 .biz-empty {
   text-align: center;
   padding: 5rem 1.5rem;
@@ -488,7 +480,6 @@ useHead({
   font-size: 0.875rem;
 }
 
-/* Footer */
 .docal-footer {
   background: #0f2137;
 }

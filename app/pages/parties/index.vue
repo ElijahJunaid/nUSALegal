@@ -163,7 +163,6 @@ useHead({
   color: #fff;
 }
 
-/* Hero */
 .parties-hero {
   background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   padding: 4rem 1.5rem 3.5rem;
@@ -203,7 +202,6 @@ useHead({
   line-height: 1.7;
 }
 
-/* Section */
 .parties-section {
   flex: 1;
   padding: 3rem 1.5rem;
@@ -223,7 +221,6 @@ useHead({
   gap: 1.5rem;
 }
 
-/* Party Card */
 .party-card {
   background: #ffffff;
   border-radius: 0.875rem;
@@ -309,7 +306,6 @@ useHead({
   color: #ffffff;
 }
 
-/* Note */
 .parties-note {
   background: #f9fafb;
   border: 1px solid #e5e7eb;
@@ -324,7 +320,6 @@ useHead({
   color: #374151;
 }
 
-/* Footer */
 .parties-footer {
   background: #1e293b;
 }

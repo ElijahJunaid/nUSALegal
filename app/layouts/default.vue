@@ -25,12 +25,12 @@
         </template>
       </div>
 
-      <div class="flex-1 p-6 flex gap-6">
+      <div class="flex-1 p-6 flex gap-6 min-h-[calc(100vh-4rem)]">
         <div class="max-lg:hidden w-[30%] xl:w-[20%]">
           <slot name="sub-menu" />
         </div>
 
-        <div class="w-full lg:w-[70%] xl:w-[60%]">
+        <div class="w-full lg:w-[70%] xl:w-[60%] overflow-x-auto">
           <slot name="default" />
         </div>
 
@@ -57,7 +57,7 @@
     </div>
     <div class="drawer-side">
       <label for="nusalegal-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-      <ul class="menu">
+      <ul class="menu text-white!">
         <label for="nusalegal-drawer" aria-label="close sidebar" class="menu-toggle">
           <img src="/svg/close.svg" alt="Close" />
         </label>
@@ -184,18 +184,18 @@ const toggleTheme = () => {
   flex-shrink: 0;
 }
 
-.navbar-right {
+/* .navbar-right {
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-shrink: 0;
 }
 
-.navbar-right > div {
+.navbar-right>div {
   display: flex;
   gap: 0.75rem;
   align-items: center;
-}
+} */
 
 .nav-link {
   color: white;
@@ -250,7 +250,7 @@ const toggleTheme = () => {
 }
 
 .menu {
-  background-color: oklch(var(--b1));
+  background-color: rgba(51, 51, 51, 0.95) !important;
   color: oklch(var(--bc));
   min-height: 100%;
   width: 20rem;
@@ -278,5 +278,17 @@ const toggleTheme = () => {
 
 .theme-toggle:hover {
   transform: scale(1.05);
+}
+
+.menu-toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+}
+
+.menu-toggle img {
+  width: 28px;
+  height: 28px;
 }
 </style>

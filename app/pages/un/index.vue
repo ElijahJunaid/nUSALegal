@@ -18,7 +18,6 @@
       </div>
     </nav>
 
-    <!-- Hero -->
     <section class="un-hero">
       <div class="un-hero-inner">
         <div class="un-hero-icon">🌐</div>
@@ -37,7 +36,6 @@
       </div>
     </section>
 
-    <!-- Info Cards -->
     <section class="un-info">
       <div class="un-info-inner">
         <div class="un-info-card">
@@ -74,7 +72,6 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="un-footer">
       <div class="un-footer-inner">
         <div class="un-footer-col">
@@ -137,7 +134,6 @@ useHead({
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* Navbar */
 .un-nav {
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
@@ -235,7 +231,6 @@ useHead({
   color: #fff;
 }
 
-/* Hero */
 .un-hero {
   background: linear-gradient(135deg, #001f3f 0%, #003e73 55%, #001f3f 100%);
   padding: 5rem 1.5rem 0;
@@ -311,7 +306,6 @@ useHead({
   height: 80px;
 }
 
-/* Info */
 .un-info {
   padding: 3.5rem 1.5rem;
   background: #f3f4f6;
@@ -376,7 +370,6 @@ useHead({
   font-weight: 700;
 }
 
-/* Footer */
 .un-footer {
   background: #001f3f;
   color: #9ca3af;

@@ -2,7 +2,6 @@
   <NuxtLayout name="default">
     <template #default>
       <div class="news-wrapper">
-        <!-- Hero -->
         <section class="news-hero">
           <div class="news-hero-inner">
             <div class="news-hero-icon">📰</div>
@@ -24,7 +23,6 @@
           </div>
         </section>
 
-        <!-- Orgs -->
         <section class="news-orgs">
           <div class="news-orgs-inner">
             <div class="news-orgs-header">

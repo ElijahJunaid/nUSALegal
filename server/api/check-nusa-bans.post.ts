@@ -56,18 +56,15 @@ export default defineEventHandler(async event => {
       reason: null
     }
   } catch (error: unknown) {
-    // Log the error for debugging
     console.error('nUSA API error:', error)
 
     if (axios.isAxiosError(error)) {
       if (error.response) {
-        // For API errors, return a safe default instead of failing
         return {
           result: 'PASS',
           reason: 'nUSA API unavailable - manual review recommended'
         }
       } else if (error.request) {
-        // Network/connection errors
         return {
           result: 'PASS',
           reason: 'nUSA API unreachable - manual review recommended'
@@ -75,7 +72,6 @@ export default defineEventHandler(async event => {
       }
     }
 
-    // For other errors, also return a safe default
     return {
       result: 'PASS',
       reason: 'nUSA API check failed - manual review recommended'

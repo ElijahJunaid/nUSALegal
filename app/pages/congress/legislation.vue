@@ -182,7 +182,6 @@ h1 {
   margin-top: 1rem;
 }
 
-/* Dark mode */
 [data-theme='dark'] .congress-page {
   background: #0f172a;
   color: #e2e8f0;

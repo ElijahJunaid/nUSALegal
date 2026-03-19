@@ -21,7 +21,6 @@
     </div>
 
     <div v-else class="org-page">
-      <!-- Header -->
       <div class="org-header">
         <div class="org-header-icon">📰</div>
         <div class="org-header-info">
@@ -46,7 +45,6 @@
         </div>
       </div>
 
-      <!-- License Details -->
       <div class="org-section">
         <h2 class="org-section-title">License Details</h2>
         <div class="org-card">
@@ -74,7 +72,6 @@
         </div>
       </div>
 
-      <!-- Discord / Community -->
       <div v-if="discordUrl" class="org-section">
         <h2 class="org-section-title">Community</h2>
         <div class="org-card">

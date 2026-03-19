@@ -1,6 +1,5 @@
 <template>
   <div class="pw-root">
-    <!-- Nav -->
     <nav class="pw-nav">
       <div class="pw-nav-inner">
         <NuxtLink to="/parties" class="pw-logo">
@@ -14,7 +13,6 @@
       </div>
     </nav>
 
-    <!-- Masthead -->
     <div class="pw-masthead">
       <div class="pw-masthead-inner">
         <div class="pw-masthead-icon">🔵</div>
@@ -23,11 +21,8 @@
       </div>
     </div>
 
-    <!-- Content -->
     <div class="pw-content">
-      <!-- Two-column info row -->
       <div class="pw-info-row">
-        <!-- Quick Facts -->
         <div class="pw-card">
           <h2 class="pw-card-label">Quick Facts</h2>
           <div class="pw-fact">
@@ -44,7 +39,6 @@
           </div>
         </div>
 
-        <!-- About -->
         <div class="pw-card pw-about-card">
           <h2 class="pw-card-label">About the Forward Party</h2>
           <p class="pw-about-text">
@@ -74,7 +68,6 @@
         </div>
       </div>
 
-      <!-- Roster -->
       <div class="pw-card">
         <h2 class="pw-roster-title">Current Members of Congress</h2>
         <div v-if="congressStore.loading" class="pw-empty">Loading members…</div>
@@ -110,7 +103,6 @@
       </div>
     </div>
 
-    <!-- Footer -->
     <footer class="pw-footer">
       <p class="pw-footer-text">&copy; 2024 nUSA Political Parties · THIS IS NOT REAL LIFE!</p>
     </footer>
@@ -149,7 +141,6 @@ useHead({ title: 'Forward Party - nUSA' })
 </script>
 
 <style scoped>
-/* ── Root ── */
 .pw-root {
   min-height: 100vh;
   background: #f0f6ff;
@@ -159,7 +150,6 @@ useHead({ title: 'Forward Party - nUSA' })
   color: #1f2937;
 }
 
-/* ── Nav ── */
 .pw-nav {
   background: #ffffff;
   border-bottom: 2px solid #bfdbfe;
@@ -219,7 +209,6 @@ useHead({ title: 'Forward Party - nUSA' })
   background: #1e40af;
 }
 
-/* ── Masthead ── */
 .pw-masthead {
   background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
   padding: 3.5rem 1.5rem 3rem;
@@ -245,7 +234,6 @@ useHead({ title: 'Forward Party - nUSA' })
   color: #bfdbfe;
 }
 
-/* ── Content wrapper ── */
 .pw-content {
   flex: 1;
   max-width: 960px;
@@ -257,7 +245,6 @@ useHead({ title: 'Forward Party - nUSA' })
   gap: 1.75rem;
 }
 
-/* ── Two-column info row ── */
 .pw-info-row {
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -265,7 +252,6 @@ useHead({ title: 'Forward Party - nUSA' })
   align-items: start;
 }
 
-/* ── Card ── */
 .pw-card {
   background: #ffffff;
   border: 1.5px solid #bfdbfe;
@@ -287,7 +273,6 @@ useHead({ title: 'Forward Party - nUSA' })
   margin-bottom: 0.75rem;
 }
 
-/* ── Quick Facts ── */
 .pw-fact {
   display: flex;
   justify-content: space-between;
@@ -319,7 +304,6 @@ useHead({ title: 'Forward Party - nUSA' })
   border-radius: 9999px;
 }
 
-/* ── About ── */
 .pw-about-text {
   font-size: 0.875rem;
   color: #374151;
@@ -370,7 +354,6 @@ useHead({ title: 'Forward Party - nUSA' })
   background: #1e40af;
 }
 
-/* ── Roster ── */
 .pw-roster-title {
   font-size: 1rem;
   font-weight: 700;
@@ -448,7 +431,6 @@ useHead({ title: 'Forward Party - nUSA' })
   color: #6b7280;
 }
 
-/* ── Footer ── */
 .pw-footer {
   background: #1e3a8a;
   padding: 1.25rem 1.5rem;
@@ -460,7 +442,6 @@ useHead({ title: 'Forward Party - nUSA' })
   margin: 0;
 }
 
-/* ── Theme toggle ── */
 .pw-theme-btn {
   position: fixed;
   bottom: 1rem;
@@ -484,7 +465,6 @@ useHead({ title: 'Forward Party - nUSA' })
   background: #2563eb;
 }
 
-/* ── Dark mode ── */
 [data-theme='dark'] .pw-root {
   background: #0f172a;
   color: #e2e8f0;
@@ -550,7 +530,6 @@ useHead({ title: 'Forward Party - nUSA' })
   background: #070f1a;
 }
 
-/* ── Responsive ── */
 @media (max-width: 700px) {
   .pw-info-row {
     grid-template-columns: 1fr;

@@ -18,8 +18,9 @@ export default defineNuxtConfig({
       sourcemap: false
     },
     server: {
-      hmr: false,
-      ws: false
+      hmr: {
+        clientPort: 8888
+      }
     }
   },
   nitro: {

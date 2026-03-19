@@ -6,7 +6,6 @@
   flex-direction: column;
 }
 
-/* Navbar */
 .news-nav {
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
@@ -75,7 +74,6 @@
   color: #fff;
 }
 
-/* Org Page */
 .org-page {
   flex: 1;
   max-width: 860px;
@@ -87,7 +85,6 @@
   gap: 2rem;
 }
 
-/* Org Header */
 .org-header {
   background: #ffffff;
   border: 1px solid #e5e7eb;
@@ -182,7 +179,6 @@
   color: #fff;
 }
 
-/* Sections */
 .org-section {
   display: flex;
   flex-direction: column;
@@ -211,7 +207,6 @@
   line-height: 1.75;
 }
 
-/* Reliability Card */
 .reliability-card {
   display: flex;
   align-items: center;
@@ -294,7 +289,6 @@
   flex-basis: 100%;
 }
 
-/* Stories */
 .org-stories {
   background: #ffffff;
   border: 1px solid #e5e7eb;
@@ -353,7 +347,6 @@
   border-top: 1px solid #f3f4f6;
 }
 
-/* Footer */
 .news-footer {
   background: #1a0a0a;
 }

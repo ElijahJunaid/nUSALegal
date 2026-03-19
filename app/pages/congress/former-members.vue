@@ -238,7 +238,6 @@ useHead({
   color: #fff;
 }
 
-/* Page */
 .fm-page {
   flex: 1;
   max-width: 1000px;
@@ -263,7 +262,6 @@ useHead({
   color: #6b7280;
 }
 
-/* Search */
 .fm-search-bar {
   position: relative;
   margin-bottom: 2rem;
@@ -294,7 +292,6 @@ useHead({
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
 
-/* Grid */
 .fm-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -397,7 +394,6 @@ useHead({
   border: 1px solid #d1d5db;
 }
 
-/* Empty */
 .fm-empty {
   text-align: center;
   padding: 5rem 1.5rem;
@@ -420,7 +416,6 @@ useHead({
   font-size: 0.875rem;
 }
 
-/* Footer */
 .loc-footer {
   background: #0d1b2a;
 }

@@ -1,6 +1,5 @@
 <template>
   <div class="docal-wrapper">
-    <!-- Navbar -->
     <nav class="docal-nav">
       <div class="docal-nav-inner">
         <NuxtLink to="/docal" class="docal-logo">
@@ -19,7 +18,6 @@
       </div>
     </nav>
 
-    <!-- Hero -->
     <section class="docal-hero">
       <div class="docal-hero-inner">
         <div class="docal-hero-icon">📋</div>
@@ -39,7 +37,6 @@
       </div>
     </section>
 
-    <!-- Info Cards -->
     <section class="docal-info">
       <div class="docal-info-inner">
         <div class="docal-info-card">
@@ -75,7 +72,6 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="docal-footer">
       <div class="docal-footer-inner">
         <div class="docal-footer-col">
@@ -141,7 +137,6 @@ useHead({
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* Navbar */
 .docal-nav {
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
@@ -239,7 +234,6 @@ useHead({
   color: #fff;
 }
 
-/* Hero */
 .docal-hero {
   background: linear-gradient(135deg, #0f2137 0%, #0f4c5c 60%, #0f2137 100%);
   padding: 5rem 1.5rem 0;
@@ -315,7 +309,6 @@ useHead({
   height: 80px;
 }
 
-/* Info */
 .docal-info {
   padding: 3.5rem 1.5rem;
   background: #f3f4f6;
@@ -380,7 +373,6 @@ useHead({
   font-weight: 700;
 }
 
-/* Footer */
 .docal-footer {
   background: #0f2137;
   color: #9ca3af;

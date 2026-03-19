@@ -1,6 +1,5 @@
 <template>
   <div class="loc-wrapper">
-    <!-- Navbar -->
     <nav class="loc-nav">
       <div class="loc-nav-inner">
         <NuxtLink to="/congress" class="loc-logo">
@@ -20,7 +19,6 @@
       </div>
     </nav>
 
-    <!-- Hero -->
     <section class="loc-hero">
       <div class="loc-hero-inner">
         <div class="loc-hero-icon">🏛️</div>
@@ -42,7 +40,6 @@
       </div>
     </section>
 
-    <!-- Stats -->
     <section class="loc-stats">
       <div class="loc-stats-inner">
         <div class="loc-stat">
@@ -71,7 +68,6 @@
       </div>
     </section>
 
-    <!-- Active Members -->
     <section class="loc-members">
       <div class="loc-members-inner">
         <div class="loc-members-header">
@@ -104,7 +100,6 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="loc-footer">
       <div class="loc-footer-inner">
         <div class="loc-footer-col">
@@ -188,7 +183,6 @@ useHead({
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* Navbar */
 .loc-nav {
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
@@ -273,7 +267,6 @@ useHead({
   color: #fff;
 }
 
-/* Hero */
 .loc-hero {
   background: linear-gradient(135deg, #0d1b2a 0%, #1e3a5f 60%, #0d1b2a 100%);
   padding: 5rem 1.5rem 0;
@@ -363,7 +356,6 @@ useHead({
   height: 80px;
 }
 
-/* Stats */
 .loc-stats {
   background: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -407,7 +399,6 @@ useHead({
   flex-shrink: 0;
 }
 
-/* Members */
 .loc-members {
   padding: 3rem 1.5rem;
   background: #f3f4f6;
@@ -517,7 +508,6 @@ useHead({
   border: 1px solid #fecaca;
 }
 
-/* Footer */
 .loc-footer {
   background: #0d1b2a;
   color: #9ca3af;

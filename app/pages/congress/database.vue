@@ -1,6 +1,5 @@
 <template>
   <div class="loc-wrapper">
-    <!-- Navbar -->
     <nav class="loc-nav">
       <div class="loc-nav-inner">
         <NuxtLink to="/congress" class="loc-logo">
@@ -21,7 +20,6 @@
     </nav>
 
     <div class="db-page">
-      <!-- Page Header -->
       <div class="db-header">
         <h1 class="db-title">🏛️ Congressional Database</h1>
         <p class="db-subtitle">
@@ -29,7 +27,6 @@
         </p>
       </div>
 
-      <!-- Seat Distribution -->
       <div class="db-panel">
         <h2 class="db-panel-title">📊 Seat Distribution — Current Members</h2>
         <div class="db-charts">
@@ -109,7 +106,6 @@
         </div>
       </div>
 
-      <!-- State Map -->
       <div class="db-panel">
         <h2 class="db-panel-title">📍 State Representation Map</h2>
         <p class="db-panel-sub">Click a state to filter members. Color indicates dominant party.</p>
@@ -138,7 +134,6 @@
         </div>
       </div>
 
-      <!-- Search + Filters -->
       <div class="db-search-bar">
         <div class="db-search-input-wrap">
           <span class="db-search-icon">🔍</span>
@@ -167,7 +162,6 @@
         </select>
       </div>
 
-      <!-- Senate Listing -->
       <div v-if="!filterChamber || filterChamber === 'Senate'" class="db-section">
         <h2 class="db-section-title">Senate ({{ filteredSenate.length }})</h2>
         <div class="db-member-list">
@@ -195,7 +189,6 @@
         </div>
       </div>
 
-      <!-- House Listing -->
       <div v-if="!filterChamber || filterChamber === 'House'" class="db-section">
         <h2 class="db-section-title">House ({{ filteredHouse.length }})</h2>
         <div class="db-member-list">
@@ -502,7 +495,6 @@ useHead({
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* Navbar (shared with index) */
 .loc-nav {
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
@@ -588,7 +580,6 @@ useHead({
   color: #fff;
 }
 
-/* Page */
 .db-page {
   max-width: 900px;
   margin: 0 auto;
@@ -608,7 +599,6 @@ useHead({
   color: #6b7280;
 }
 
-/* Panel */
 .db-panel {
   background: #ffffff;
   border: 1px solid #e5e7eb;
@@ -628,7 +618,6 @@ useHead({
   margin-bottom: 1.25rem;
 }
 
-/* Donut Charts */
 .db-charts {
   display: flex;
   justify-content: center;
@@ -691,7 +680,6 @@ useHead({
   color: #ef4444;
 }
 
-/* State Grid */
 .state-grid {
   display: grid;
   grid-template-columns: repeat(11, 1fr);
@@ -780,7 +768,6 @@ useHead({
   color: #9ca3af;
 }
 
-/* Search */
 .db-search-bar {
   display: flex;
   gap: 0.75rem;
@@ -828,7 +815,6 @@ useHead({
   border-color: #3b82f6;
 }
 
-/* Member Sections */
 .db-section {
   margin-bottom: 2.5rem;
 }
@@ -953,7 +939,6 @@ useHead({
   padding: 1rem 0;
 }
 
-/* Footer */
 .loc-footer {
   background: #0d1b2a;
 }

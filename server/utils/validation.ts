@@ -142,15 +142,9 @@ export const validationSchemas = {
       .string()
       .max(5000, errorMessages.tooLong)
       .min(1, errorMessages.required)
-      .refine(customValidators.noSqlInjection, {
-        message: errorMessages.sqlInjection
-      })
-      .refine(customValidators.noXss, {
-        message: errorMessages.xssRisk
-      })
       .transform(val => val.trim().replace(/\s+/g, ' '))
       .optional(),
-    thread_id: z.string().regex(patterns.threadId, errorMessages.invalidId).optional()
+    thread_id: z.string().regex(patterns.threadId, errorMessages.invalidId).nullish()
   }),
 
   checkNusaBans: z.object({

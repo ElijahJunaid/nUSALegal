@@ -1,6 +1,5 @@
 <template>
   <div class="pp-root">
-    <!-- Nav -->
     <nav class="pp-nav">
       <div class="pp-nav-inner">
         <NuxtLink to="/parties" class="pp-logo">
@@ -14,7 +13,6 @@
       </div>
     </nav>
 
-    <!-- Masthead -->
     <div class="pp-masthead">
       <div class="pp-masthead-inner">
         <div class="pp-masthead-icon">🔴</div>
@@ -23,11 +21,8 @@
       </div>
     </div>
 
-    <!-- Content -->
     <div class="pp-content">
-      <!-- Two-column info row -->
       <div class="pp-info-row">
-        <!-- Quick Facts -->
         <div class="pp-card">
           <h2 class="pp-card-label">Quick Facts</h2>
           <div class="pp-fact">
@@ -44,7 +39,6 @@
           </div>
         </div>
 
-        <!-- About -->
         <div class="pp-card pp-about-card">
           <h2 class="pp-card-label">About the Pioneer Party</h2>
           <p class="pp-about-text">
@@ -75,7 +69,6 @@
         </div>
       </div>
 
-      <!-- Roster -->
       <div class="pp-card">
         <h2 class="pp-roster-title">Current Members of Congress</h2>
         <div v-if="congressStore.loading" class="pp-empty">Loading members…</div>
@@ -111,7 +104,6 @@
       </div>
     </div>
 
-    <!-- Footer -->
     <footer class="pp-footer">
       <p class="pp-footer-text">&copy; 2024 nUSA Political Parties · THIS IS NOT REAL LIFE!</p>
     </footer>
@@ -150,7 +142,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
 </script>
 
 <style scoped>
-/* ── Root ── */
 .pp-root {
   min-height: 100vh;
   background: #fff5f5;
@@ -160,7 +151,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   color: #1f2937;
 }
 
-/* ── Nav ── */
 .pp-nav {
   background: #ffffff;
   border-bottom: 2px solid #fecaca;
@@ -220,7 +210,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   background: #991b1b;
 }
 
-/* ── Masthead ── */
 .pp-masthead {
   background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 100%);
   padding: 3.5rem 1.5rem 3rem;
@@ -246,7 +235,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   color: #fecaca;
 }
 
-/* ── Content ── */
 .pp-content {
   flex: 1;
   max-width: 960px;
@@ -258,7 +246,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   gap: 1.75rem;
 }
 
-/* ── Two-column info row ── */
 .pp-info-row {
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -266,7 +253,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   align-items: start;
 }
 
-/* ── Card ── */
 .pp-card {
   background: #ffffff;
   border: 1.5px solid #fecaca;
@@ -288,7 +274,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   margin-bottom: 0.75rem;
 }
 
-/* ── Quick Facts ── */
 .pp-fact {
   display: flex;
   justify-content: space-between;
@@ -320,7 +305,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   border-radius: 9999px;
 }
 
-/* ── About ── */
 .pp-about-text {
   font-size: 0.875rem;
   color: #374151;
@@ -371,7 +355,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   background: #991b1b;
 }
 
-/* ── Roster ── */
 .pp-roster-title {
   font-size: 1rem;
   font-weight: 700;
@@ -449,7 +432,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   color: #6b7280;
 }
 
-/* ── Footer ── */
 .pp-footer {
   background: #7f1d1d;
   padding: 1.25rem 1.5rem;
@@ -461,7 +443,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   margin: 0;
 }
 
-/* ── Theme toggle ── */
 .pp-theme-btn {
   position: fixed;
   bottom: 1rem;
@@ -485,7 +466,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   background: #dc2626;
 }
 
-/* ── Dark mode ── */
 [data-theme='dark'] .pp-root {
   background: #1a0505;
   color: #e2e8f0;
@@ -551,7 +531,6 @@ useHead({ title: 'Pioneer Party - nUSA' })
   background: #100202;
 }
 
-/* ── Responsive ── */
 @media (max-width: 700px) {
   .pp-info-row {
     grid-template-columns: 1fr;

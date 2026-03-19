@@ -207,7 +207,6 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   position: relative;
 }
 
-/* Nav */
 .un-nav {
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
@@ -294,7 +293,6 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   color: #fff;
 }
 
-/* Legend */
 .map-legend {
   position: fixed;
   top: 68px;
@@ -337,14 +335,12 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   border: 1px solid #9ca3af;
 }
 
-/* Map */
 .un-map {
   flex: 1;
   width: 100%;
   min-height: 0;
 }
 
-/* Loading overlay */
 .map-loading {
   position: fixed;
   top: 50%;
@@ -359,7 +355,6 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-/* Footer */
 .un-footer {
   background: #001f3f;
   flex-shrink: 0;
@@ -373,7 +368,6 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   text-align: center;
 }
 
-/* Theme toggle */
 .theme-toggle {
   position: fixed;
   bottom: 1rem;
@@ -397,7 +391,6 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   background: #0057a3;
 }
 
-/* Dark mode */
 [data-theme='dark'] .un-wrapper {
   background: #111827;
 }
@@ -444,7 +437,6 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
 </style>
 
 <style>
-/* Global — Leaflet popup content styles (not scoped, injected into DOM by Leaflet) */
 .un-leaflet-popup .leaflet-popup-content-wrapper {
   border-radius: 0.625rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
@@ -510,7 +502,6 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   color: #6b7280;
 }
 
-/* Dark mode */
 [data-theme='dark'] .un-wrapper {
   background: #111827;
   color: #e5e7eb;

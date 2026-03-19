@@ -41,7 +41,8 @@ export default [
         clearTimeout: 'readonly',
         setInterval: 'readonly',
         clearInterval: 'readonly',
-        NodeJS: 'readonly'
+        NodeJS: 'readonly',
+        HTMLDialogElement: 'readonly'
       }
     },
     plugins: {
@@ -180,7 +181,7 @@ export default [
     files: ['scripts/**/*.js', '*.js'],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: {
         console: 'readonly',
         process: 'readonly',
@@ -249,10 +250,10 @@ export default [
     files: [
       'app/components/ChatbotWidget.vue',
       'app/components/EnhancedSearch.vue',
-      'app/pages/constitution.vue',
-      'app/pages/frcp-frcmp.vue',
-      'app/pages/mock-trial.vue',
-      'app/pages/laws.vue',
+      'app/pages/legal/constitution.vue',
+      'app/pages/legal/frcp-frcmp.vue',
+      'app/pages/legal/mock-trial.vue',
+      'app/pages/legal/laws.vue',
       'app/pages/ai-chat.vue',
       'app/components/laws/federal-eo.vue',
       'app/components/laws/municipal.vue'
