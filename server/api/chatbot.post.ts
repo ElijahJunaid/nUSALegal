@@ -242,7 +242,7 @@ const TOOL_DEFINITIONS: OpenAI.Beta.Assistants.AssistantTool[] = [
   }
 ]
 
-export default defineEventHandler(async event => {
+const handler = defineEventHandler(async event => {
   const rateLimit = await apiRateLimiter.check(event)
   if (!rateLimit.allowed) {
     throw createError({
@@ -626,3 +626,8 @@ export default defineEventHandler(async event => {
     })
   }
 })
+
+// Mark as already wrapped to prevent Nitro double-wrapping warning
+;(handler as unknown as Record<string, unknown>).__is_handler__ = true
+
+export default handler
