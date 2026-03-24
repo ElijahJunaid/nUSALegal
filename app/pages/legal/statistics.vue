@@ -207,6 +207,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useApiToken } from '~/composables/useApiToken'
+import { dError } from '~/plugins/debug-logger.client'
 
 definePageMeta({
   title: 'Statistics',
@@ -245,6 +247,9 @@ const mostActiveDepts = ref([])
 
 onMounted(async () => {
   try {
+    const { getToken } = useApiToken()
+    const token = await getToken('statistics')
+
     const data = await $fetch<{
       caseStats: {
         totalCases: number
@@ -266,7 +271,11 @@ onMounted(async () => {
       topDefense: unknown[]
       topJudges: unknown[]
       mostActiveDepts: unknown[]
-    }>('/api/statistics')
+    }>('/api/statistics', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
 
     caseStats.value = data.caseStats
     topCharges.value = data.topCharges
@@ -279,7 +288,7 @@ onMounted(async () => {
     topJudges.value = data.topJudges
     mostActiveDepts.value = data.mostActiveDepts
   } catch (error) {
-    console.error('Failed to fetch statistics:', error)
+    dError('Failed to fetch statistics:', error)
   }
 })
 </script>

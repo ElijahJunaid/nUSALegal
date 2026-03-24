@@ -1,6 +1,20 @@
 import { defineNuxtPlugin, useRouter } from '#imports'
 
+export const DEBUG = false
+
+export const dLog = (...a: unknown[]) => {
+  if (DEBUG) console.log(...a)
+}
+export const dWarn = (...a: unknown[]) => {
+  if (DEBUG) console.warn(...a)
+}
+export const dError = (...a: unknown[]) => {
+  if (DEBUG) console.error(...a)
+}
+
 export default defineNuxtPlugin(nuxtApp => {
+  if (!DEBUG) return
+
   console.log('🔷 [DEBUG] Plugin initialized')
 
   const router = useRouter()
@@ -43,19 +57,23 @@ export default defineNuxtPlugin(nuxtApp => {
 
     const OriginalWebSocket = window.WebSocket
     const WebSocketProxy = function (url: string | URL, protocols?: string | string[]) {
-      console.log('🔷 [DEBUG] WebSocket connecting:', url)
+      const currentOrigin = window.location.origin
+      console.log(`🔷 [DEBUG] WebSocket connecting to: ${url} (Current Origin: ${currentOrigin})`)
       const ws = new OriginalWebSocket(url, protocols)
 
       ws.addEventListener('open', () => {
-        console.log('🔷 [DEBUG] WebSocket opened:', url)
+        console.log('✅ [DEBUG] WebSocket opened:', url)
       })
 
-      ws.addEventListener('close', () => {
-        console.log('🔷 [DEBUG] WebSocket closed:', url)
+      ws.addEventListener('close', event => {
+        console.log(
+          `❌ [DEBUG] WebSocket closed (Code: ${event.code}, Reason: ${event.reason}):`,
+          url
+        )
       })
 
       ws.addEventListener('error', error => {
-        console.error('🔷 [DEBUG] WebSocket error:', url, error)
+        console.error('❌ [DEBUG] WebSocket error:', url, error)
       })
 
       return ws

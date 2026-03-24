@@ -1,14 +1,15 @@
 import { constitutionArticles } from '../../data/constitution'
 import { defineEventHandler, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
+import { dLog, dError } from '../../utils/debug'
 
 export default defineEventHandler(async event => {
-  console.log('🔍 [DEBUG] Constitution API called (direct TypeScript import)')
+  dLog('🔍 [DEBUG] Constitution API called (direct TypeScript import)')
 
   try {
-    console.log('🔐 [DEBUG] Validating API access...')
+    dLog('🔐 [DEBUG] Validating API access...')
     validateApiAccess(event, 'constitution/constitution')
-    console.log('✅ [DEBUG] API access validated')
+    dLog('✅ [DEBUG] API access validated')
 
     const result = constitutionArticles.map(article => ({
       title: article.title,
@@ -17,10 +18,10 @@ export default defineEventHandler(async event => {
       key: `article${article.number}`
     }))
 
-    console.log('📊 [DEBUG] Returning', result.length, 'constitution articles')
+    dLog('📊 [DEBUG] Returning', result.length, 'constitution articles')
     return result
   } catch (error) {
-    console.error('❌ [ERROR] Constitution API failed:', error)
+    dError('❌ [ERROR] Constitution API failed:', error)
     throw createError({
       status: 500,
       statusText: 'Failed to fetch constitution articles',

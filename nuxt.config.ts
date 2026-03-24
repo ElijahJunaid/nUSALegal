@@ -19,7 +19,10 @@ export default defineNuxtConfig({
     },
     server: {
       hmr: {
-        clientPort: 8888
+        // When running through Netlify Dev proxy (port 8888 → 3001), tell the browser
+        // to connect the HMR WebSocket to 8888 so it goes through the proxy.
+        clientPort: process.env.NETLIFY ? 8888 : undefined,
+        host: '127.0.0.1'
       }
     }
   },

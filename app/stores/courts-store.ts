@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { dError } from '~/plugins/debug-logger.client'
 
 export interface CourtCase {
   title: string
@@ -96,7 +97,7 @@ export const useCourtsStore = defineStore('courts', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || `Failed to fetch volume ${vol}`
-        console.error(`Failed to fetch volume ${vol}:`, err)
+        dError(`Failed to fetch volume ${vol}:`, err)
       } finally {
         this.loading = false
       }

@@ -18,29 +18,44 @@
       </div>
     </nav>
 
-    <div class="map-legend">
-      <span class="legend-item">
-        <span class="legend-dot member"></span>
-        Member
-      </span>
-      <span class="legend-item">
-        <span class="legend-dot observer"></span>
-        Observer
-      </span>
-      <span class="legend-item">
-        <span class="legend-dot allied"></span>
-        Allied
-      </span>
-      <span class="legend-item">
-        <span class="legend-dot none"></span>
-        Not a member
-      </span>
+    <div class="view-controls">
+      <button @click="viewMode = '2d'" class="view-btn" :class="{ active: viewMode === '2d' }">
+        🗺️ 2D Map
+      </button>
+      <button @click="viewMode = '3d'" class="view-btn" :class="{ active: viewMode === '3d' }">
+        🌍 3D Globe
+      </button>
     </div>
 
-    <div ref="mapEl" class="un-map"></div>
+    <div v-show="viewMode === '2d'" class="map-container">
+      <div class="map-legend">
+        <span class="legend-item">
+          <span class="legend-dot member"></span>
+          Member
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot observer"></span>
+          Observer
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot allied"></span>
+          Allied
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot none"></span>
+          Not a member
+        </span>
+      </div>
 
-    <div v-if="mapLoading" class="map-loading">
-      <span>Loading map…</span>
+      <div ref="mapEl" class="un-map"></div>
+
+      <div v-if="mapLoading" class="map-loading">
+        <span>Loading map…</span>
+      </div>
+    </div>
+
+    <div v-if="viewMode === '3d'" class="globe-view">
+      <UnEarthGlobe />
     </div>
 
     <footer class="un-footer">
@@ -69,7 +84,12 @@ import type { FeatureCollection } from 'geojson'
 import { useTheme } from '~/composables/useTheme'
 import { unNations } from '~/data/un-nations'
 
+definePageMeta({
+  layout: false
+})
+
 const { theme, toggleTheme } = useTheme()
+const viewMode = ref<'2d' | '3d'>('2d')
 
 const mapEl = ref<HTMLElement | null>(null)
 const mapLoading = ref(true)
@@ -293,11 +313,86 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   color: #fff;
 }
 
-.map-legend {
+.view-controls {
   position: fixed;
   top: 68px;
-  right: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 500;
+  display: flex;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  padding: 0.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.view-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.view-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.view-btn.active {
+  background: #003e73;
+  color: #ffffff;
+}
+
+.map-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
+}
+
+.globe-view {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  background: #000c1d;
+  overflow: hidden;
+}
+
+[data-theme='dark'] .view-controls {
+  background: rgba(31, 41, 55, 0.9);
+  border-color: #374151;
+}
+
+[data-theme='dark'] .view-btn {
+  color: #9ca3af;
+}
+
+[data-theme='dark'] .view-btn:hover {
+  background: #374151;
+  color: #e5e7eb;
+}
+
+[data-theme='dark'] .view-btn.active {
+  background: #003e73;
+  color: #ffffff;
+}
+
+.map-legend {
+  position: absolute;
+  top: 10px;
+  right: 1rem;
+  z-index: 450;
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;

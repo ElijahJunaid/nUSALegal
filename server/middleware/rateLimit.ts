@@ -1,5 +1,6 @@
 import { defaultRateLimiter, strictRateLimiter } from '../utils/rateLimit'
 import { defineEventHandler, getRequestURL, getHeader } from 'h3'
+import { dError } from '../utils/debug'
 
 export default defineEventHandler(async event => {
   try {
@@ -27,7 +28,7 @@ export default defineEventHandler(async event => {
       return
     }
   } catch (error: unknown) {
-    console.error('Rate limiting middleware error:', error)
+    dError('Rate limiting middleware error:', error)
     if (getHeader(event, 'x-debug') === '1' && event.node?.res) {
       const e = error instanceof Error ? error : null
       event.node.res.setHeader('Content-Type', 'application/json')

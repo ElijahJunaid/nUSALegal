@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useApiToken } from '~/composables/useApiToken'
+import { dError } from '~/plugins/debug-logger.client'
 
 export interface CongressMember {
   name: string
@@ -56,7 +57,7 @@ export const useCongressStore = defineStore('congress', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch congress members'
-        console.error('Failed to fetch congress members:', err)
+        dError('Failed to fetch congress members:', err)
       } finally {
         this.loading = false
       }
@@ -80,7 +81,7 @@ export const useCongressStore = defineStore('congress', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch former members'
-        console.error('Failed to fetch former congress members:', err)
+        dError('Failed to fetch former congress members:', err)
       }
     }
   }

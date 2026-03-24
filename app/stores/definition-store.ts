@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { dError } from '~/plugins/debug-logger.client'
 
 export interface Definition {
   title: string
@@ -63,7 +64,7 @@ export const useDefinitionStore = defineStore('definition', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Definition'
-        console.error('Failed to fetch Definition:', err)
+        dError('Failed to fetch Definition:', err)
       } finally {
         this.loading = false
       }

@@ -38,7 +38,6 @@
       </div>
 
       <div id="chat-messages" ref="messagesContainer" aria-live="polite">
-        <!-- Starter questions when empty -->
         <div v-if="store.messages.length <= 1 && !store.isLoading" class="starter-questions">
           <p class="starter-label">Try asking:</p>
           <button

@@ -97,11 +97,13 @@
 
 <script lang="ts" setup>
 import { useBillsStore } from '~/stores/bills-store'
+import { dError } from '~/plugins/debug-logger.client'
 import { useHead, definePageMeta, storeToRefs, onMounted } from '#imports'
 
 definePageMeta({
   title: 'Legislation & Bills',
-  description: 'View Congress and City Council bills and legislation'
+  description: 'View Congress and City Council bills and legislation',
+  layout: false
 })
 
 const billsStore = useBillsStore()
@@ -129,7 +131,7 @@ async function openPDF(pdfPath: string) {
       alert('Pop-up was blocked. Please allow pop-ups for this site to view PDFs.')
     }
   } catch (error: unknown) {
-    console.error('Failed to open PDF:', error)
+    dError('Failed to open PDF:', error)
 
     const err = error as {
       data?: { statusMessage?: string }

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { dError } from '~/plugins/debug-logger.client'
 import { useApiToken } from '~/composables/useApiToken'
 
 export interface Constitution {
@@ -83,7 +84,7 @@ export const useConstitutionStore = defineStore('constitution', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Constitution'
-        console.error('Failed to fetch Constitution:', err)
+        dError('Failed to fetch Constitution:', err)
       } finally {
         this.loading = false
       }
@@ -116,7 +117,7 @@ export const useConstitutionStore = defineStore('constitution', {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error =
           e?.data?.statusMessage || e?.message || 'Failed to fetch Constitution Amendments'
-        console.error('Failed to fetch Constitution Amendments:', err)
+        dError('Failed to fetch Constitution Amendments:', err)
       } finally {
         this.loading = false
       }

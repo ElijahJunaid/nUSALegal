@@ -1,6 +1,7 @@
 import { municipalLaws } from '../../data/municipal-laws'
 import { defineEventHandler, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
+import { dError } from '../../utils/debug'
 
 interface LawEntry {
   title: string
@@ -52,7 +53,7 @@ export default defineEventHandler(async event => {
 
     return grouped
   } catch (error) {
-    console.error('Error fetching municipal laws:', error)
+    dError('Error fetching municipal laws:', error)
     throw createError({
       status: 500,
       statusText: 'Failed to fetch municipal laws'

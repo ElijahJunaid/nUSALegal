@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { dError } from './debug'
 
 interface TrelloCard {
   name: string
@@ -103,7 +104,7 @@ async function checkBoardCategory(
         }))
       )
     } catch (error: unknown) {
-      console.error(
+      dError(
         `Error accessing board ${boardId}:`,
         axios.isAxiosError(error) ? error.response?.statusText || error.message : String(error)
       )
@@ -117,7 +118,7 @@ export async function checkTrelloBoards(username: string): Promise<TrelloCheckRe
   const { key, token } = getTrelloConfig()
 
   if (!key || !token) {
-    console.error('Missing Trello credentials')
+    dError('Missing Trello credentials')
     return {
       hasSevereBans: false,
       hasMinorBans: false,

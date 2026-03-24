@@ -14,7 +14,6 @@ export interface CongressMember {
 export const activeSessions: number = 1
 
 export const congressMembers: CongressMember[] = [
-  // Senate - Active
   {
     name: 'Claire Wolfewere',
     username: 'ClaireWolfwere',
@@ -147,7 +146,6 @@ export const congressMembers: CongressMember[] = [
     term: '',
     class: ''
   },
-  // House - Active
   {
     name: 'JohnCulture',
     username: 'JohnCulture',
@@ -295,7 +293,6 @@ export const congressMembers: CongressMember[] = [
 ]
 
 export const formerCongressMembers: CongressMember[] = [
-  // Senate - Former
   {
     name: 'Claire Wolfewere',
     username: 'ClaireWolfwere',
@@ -308,7 +305,6 @@ export const formerCongressMembers: CongressMember[] = [
     term: '',
     class: ''
   },
-  // House - Former
   {
     name: 'XanderOppst',
     username: 'XanderOppst',

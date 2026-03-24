@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { dError, dWarn } from '~/plugins/debug-logger.client'
 
 export interface VIPBase {
   userId: string
@@ -101,7 +102,7 @@ export const useResourceVIPStore = defineStore('resource-vips', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch VIP resource'
-        console.error('Failed to fetch VIP resource:', err)
+        dError('Failed to fetch VIP resource:', err)
         this.loading = false
       }
     },
@@ -127,7 +128,7 @@ export const useResourceVIPStore = defineStore('resource-vips', {
             hasError: false
           }
         } catch (error) {
-          console.warn(`Failed to enrich data for user ${vip.userId}:`, error)
+          dWarn(`Failed to enrich data for user ${vip.userId}:`, error)
           this.data[index] = {
             ...vip,
             isLoading: false,

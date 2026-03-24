@@ -1,6 +1,7 @@
 import { frcpRules } from '../../data/federal-rules-frcp'
 import { defineEventHandler, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
+import { dError } from '../../utils/debug'
 
 interface FrcpRule {
   number: string
@@ -41,7 +42,7 @@ export default defineEventHandler(async event => {
       data: groupedRules[label]
     }))
   } catch (error) {
-    console.error('Error fetching FRCP rules:', error)
+    dError('Error fetching FRCP rules:', error)
     throw createError({
       status: 500,
       statusText: 'Failed to fetch FRCP rules'

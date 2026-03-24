@@ -1,12 +1,13 @@
 import { validateApiToken } from './apiTokens'
 import { createError, type H3Event } from 'h3'
+import { dLog } from './debug'
 
 export function validateApiAccess(event: H3Event, endpoint: string) {
-  console.log(' [DEBUG] Validating access for endpoint:', endpoint)
+  dLog(' [DEBUG] Validating access for endpoint:', endpoint)
 
   const headers = event.node?.req?.headers
   const authHeader = headers?.authorization
-  console.log(' [DEBUG] Auth header present:', !!authHeader)
+  dLog(' [DEBUG] Auth header present:', !!authHeader)
 
   if (!authHeader) {
     throw createError({

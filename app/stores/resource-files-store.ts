@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { dError } from '~/plugins/debug-logger.client'
 
 export interface ResourceFile {
   title: string
@@ -61,7 +62,7 @@ export const useResourceFileStore = defineStore('resource-file', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Resource Files'
-        console.error('Failed to fetch Resource Files:', err)
+        dError('Failed to fetch Resource Files:', err)
       } finally {
         this.loading = false
       }

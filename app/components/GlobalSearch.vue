@@ -74,6 +74,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { dLog, dError } from '~/plugins/debug-logger.client'
 
 interface SearchResult {
   id?: string
@@ -127,7 +128,7 @@ const handleSearch = async () => {
       })
       results.value = response.results
     } catch (error) {
-      console.error('Search error:', error)
+      dError('Search error:', error)
       results.value = []
     } finally {
       isLoading.value = false
@@ -144,7 +145,7 @@ const clearSearch = () => {
 const selectResult = (result: SearchResult) => {
   showResults.value = false
 
-  console.log('Selected:', result)
+  dLog('Selected:', result)
 }
 
 const getBadgeClass = (type: string) => {

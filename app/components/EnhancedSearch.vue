@@ -115,6 +115,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { dError } from '~/plugins/debug-logger.client'
 import { useRouter } from 'vue-router'
 import { useApiToken } from '~/composables/useApiToken'
 import { useSanitize } from '~/composables/useSanitize'
@@ -179,7 +180,7 @@ const performSearch = async () => {
     searchResults.value = results as SearchResult[]
     showResults.value = true
   } catch (error) {
-    console.error('Search error:', error)
+    dError('Search error:', error)
     searchResults.value = []
   } finally {
     isSearching.value = false

@@ -1,5 +1,6 @@
 import { defineEventHandler, getRouterParam, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
+import { dError } from '../../utils/debug'
 
 interface NewsArticle {
   id: string
@@ -93,7 +94,7 @@ export default defineEventHandler(async event => {
 
     return article
   } catch (error) {
-    console.error('Error fetching news article:', error)
+    dError('Error fetching news article:', error)
     if (error instanceof Error && 'statusCode' in error) {
       throw error
     }

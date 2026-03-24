@@ -2,7 +2,6 @@ import { marked } from 'marked'
 import { markedHighlight } from 'marked-highlight'
 import hljs from 'highlight.js'
 
-// Configure marked with syntax highlighting
 marked.use(
   markedHighlight({
     langPrefix: 'hljs language-',
@@ -18,7 +17,6 @@ marked.setOptions({
   gfm: true
 })
 
-// Parse OpenAI citation markers like 【4:2†source】 into readable footnotes
 function renderCitations(text: string): { html: string; sources: string[] } {
   const sources: string[] = []
   const citationPattern = /【(\d+):(\d+)†([^】]+)】/g
@@ -34,7 +32,6 @@ function renderCitations(text: string): { html: string; sources: string[] } {
   return { html, sources }
 }
 
-// Also handle bracket-style citations: [4:2†source]
 function renderBracketCitations(text: string, sources: string[]): string {
   const bracketPattern = /\[(\d+):(\d+)†([^\]]+)\]/g
   return text.replace(bracketPattern, (_match, _idx, _sub, source) => {
@@ -50,11 +47,9 @@ export function useMarkdown() {
   const parseMarkdown = (text: string): { html: string; sources: string[] } => {
     if (!text) return { html: '', sources: [] }
 
-    // Process citations first
     const { html: withCitations, sources } = renderCitations(text)
     const withAllCitations = renderBracketCitations(withCitations, sources)
 
-    // Parse markdown
     const parsed = marked.parse(withAllCitations) as string
 
     return { html: parsed, sources }

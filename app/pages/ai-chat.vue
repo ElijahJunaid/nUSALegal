@@ -49,7 +49,6 @@
       </div>
 
       <div class="messages-area" ref="messagesContainer">
-        <!-- Starter questions when empty -->
         <div v-if="store.messages.length <= 1 && !store.isLoading" class="starter-questions">
           <p class="starter-label">Try asking:</p>
           <div class="starter-chips">

@@ -1,4 +1,5 @@
 import { defineEventHandler, createError, type H3Event } from 'h3'
+import { dLog } from '../utils/debug'
 import type { IncomingMessage } from 'http'
 
 interface FeedbackBody {
@@ -26,7 +27,7 @@ const handler = defineEventHandler(async event => {
     throw createError({ status: 400, message: 'rating must be "up" or "down"' })
   }
 
-  console.log('[Chatbot Feedback]', {
+  dLog('[Chatbot Feedback]', {
     thread_id: body.thread_id,
     message_index: body.message_index,
     rating: body.rating,
@@ -37,7 +38,6 @@ const handler = defineEventHandler(async event => {
   return { success: true }
 })
 
-// Mark as already wrapped to prevent Nitro double-wrapping warning
 ;(handler as unknown as Record<string, unknown>).__is_handler__ = true
 
 export default handler

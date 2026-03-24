@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useApiToken } from '~/composables/useApiToken'
+import { dError } from '~/plugins/debug-logger.client'
 
 export interface Business {
   name: string
@@ -47,7 +48,7 @@ export const useDocalStore = defineStore('docal', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch businesses'
-        console.error('Failed to fetch DOCAL businesses:', err)
+        dError('Failed to fetch DOCAL businesses:', err)
       } finally {
         this.loading = false
       }

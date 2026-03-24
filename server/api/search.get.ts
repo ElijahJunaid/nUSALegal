@@ -1,4 +1,5 @@
 import { congressBills } from '../data/congress-bills'
+import { dError } from '../utils/debug'
 import { cityCouncilBills } from './bills/city-council'
 import { federalLaws } from '../data/laws'
 import { definitions } from '../data/definitions'
@@ -121,7 +122,7 @@ export default defineEventHandler(async event => {
 
     return { results, total: results.length }
   } catch (error) {
-    console.error('Search error:', error)
+    dError('Search error:', error)
     throw createError({
       status: 500,
       statusText: 'Search failed'

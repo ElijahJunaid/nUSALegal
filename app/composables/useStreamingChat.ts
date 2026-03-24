@@ -16,7 +16,6 @@ export function useStreamingChat() {
         body: JSON.stringify({ query, thread_id: store.threadId })
       })
 
-      // Non-streaming response (greeting/guard responses return JSON)
       const contentType = response.headers.get('content-type') || ''
       if (contentType.includes('application/json')) {
         const data = await response.json()
@@ -59,7 +58,6 @@ export function useStreamingChat() {
         return
       }
 
-      // SSE streaming response
       const reader = response.body!.getReader()
       const decoder = new TextDecoder()
 
@@ -70,11 +68,9 @@ export function useStreamingChat() {
       const streamStart = Date.now()
       let idleWarningShown = false
 
-      // Idle timeout checker — shows "still thinking" if no tokens for 15s
       const idleInterval = setInterval(() => {
         const now = Date.now()
 
-        // Total stream timeout (90s)
         if (now - streamStart > STREAM_TIMEOUT_MS) {
           clearInterval(idleInterval)
           reader.cancel()
@@ -86,7 +82,6 @@ export function useStreamingChat() {
           return
         }
 
-        // Idle warning (15s no tokens)
         if (
           now - lastTokenTime > IDLE_TIMEOUT_MS &&
           !idleWarningShown &&
@@ -113,7 +108,6 @@ export function useStreamingChat() {
                 const data = JSON.parse(line.slice(6))
                 if (data.thread_id) store.setThreadId(data.thread_id)
                 if (data.token) {
-                  // Remove "still thinking" if it was appended
                   if (idleWarningShown) {
                     store.messages[msgIdx].text = store.messages[msgIdx].text.replace(
                       /\n\n_Still thinking\.\.\._$/,
@@ -147,7 +141,6 @@ export function useStreamingChat() {
         clearInterval(idleInterval)
       }
 
-      // Remove empty bot messages
       if (!store.messages[msgIdx].text) {
         store.messages.splice(msgIdx, 1)
       }

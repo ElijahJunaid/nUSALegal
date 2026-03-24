@@ -1,4 +1,5 @@
 import { OpenAI } from 'openai'
+import { dError } from '../utils/debug'
 import { tavily } from '@tavily/core'
 import { apiRateLimiter } from '../utils/rateLimit'
 import { defineEventHandler, createError } from 'h3'
@@ -18,7 +19,6 @@ interface ChatbotRequestBody {
 const THREAD_ID_PATTERN = /^thread_[a-zA-Z0-9]{24,}$/
 const VECTOR_STORE_ID_PATTERN = /^vs_[a-zA-Z0-9]{24,}$/
 
-// ── Version-controlled system prompt (Critical Fix #1C) ──
 const CASEBOT_SYSTEM_INSTRUCTIONS = `
 You are CaseBot, the official AI legal assistant for the nUSA (Nightglade's United States of America) —
 a Roblox roleplay nation with a comprehensive legal system modeled after the United States.
@@ -42,7 +42,6 @@ function sanitizeInput(input: string): string {
   return input.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-// ── GPT-4o Intent Guard (Critical Fix #3 — replaces keyword filter) ──
 async function classifyQuery(
   openai: OpenAI,
   query: string
@@ -81,13 +80,11 @@ Respond with JSON only: { "classification": "LEGAL"|"GREETING"|"OFF_TOPIC"|"HARM
       return JSON.parse(content)
     }
   } catch (error) {
-    console.error('[Chatbot] Intent guard error, defaulting to LEGAL:', error)
+    dError('[Chatbot] Intent guard error, defaulting to LEGAL:', error)
   }
-  // Default to LEGAL on failure — don't block legitimate questions
   return { classification: 'LEGAL', reason: 'guard fallback' }
 }
 
-// ── Internal Law Search Tool (Phase 1D) ──
 function searchNusaLaws(query: string, type?: string): string {
   const queryLower = query.toLowerCase()
   const results: Array<{ title: string; category: string; description: string }> = []
@@ -160,30 +157,25 @@ function searchNusaLaws(query: string, type?: string): string {
     return 'No matching nUSA laws found for that query.'
   }
 
-  // Limit to top 5 results to keep context manageable
   return results
     .slice(0, 5)
     .map(r => `**${r.title}** (${r.category})\n${r.description}`)
     .join('\n\n---\n\n')
 }
 
-// ── Statute Lookup Tool ──
 function getStatute(id: string): string {
   const idLower = id.toLowerCase()
 
-  // Search federal laws
   const federal = federalLaws.find(
     l => l.title.toLowerCase() === idLower || l.uscode?.toLowerCase() === idLower
   )
   if (federal) return `**${federal.title}** (${federal.category})\n${federal.description}`
 
-  // Search EOs
   const eo = executiveOrders.find(
     e => e.number.toLowerCase() === idLower || e.title.toLowerCase() === idLower
   )
   if (eo) return `**${eo.number} - ${eo.title}** (${eo.category})\n${eo.description}`
 
-  // Search municipal laws
   const muni = municipalLaws.find(
     m => m.code.toLowerCase() === idLower || m.title.toLowerCase() === idLower
   )
@@ -192,7 +184,6 @@ function getStatute(id: string): string {
   return `No statute found with identifier "${id}".`
 }
 
-// ── Tool definitions for the assistant ──
 const TOOL_DEFINITIONS: OpenAI.Beta.Assistants.AssistantTool[] = [
   { type: 'file_search' as const },
   {
@@ -279,7 +270,7 @@ const handler = defineEventHandler(async event => {
   const ASSISTANT_ID = config.assistantId as string
 
   if (!OPENAI_API_KEY || !TAVILY_API_KEY || !VECTOR_STORE_ID || !ASSISTANT_ID) {
-    console.error('[Chatbot] Missing required environment variables')
+    dError('[Chatbot] Missing required environment variables')
     throw createError({
       status: 500,
       statusText: 'Internal Server Error',
@@ -288,7 +279,7 @@ const handler = defineEventHandler(async event => {
   }
 
   if (!VECTOR_STORE_ID_PATTERN.test(VECTOR_STORE_ID)) {
-    console.error('[Chatbot] Invalid vectorStoreId format')
+    dError('[Chatbot] Invalid vectorStoreId format')
     throw createError({
       status: 500,
       statusText: 'Internal Server Error',
@@ -304,7 +295,6 @@ const handler = defineEventHandler(async event => {
 
   const tavilyClient = tavily({ apiKey: TAVILY_API_KEY })
 
-  // ── Critical Fix #3: GPT-4o intent guard replaces keyword filter ──
   const guardResult = await classifyQuery(openai, query)
 
   if (guardResult.classification === 'GREETING') {
@@ -332,7 +322,6 @@ const handler = defineEventHandler(async event => {
     }
   }
 
-  // ── Tavily search helper ──
   async function tavilySearch(q: string): Promise<string> {
     try {
       const response = await tavilyClient.search(q)
@@ -344,12 +333,11 @@ const handler = defineEventHandler(async event => {
       return 'No relevant results found on the web.'
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : 'Unknown error'
-      console.error('[Chatbot] Error performing Tavily search:', msg)
+      dError('[Chatbot] Error performing Tavily search:', msg)
       return `Error performing Tavily search: ${msg}`
     }
   }
 
-  // ── Handle tool calls during streaming ──
   async function handleToolCall(name: string, args: Record<string, string>): Promise<string> {
     switch (name) {
       case 'tavily_search':
@@ -364,7 +352,6 @@ const handler = defineEventHandler(async event => {
   }
 
   try {
-    // Create thread if needed
     if (!thread_id) {
       const thread = await openai.beta.threads.create({
         tool_resources: {
@@ -374,13 +361,11 @@ const handler = defineEventHandler(async event => {
       thread_id = thread.id
     }
 
-    // Add user message
     await openai.beta.threads.messages.create(thread_id, {
       role: 'user',
       content: query
     })
 
-    // ── Critical Fix #1: SSE Streaming replaces createAndPoll ──
     const res = event.node.res as import('http').ServerResponse
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
@@ -388,15 +373,12 @@ const handler = defineEventHandler(async event => {
     res.setHeader('X-Accel-Buffering', 'no')
     res.flushHeaders()
 
-    // Send thread_id immediately so client can track it
     res.write(`data: ${JSON.stringify({ thread_id })}\n\n`)
 
-    // Track full response and metadata
     let fullResponse = ''
     const startTime = Date.now()
     const toolsUsed: string[] = []
 
-    // Start streaming run with exponential backoff retry (Phase 3A)
     const MAX_RETRIES = 3
     let stream: ReturnType<typeof openai.beta.threads.runs.stream> | null = null
 
@@ -418,7 +400,6 @@ const handler = defineEventHandler(async event => {
     if (!stream) throw new Error('Failed to start stream after retries')
 
     for await (const chunk of stream) {
-      // Stream text tokens
       if (chunk.event === 'thread.message.delta') {
         const delta = (
           chunk.data as { delta?: { content?: Array<{ type: string; text?: { value?: string } }> } }
@@ -429,7 +410,6 @@ const handler = defineEventHandler(async event => {
         }
       }
 
-      // ── Critical Fix #2: Handle tool calls properly within the stream ──
       if (chunk.event === 'thread.run.requires_action') {
         const run = chunk.data as {
           id: string
@@ -454,7 +434,6 @@ const handler = defineEventHandler(async event => {
             })
           )
 
-          // Submit tool outputs and continue streaming (fixes the polling bug)
           const toolStream = openai.beta.threads.runs.submitToolOutputsStream(run.id, {
             tool_outputs: toolOutputs,
             thread_id: run.thread_id
@@ -473,7 +452,6 @@ const handler = defineEventHandler(async event => {
               }
             }
 
-            // Handle nested tool calls (if the assistant calls another tool after the first)
             if (toolChunk.event === 'thread.run.requires_action') {
               const nestedRun = toolChunk.data as {
                 id: string
@@ -521,7 +499,6 @@ const handler = defineEventHandler(async event => {
         }
       }
 
-      // Stream completed — generate follow-up suggestions
       if (chunk.event === 'thread.run.completed') {
         let followups: string[] = []
         try {
@@ -549,7 +526,6 @@ const handler = defineEventHandler(async event => {
           // Follow-ups are optional — don't block the response
         }
 
-        // Fetch annotations for citation source names and quotes
         const citations: Array<{ filename: string; quote?: string }> = []
         try {
           const messagesResponse = await openai.beta.threads.messages.list(thread_id!, {
@@ -577,7 +553,6 @@ const handler = defineEventHandler(async event => {
                         filename = fileId
                       }
                     }
-                    // Deduplicate by filename+quote
                     const exists = citations.some(c => c.filename === filename && c.quote === quote)
                     if (!exists) {
                       citations.push({ filename, quote })
@@ -597,9 +572,8 @@ const handler = defineEventHandler(async event => {
         )
       }
 
-      // Handle run failure
       if (chunk.event === 'thread.run.failed') {
-        console.error('[Chatbot] Run failed:', chunk.data)
+        dError('[Chatbot] Run failed:', chunk.data)
         res.write(
           `data: ${JSON.stringify({ error: 'CaseBot encountered an error processing your request. Please try again.' })}\n\n`
         )
@@ -608,9 +582,8 @@ const handler = defineEventHandler(async event => {
 
     res.end()
   } catch (error: unknown) {
-    console.error('[Chatbot] Unhandled error:', error)
+    dError('[Chatbot] Unhandled error:', error)
 
-    // If headers already sent (streaming started), try to send error via SSE
     if (event.node.res.headersSent) {
       event.node.res.write(
         `data: ${JSON.stringify({ error: 'An unexpected error occurred. Please try again.' })}\n\n`
@@ -627,7 +600,6 @@ const handler = defineEventHandler(async event => {
   }
 })
 
-// Mark as already wrapped to prevent Nitro double-wrapping warning
 ;(handler as unknown as Record<string, unknown>).__is_handler__ = true
 
 export default handler

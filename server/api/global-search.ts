@@ -1,5 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
 import { validateApiAccess } from '../utils/validateApiAccess'
+import { dError } from '../utils/debug'
 import { federalLaws } from '../data/laws'
 import { frcpRules } from '../data/federal-rules-frcp'
 import { frcmpRules } from '../data/federal-rules-frcmp'
@@ -203,7 +204,7 @@ export default defineEventHandler(async event => {
 
     return results.slice(0, 50)
   } catch (error) {
-    console.error('Error in global search:', error)
+    dError('Error in global search:', error)
     throw createError({
       status: 500,
       statusText: 'Failed to perform search'

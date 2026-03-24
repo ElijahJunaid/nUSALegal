@@ -1,5 +1,6 @@
 import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
 import { onCLS, onINP, onFCP, onLCP, onTTFB, type Metric } from 'web-vitals'
+import { dLog } from '~/plugins/debug-logger.client'
 
 export default defineNuxtPlugin(nuxtApp => {
   const config = useRuntimeConfig()
@@ -7,7 +8,7 @@ export default defineNuxtPlugin(nuxtApp => {
   if (process.client) {
     const sendToAnalytics = (metric: Metric) => {
       if (config.public.environment === 'development') {
-        console.log(`[Web Vitals] ${metric.name}:`, {
+        dLog(`[Web Vitals] ${metric.name}:`, {
           value: metric.value,
           rating: metric.rating,
           delta: metric.delta

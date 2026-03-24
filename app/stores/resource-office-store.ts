@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { dError } from '~/plugins/debug-logger.client'
 
 interface OfficeGroup {
   label: string
@@ -87,7 +88,7 @@ export const useResourceOfficeStore = defineStore('resource-office', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch office resource'
-        console.error('Failed to fetch office resource:', err)
+        dError('Failed to fetch office resource:', err)
       } finally {
         this.loading = false
       }

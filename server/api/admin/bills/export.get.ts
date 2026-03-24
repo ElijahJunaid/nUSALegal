@@ -1,6 +1,7 @@
 import { congressBills } from '../../../data/congress-bills'
 import { cityCouncilBills } from '../../bills/city-council'
 import { defineEventHandler, getQuery, createError, setHeader } from 'h3'
+import { dError } from '../../../utils/debug'
 
 export default defineEventHandler(async event => {
   const query = getQuery(event)
@@ -42,7 +43,7 @@ export default defineEventHandler(async event => {
     setHeader(event, 'Content-Disposition', 'attachment; filename="bills.json"')
     return bills
   } catch (error) {
-    console.error('Export error:', error)
+    dError('Export error:', error)
     throw createError({
       status: 500,
       statusText: 'Failed to export bills'

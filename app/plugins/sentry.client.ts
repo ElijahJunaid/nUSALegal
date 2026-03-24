@@ -1,11 +1,12 @@
 import * as Sentry from '@sentry/vue'
 import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
+import { dLog, dWarn, dError } from '~/plugins/debug-logger.client'
 
 export default defineNuxtPlugin(nuxtApp => {
   const config = useRuntimeConfig()
 
   if (config.public.environment === 'development') {
-    console.log('Sentry disabled in development mode')
+    dLog('Sentry disabled in development mode')
     return {
       provide: {
         sentry: Sentry
@@ -39,7 +40,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
       beforeSend(event, hint) {
         if (config.public.environment === 'development') {
-          console.error('Sentry Event (dev):', event, hint)
+          dError('Sentry Event (dev):', event, hint)
           return null
         }
 
@@ -73,7 +74,7 @@ export default defineNuxtPlugin(nuxtApp => {
     })
 
     nuxtApp.vueApp.config.errorHandler = (error: unknown, instance, info: string) => {
-      console.error('Vue Error:', error, info)
+      dError('Vue Error:', error, info)
 
       Sentry.withScope(scope => {
         scope.setContext('vue', {
@@ -87,7 +88,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
     if (process.client) {
       window.addEventListener('unhandledrejection', event => {
-        console.error('Unhandled Rejection:', event.reason)
+        dError('Unhandled Rejection:', event.reason)
 
         Sentry.withScope(scope => {
           scope.setContext('promise', {
@@ -98,7 +99,7 @@ export default defineNuxtPlugin(nuxtApp => {
       })
     }
   } else {
-    console.warn('Sentry DSN not configured. Error tracking disabled.')
+    dWarn('Sentry DSN not configured. Error tracking disabled.')
   }
 
   return {

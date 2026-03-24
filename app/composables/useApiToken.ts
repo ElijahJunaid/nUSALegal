@@ -1,3 +1,5 @@
+import { dError } from '~/plugins/debug-logger.client'
+
 interface CachedToken {
   token: string
   expiresAt: number
@@ -30,7 +32,7 @@ export function useApiToken() {
 
       return response.token
     } catch (error) {
-      console.error('Failed to get API token:', error)
+      dError('Failed to get API token:', error)
       throw error
     }
   }

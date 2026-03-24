@@ -1,74 +1,74 @@
 <template>
-  <NuxtLayout name="default">
-    <template #default>
-      <div class="news-wrapper">
-        <section class="news-hero">
-          <div class="news-hero-inner">
-            <div class="news-hero-icon">📰</div>
-            <p class="news-hero-eyebrow">NIGHTGALADES'S UNITED STATES OF AMERICA</p>
-            <h1 class="news-hero-title">nUSA Press &amp; Media</h1>
-            <p class="news-hero-desc">
-              Your directory of active news organizations covering the politics, events, and stories
-              of Nightgalades's United States of America.
-            </p>
+  <div class="news-wrapper">
+    <nav class="news-nav">
+      <div class="news-nav-inner">
+        <NuxtLink to="/news" class="news-logo">
+          <span class="news-logo-icon">📰</span>
+          <div class="news-logo-text">
+            <span class="news-logo-top">nUSA</span>
+            <span class="news-logo-bottom">Press &amp; Media</span>
           </div>
-          <div class="news-hero-wave">
-            <svg
-              viewBox="0 0 1440 80"
-              preserveAspectRatio="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#f3f4f6" />
-            </svg>
-          </div>
-        </section>
-
-        <section class="news-orgs">
-          <div class="news-orgs-inner">
-            <div class="news-orgs-header">
-              <p class="news-orgs-eyebrow">REGISTERED OUTLETS</p>
-              <h2 class="news-orgs-title">News Organizations</h2>
-            </div>
-            <div v-if="loading" class="news-orgs-loading">Loading…</div>
-            <div v-else-if="newsOrgs.length === 0" class="news-orgs-empty">
-              No registered news organizations found.
-            </div>
-            <div v-else class="news-orgs-grid">
-              <NuxtLink
-                v-for="org in newsOrgs"
-                :key="org.name"
-                :to="org.route"
-                class="news-org-card"
-              >
-                <div class="news-org-icon">📰</div>
-                <div class="news-org-meta">
-                  <p class="news-org-name">{{ org.name }}</p>
-                  <p class="news-org-focus">{{ org.focus }}</p>
-                </div>
-              </NuxtLink>
-            </div>
-          </div>
-        </section>
-
-        <footer class="news-footer">
-          <div class="news-footer-bottom">
-            <p>&copy; 2024 nUSA Department of State · THIS IS NOT REAL LIFE!</p>
-          </div>
-        </footer>
-
-        <button
-          @click="toggleTheme"
-          class="theme-toggle"
-          :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
-        >
-          <span v-if="theme === 'light'">☀️</span>
-          <span v-else>🌙</span>
-        </button>
-
-        <ChatbotWidget />
+        </NuxtLink>
+        <NuxtLink to="/" class="news-back-btn">← Back to nUSA</NuxtLink>
       </div>
-    </template>
-  </NuxtLayout>
+    </nav>
+
+    <section class="news-hero">
+      <div class="news-hero-inner">
+        <div class="news-hero-icon">📰</div>
+        <p class="news-hero-eyebrow">NIGHTGALADES'S UNITED STATES OF AMERICA</p>
+        <h1 class="news-hero-title">nUSA Press &amp; Media</h1>
+        <p class="news-hero-desc">
+          Your directory of active news organizations covering the politics, events, and stories of
+          Nightgalades's United States of America.
+        </p>
+      </div>
+      <div class="news-hero-wave">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#f3f4f6" />
+        </svg>
+      </div>
+    </section>
+
+    <section class="news-orgs">
+      <div class="news-orgs-inner">
+        <div class="news-orgs-header">
+          <p class="news-orgs-eyebrow">REGISTERED OUTLETS</p>
+          <h2 class="news-orgs-title">News Organizations</h2>
+        </div>
+        <div v-if="loading" class="news-orgs-loading">Loading…</div>
+        <div v-else-if="newsOrgs.length === 0" class="news-orgs-empty">
+          No registered news organizations found.
+        </div>
+        <div v-else class="news-orgs-grid">
+          <NuxtLink v-for="org in newsOrgs" :key="org.name" :to="org.route" class="news-org-card">
+            <div class="news-org-icon">📰</div>
+            <div class="news-org-meta">
+              <p class="news-org-name">{{ org.name }}</p>
+              <p class="news-org-focus">{{ org.focus }}</p>
+            </div>
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
+    <footer class="news-footer">
+      <div class="news-footer-bottom">
+        <p>&copy; 2024 nUSA Department of State · THIS IS NOT REAL LIFE!</p>
+      </div>
+    </footer>
+
+    <button
+      @click="toggleTheme"
+      class="theme-toggle"
+      :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+    >
+      <span v-if="theme === 'light'">☀️</span>
+      <span v-else>🌙</span>
+    </button>
+
+    <ChatbotWidget />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -108,12 +108,86 @@ const newsOrgs = computed(() => [
 onMounted(() => {
   docalStore.fetchBusinesses()
 })
+
+definePageMeta({
+  layout: false
+})
 </script>
 
 <style scoped>
 .news-wrapper {
   min-height: 100vh;
   background: #f9fafb;
+}
+
+.news-nav {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.news-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.news-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.news-logo-icon {
+  font-size: 1.4rem;
+}
+
+.news-logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.news-logo-top {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.news-logo-bottom {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #991b1b;
+}
+
+.news-back-btn {
+  margin-left: auto;
+  padding: 0.4rem 1rem;
+  background: #991b1b;
+  color: #ffffff;
+  border-radius: 0.375rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.news-back-btn:hover {
+  background: #7f1d1d;
+  text-decoration: none;
+  color: #fff;
 }
 
 .news-hero {
@@ -285,6 +359,19 @@ onMounted(() => {
   color: #6b7280;
 }
 
+[data-theme='dark'] .news-nav {
+  background: #1f2937;
+  border-color: #374151;
+}
+[data-theme='dark'] .news-logo-bottom {
+  color: #fca5a5;
+}
+[data-theme='dark'] .news-back-btn {
+  background: #7f1d1d;
+}
+[data-theme='dark'] .news-back-btn:hover {
+  background: #991b1b;
+}
 [data-theme='dark'] .news-wrapper {
   background: #111827;
 }

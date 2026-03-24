@@ -1,4 +1,5 @@
 import { ref, onUnmounted } from 'vue'
+import { dLog, dError } from '~/plugins/debug-logger.client'
 
 interface BabylonVector3 {
   x: number
@@ -229,7 +230,7 @@ export function useCourtroomScene() {
 
     canvas.value = document.getElementById(canvasId) as HTMLCanvasElement
     if (!canvas.value) {
-      console.error(`Canvas element with ID '${canvasId}' not found`)
+      dError(`Canvas element with ID '${canvasId}' not found`)
       return false
     }
 
@@ -239,7 +240,7 @@ export function useCourtroomScene() {
       isInitialized.value = true
       return true
     } catch (error) {
-      console.error('Error initializing Babylon engine:', error)
+      dError('Error initializing Babylon engine:', error)
       return false
     }
   }
@@ -251,11 +252,11 @@ export function useCourtroomScene() {
     const BABYLON = (window as BabylonWindow).BABYLON
 
     if (typeof BABYLON === 'undefined') {
-      console.error('Babylon.js is not loaded. Attempting to load scripts again.')
+      dError('Babylon.js is not loaded. Attempting to load scripts again.')
       await loadBabylonScripts()
 
       if (typeof (window as BabylonWindow).BABYLON === 'undefined') {
-        console.error('Failed to load Babylon.js after retry.')
+        dError('Failed to load Babylon.js after retry.')
         hasError.value = true
         isLoading.value = false
         return null
@@ -315,7 +316,7 @@ export function useCourtroomScene() {
               rootMesh.scaling = new BABYLON.Vector3(1, 1, 1)
               rootMesh.position = new BABYLON.Vector3(0, 0, 0)
 
-              console.info('3D model loaded successfully with ' + meshes.length + ' meshes')
+              dLog('3D model loaded successfully with ' + meshes.length + ' meshes')
               isLoading.value = false
             }
           },
@@ -324,21 +325,18 @@ export function useCourtroomScene() {
             const errorMsg = exception
               ? exception.message || String(exception)
               : message || 'Unknown error'
-            console.error('Error loading 3D model:', errorMsg)
+            dError('Error loading 3D model:', errorMsg)
             hasError.value = true
             isLoading.value = false
           }
         )
       } else {
-        console.error('GLTF loader plugin is not available')
+        dError('GLTF loader plugin is not available')
         hasError.value = true
         isLoading.value = false
       }
     } catch (error: unknown) {
-      console.error(
-        'Error in scene creation:',
-        error instanceof Error ? error.message : String(error)
-      )
+      dError('Error in scene creation:', error instanceof Error ? error.message : String(error))
       hasError.value = true
       isLoading.value = false
     }

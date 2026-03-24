@@ -1,6 +1,7 @@
 import { files } from '../../data/files'
 import { defineEventHandler, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
+import { dError } from '../../utils/debug'
 
 export default defineEventHandler(async event => {
   validateApiAccess(event, 'resources/files')
@@ -11,7 +12,7 @@ export default defineEventHandler(async event => {
       link: file.fileUrl
     }))
   } catch (error) {
-    console.error('Error fetching files:', error)
+    dError('Error fetching files:', error)
     throw createError({
       status: 500,
       statusText: 'Failed to fetch files'

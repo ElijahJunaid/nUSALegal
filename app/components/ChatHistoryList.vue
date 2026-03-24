@@ -25,7 +25,6 @@
     </div>
     <p v-if="store.conversations.length === 0" class="history-empty">No conversation history yet</p>
 
-    <!-- Delete confirmation modal -->
     <dialog ref="deleteModal" class="modal modal-bottom sm:modal-middle">
       <div class="modal-box">
         <h3 class="text-lg font-bold">Delete conversation?</h3>

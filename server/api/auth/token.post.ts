@@ -1,8 +1,8 @@
-import { defineEventHandler, getHeader } from 'h3'
+import { defineEventHandler, getHeader, readBody } from 'h3'
 import { validateOrigin, setCorsHeaders } from '../../utils/validateOrigin'
 import { generateApiToken } from '../../utils/apiTokens'
-import { validationSchemas } from '../../utils/validation'
-import { validateAndReplaceBody } from '../../middleware/safe-body'
+import { validationSchemas, validateData } from '../../utils/validation'
+import { dError } from '../../utils/debug'
 
 interface AuthTokenRequestBody {
   endpoint: string
@@ -10,11 +10,8 @@ interface AuthTokenRequestBody {
 
 export default defineEventHandler(async event => {
   try {
-    const validatedBody = await validateAndReplaceBody<AuthTokenRequestBody>(
-      event,
-      validationSchemas.authToken
-    )
-    const { endpoint } = validatedBody
+    const body = await readBody<AuthTokenRequestBody>(event)
+    const { endpoint } = validateData(validationSchemas.authToken, body)
 
     validateOrigin(event)
 
@@ -28,7 +25,7 @@ export default defineEventHandler(async event => {
     }
   } catch (err: unknown) {
     const e = err as Record<string, unknown>
-    console.error('AUTH_TOKEN_UNHANDLED_ERROR', {
+    dError('AUTH_TOKEN_UNHANDLED_ERROR', {
       message: e?.message,
       name: e?.name,
       stack: e?.stack

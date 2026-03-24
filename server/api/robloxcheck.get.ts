@@ -1,4 +1,5 @@
 import noblox from 'noblox.js'
+import { dError } from '../utils/debug'
 import { checkTrelloBoards } from '../utils/trelloConfig'
 import { checkGroupBans } from '../utils/groupConfig'
 import { defineEventHandler, createError } from 'h3'
@@ -13,7 +14,7 @@ async function getFriendCount(userId: number): Promise<number | null> {
     const data = await response.json()
     return data.count
   } catch (error) {
-    console.error('Friend count error:', error)
+    dError('Friend count error:', error)
     return null
   }
 }
@@ -56,7 +57,7 @@ export default defineEventHandler(async event => {
     try {
       groupBanResults = await checkGroupBans(groups)
     } catch (err) {
-      console.error('Group ban check error:', err)
+      dError('Group ban check error:', err)
       groupBanResults = {
         severeBanGroups: [],
         minorBanGroups: [],
@@ -78,7 +79,7 @@ export default defineEventHandler(async event => {
     const isFederalPrisoner = nusaGroup?.Role === 'Federal Prisoner'
 
     const trelloResults = await checkTrelloBoards(userInfo.username).catch(error => {
-      console.error('Trello check error:', error)
+      dError('Trello check error:', error)
       return {
         hasSevereBans: false,
         hasMinorBans: false,
@@ -135,7 +136,7 @@ export default defineEventHandler(async event => {
       }
     }
   } catch (error: unknown) {
-    console.error('Roblox check error:', error)
+    dError('Roblox check error:', error)
     const message = error instanceof Error ? error.message : 'Failed to check user'
     const status = message === 'User not found' ? 404 : 500
     throw createError({

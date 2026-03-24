@@ -1,6 +1,7 @@
 import { OpenAI } from 'openai'
 import { defineEventHandler, createError } from 'h3'
 import { useRuntimeConfig } from '#imports'
+import { dError } from '../utils/debug'
 
 const THREAD_ID_PATTERN = /^thread_[a-zA-Z0-9]{24,}$/
 
@@ -46,7 +47,7 @@ const handler = defineEventHandler(async event => {
 
     return { thread_id: threadId, messages }
   } catch (error: unknown) {
-    console.error('[Chatbot] Error fetching thread history:', error)
+    dError('[Chatbot] Error fetching thread history:', error)
 
     if (error instanceof OpenAI.APIError && error.status === 404) {
       return { thread_id: null, messages: [] }
@@ -59,7 +60,6 @@ const handler = defineEventHandler(async event => {
   }
 })
 
-// Mark as already wrapped to prevent Nitro double-wrapping warning
 ;(handler as unknown as Record<string, unknown>).__is_handler__ = true
 
 export default handler

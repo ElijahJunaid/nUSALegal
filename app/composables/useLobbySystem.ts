@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { dLog, dWarn } from '~/plugins/debug-logger.client'
 
 export interface Player {
   name: string
@@ -35,7 +36,7 @@ export function useLobbySystem() {
 
     startHeartbeat()
 
-    console.log(`${asLeader ? 'Created' : 'Joined'} lobby: ${code}`)
+    dLog(`${asLeader ? 'Created' : 'Joined'} lobby: ${code}`)
   }
 
   function disconnect() {
@@ -44,7 +45,7 @@ export function useLobbySystem() {
     connectedPlayers.value.clear()
     claimedRoles.value.clear()
 
-    console.log('Disconnected from lobby')
+    dLog('Disconnected from lobby')
   }
 
   function startHeartbeat() {
@@ -66,7 +67,7 @@ export function useLobbySystem() {
     for (const [playerName, data] of connectedPlayers.value.entries()) {
       if (now - data.lastSeen > PLAYER_TIMEOUT && playerName !== 'You') {
         connectedPlayers.value.delete(playerName)
-        console.log(`Player ${playerName} disconnected due to inactivity`)
+        dLog(`Player ${playerName} disconnected due to inactivity`)
       }
     }
   }
@@ -90,7 +91,7 @@ export function useLobbySystem() {
       player.role = role
     }
 
-    console.log(`Claimed role: ${role}`)
+    dLog(`Claimed role: ${role}`)
   }
 
   function releaseRole(role: string) {
@@ -102,19 +103,19 @@ export function useLobbySystem() {
         player.role = null
       }
 
-      console.log(`Released role: ${role}`)
+      dLog(`Released role: ${role}`)
     }
   }
 
   function selectCase(type: string, index: number) {
     if (!isLeader.value) {
-      console.warn('Only lobby leader can select case')
+      dWarn('Only lobby leader can select case')
       return
     }
 
     selectedCase.value = { type, index }
 
-    console.log(`Selected case: ${type} #${index}`)
+    dLog(`Selected case: ${type} #${index}`)
   }
 
   function onPlayerJoin(playerName: string) {

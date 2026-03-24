@@ -126,6 +126,10 @@ import { computed, onMounted } from 'vue'
 import { useCongressStore } from '~/stores/congress-store'
 import { useTheme } from '~/composables/useTheme'
 
+definePageMeta({
+  layout: false
+})
+
 const { theme, toggleTheme } = useTheme()
 const congressStore = useCongressStore()
 

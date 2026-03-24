@@ -1,5 +1,6 @@
 import { defineEventHandler, createError } from 'h3'
 import { validateApiAccess } from '../utils/validateApiAccess'
+import { dError } from '../utils/debug'
 import {
   caseStatistics,
   topCharges,
@@ -30,7 +31,7 @@ export default defineEventHandler(async event => {
       mostActiveDepts
     }
   } catch (error) {
-    console.error('Error fetching statistics:', error)
+    dError('Error fetching statistics:', error)
     throw createError({
       status: 500,
       statusText: 'Failed to fetch statistics'

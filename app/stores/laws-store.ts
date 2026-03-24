@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { dError } from '~/plugins/debug-logger.client'
 
 interface MunicipalGroup {
   label: string
@@ -146,7 +147,7 @@ export const useLawsStore = defineStore('laws-rules', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Federal'
-        console.error('Failed to fetch Federal:', err)
+        dError('Failed to fetch Federal:', err)
       } finally {
         this.loading = false
       }
@@ -178,7 +179,7 @@ export const useLawsStore = defineStore('laws-rules', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch EO data'
-        console.error('Failed to fetch EO data:', err)
+        dError('Failed to fetch EO data:', err)
       } finally {
         this.loading = false
       }
@@ -210,7 +211,7 @@ export const useLawsStore = defineStore('laws-rules', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Municipal'
-        console.error('Failed to fetch Municipal:', err)
+        dError('Failed to fetch Municipal:', err)
       } finally {
         this.loading = false
       }

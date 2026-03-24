@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { dLog, dError } from './debug'
 
 const patterns = {
   endpoint: /^[a-zA-Z0-9/_-]+$/,
@@ -113,6 +114,9 @@ export const validationSchemas = {
       'resources/vips',
       'news/index',
       'news/slug',
+      'docal/businesses',
+      'congress/members',
+      'congress/former-members',
       'statistics'
     ])
   }),
@@ -283,9 +287,6 @@ export const validationSchemas = {
     )
 }
 
-/**
- * Input sanitization utilities
- */
 export const sanitizers = {
   escapeHtml: (input: string): string => {
     return input
@@ -351,9 +352,7 @@ export function validateData<T>(schema: z.ZodSchema<T>, data: unknown): T {
   try {
     const result = schema.parse(data)
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log('✅ Validation successful:', result)
-    }
+    dLog('✅ Validation successful:', result)
 
     return result
   } catch (error: unknown) {
@@ -371,16 +370,12 @@ export function validateData<T>(schema: z.ZodSchema<T>, data: unknown): T {
         { validationErrors: fieldErrors, statusCode: 400 }
       )
 
-      if (process.env.NODE_ENV === 'development') {
-        console.error('❌ Validation failed:', fieldErrors)
-      }
+      dError('❌ Validation failed:', fieldErrors)
 
       throw validationError
     }
 
-    if (process.env.NODE_ENV === 'development') {
-      console.error('❌ Unexpected validation error:', error)
-    }
+    dError('❌ Unexpected validation error:', error)
 
     throw error
   }

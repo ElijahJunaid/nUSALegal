@@ -1,4 +1,5 @@
 import { validateEnv } from '../utils/validateEnv'
+import { dError } from '../utils/debug'
 
 export default () => {
   if (process.env.NODE_ENV !== 'production') {
@@ -8,7 +9,7 @@ export default () => {
   try {
     validateEnv()
   } catch (error) {
-    console.error('Environment validation failed:', error)
+    dError('Environment validation failed:', error)
     throw error
   }
 }

@@ -1,4 +1,5 @@
 import { Redis } from '@upstash/redis'
+import { dLog, dWarn } from './debug'
 
 let redisClient: Redis | null = null
 
@@ -8,12 +9,12 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
       url: process.env.UPSTASH_REDIS_REST_URL,
       token: process.env.UPSTASH_REDIS_REST_TOKEN
     })
-    console.log('✅ Redis cache initialized')
+    dLog('✅ Redis cache initialized')
   } catch (error) {
-    console.warn('⚠️  Redis initialization failed:', error)
+    dWarn('⚠️  Redis initialization failed:', error)
   }
 } else {
-  console.log('ℹ️  Redis not configured - caching disabled')
+  dLog('ℹ️  Redis not configured - caching disabled')
 }
 
 export const redis = redisClient
@@ -34,14 +35,14 @@ export async function getCachedOrFetch<T>(
       return cached as T
     }
   } catch (error) {
-    console.warn('Cache read error:', error)
+    dWarn('Cache read error:', error)
   }
 
   const data = await fetcher()
 
   if (redis) {
     redis.setex(key, ttl, JSON.stringify(data)).catch(err => {
-      console.warn('Cache write error:', err)
+      dWarn('Cache write error:', err)
     })
   }
 
@@ -54,7 +55,7 @@ export async function invalidateCache(key: string): Promise<void> {
   try {
     await redis.del(key)
   } catch (error) {
-    console.warn('Cache invalidation error:', error)
+    dWarn('Cache invalidation error:', error)
   }
 }
 
@@ -67,7 +68,7 @@ export async function invalidateCachePattern(pattern: string): Promise<void> {
       await redis.del(...keys)
     }
   } catch (error) {
-    console.warn('Cache pattern invalidation error:', error)
+    dWarn('Cache pattern invalidation error:', error)
   }
 }
 
@@ -78,7 +79,7 @@ export async function getCache<T>(key: string): Promise<T | null> {
     const value = await redis.get(key)
     return value as T | null
   } catch (error) {
-    console.warn('Cache get error:', error)
+    dWarn('Cache get error:', error)
     return null
   }
 }
@@ -89,6 +90,6 @@ export async function setCache<T>(key: string, value: T, ttl: number = 300): Pro
   try {
     await redis.setex(key, ttl, JSON.stringify(value))
   } catch (error) {
-    console.warn('Cache set error:', error)
+    dWarn('Cache set error:', error)
   }
 }

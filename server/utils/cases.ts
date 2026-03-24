@@ -1,3 +1,5 @@
+import { dError } from './debug'
+
 export interface CaseData {
   id: string
   title: string
@@ -223,13 +225,13 @@ const mockTrialCases: MockTrialCases = {
 
 export function getRandomCase(caseType: 'criminal' | 'civil'): CaseData | null {
   if (!['criminal', 'civil'].includes(caseType)) {
-    console.error('Invalid caseType provided to getRandomCase. Must be "criminal" or "civil"')
+    dError('Invalid caseType provided to getRandomCase. Must be "criminal" or "civil"')
     return null
   }
 
   const cases = mockTrialCases[caseType]
   if (!cases || cases.length === 0) {
-    console.error('No cases found for caseType:', caseType)
+    dError('No cases found for caseType:', caseType)
     return null
   }
 
@@ -239,24 +241,24 @@ export function getRandomCase(caseType: 'criminal' | 'civil'): CaseData | null {
 
 export function getCaseById(caseType: 'criminal' | 'civil', caseId: string): CaseData | null {
   if (!['criminal', 'civil'].includes(caseType)) {
-    console.error('Invalid caseType provided to getCaseById. Must be "criminal" or "civil"')
+    dError('Invalid caseType provided to getCaseById. Must be "criminal" or "civil"')
     return null
   }
 
   if (typeof caseId !== 'string') {
-    console.error('Invalid caseId provided to getCaseById. Must be a string')
+    dError('Invalid caseId provided to getCaseById. Must be a string')
     return null
   }
 
   const cases = mockTrialCases[caseType]
   if (!cases) {
-    console.error('No cases found for caseType:', caseType)
+    dError('No cases found for caseType:', caseType)
     return null
   }
 
   const caseFound = cases.find(c => c.id === caseId)
   if (!caseFound) {
-    console.error('Case not found for ID:', caseId)
+    dError('Case not found for ID:', caseId)
     return null
   }
 
@@ -265,7 +267,7 @@ export function getCaseById(caseType: 'criminal' | 'civil', caseId: string): Cas
 
 export function getAllCases(caseType: 'criminal' | 'civil'): CaseData[] {
   if (!['criminal', 'civil'].includes(caseType)) {
-    console.error('Invalid caseType provided to getAllCases. Must be "criminal" or "civil"')
+    dError('Invalid caseType provided to getAllCases. Must be "criminal" or "civil"')
     return []
   }
 

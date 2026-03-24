@@ -46,6 +46,7 @@
 
 <script lang="ts" setup>
 import { useDefinitionStore } from '~/stores/definition-store'
+import { dLog } from '~/plugins/debug-logger.client'
 import { storeToRefs } from 'pinia'
 import { watchEffect, onMounted, onUnmounted } from 'vue'
 
@@ -65,6 +66,6 @@ watchEffect(() => {
 onMounted(get)
 
 onUnmounted(() => {
-  console.log('unmounted definition')
+  dLog('unmounted definition')
 })
 </script>

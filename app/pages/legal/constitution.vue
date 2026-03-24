@@ -187,6 +187,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
+import { dLog } from '~/plugins/debug-logger.client'
 import { storeToRefs } from 'pinia'
 import { $fetch } from 'ofetch'
 import {
@@ -231,7 +232,7 @@ const articlePage = ref<number>(1)
 
 const articleContent = computed<ConstitutionArticleSection | null>(() => {
   if (!article.value) {
-    console.log('No article value')
+    dLog('No article value')
     return null
   }
 
@@ -242,14 +243,14 @@ const articleContent = computed<ConstitutionArticleSection | null>(() => {
   ) {
     const pageIndex = articlePage.value - 1
     if (pageIndex >= 0 && pageIndex < article.value.sections.length) {
-      console.log('Using article sections')
+      dLog('Using article sections')
       return article.value.sections[pageIndex] as ConstitutionArticleSection
     }
   }
 
   type ConstitutionArticleExtended = typeof article.value & { content?: string; summary?: string }
   if ((article.value as ConstitutionArticleExtended)?.content) {
-    console.log('Using article content directly')
+    dLog('Using article content directly')
     return {
       content: (article.value as ConstitutionArticleExtended).content as string,
       title: article.value.title || 'Content'
@@ -257,14 +258,14 @@ const articleContent = computed<ConstitutionArticleSection | null>(() => {
   }
 
   if ((article.value as ConstitutionArticleExtended)?.summary) {
-    console.log('Using article summary as content')
+    dLog('Using article summary as content')
     return {
       content: (article.value as ConstitutionArticleExtended).summary as string,
       title: article.value.title || 'Summary'
     } as ConstitutionArticleSection
   }
 
-  console.log('No content or sections found in article')
+  dLog('No content or sections found in article')
   return null
 })
 
@@ -290,7 +291,7 @@ const handleClick = async () => {
       )
 
       article.value = response
-      console.log('Article loaded:', article.value)
+      dLog('Article loaded:', article.value)
     } catch (_error) {
       /* noop */
     } finally {

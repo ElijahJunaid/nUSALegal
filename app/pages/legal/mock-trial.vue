@@ -671,6 +671,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick, defineAsyncComponent } from 'vue'
+import { dLog, dError } from '~/plugins/debug-logger.client'
 import { useToast } from '~/composables/useToast'
 import { useLobbyConnection } from '~/composables/useLobbyConnection'
 
@@ -912,7 +913,7 @@ async function selectCaseType(type: 'criminal' | 'civil') {
       info(`Loaded ${response.cases.length} ${type} cases`)
     }
   } catch (error) {
-    console.error('Failed to load cases:', error)
+    dError('Failed to load cases:', error)
     availableCases.value = []
     warning('Failed to load cases. Please try again.')
   }
@@ -1028,7 +1029,7 @@ async function confirmSetup() {
       error('Failed to load case data')
     }
   } catch (err) {
-    console.error('Error loading case:', err)
+    dError('Error loading case:', err)
     error('Failed to start trial. Please try again.')
   } finally {
     isLoading.value = false
@@ -1110,7 +1111,7 @@ async function initializeCourtroomScene() {
     courtroomLoading.value = false
     success('3D courtroom loaded successfully!')
   } catch (err) {
-    console.error('Error initializing courtroom:', err)
+    dError('Error initializing courtroom:', err)
     courtroomLoading.value = false
     courtroomError.value = true
     error('Failed to load 3D courtroom')
@@ -1226,7 +1227,7 @@ function admitEvidence(evidenceId: string) {
   evidenceList.value.forEach((e: EvidenceItem) => {
     if (e.id === evidenceId) {
       e.admitted = true
-      console.log(`Evidence ${evidenceId} admitted`)
+      dLog(`Evidence ${evidenceId} admitted`)
     }
   })
 }
@@ -1267,7 +1268,7 @@ function ruleOnObjection(objectionId: string, sustained: boolean) {
   pendingObjections.value.forEach((o: ObjectionItem) => {
     if (o.id === objectionId) {
       o.ruling = sustained ? 'sustained' : 'overruled'
-      console.log(`Objection ${objectionId} ${o.ruling}`)
+      dLog(`Objection ${objectionId} ${o.ruling}`)
     }
   })
 

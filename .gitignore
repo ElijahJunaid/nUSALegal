@@ -62,6 +62,7 @@ health-check.config.json
 scripts/upload-pdfs-to-blobs.js
 scripts/sync-docal-businesses.js
 scripts/sync-congress-laws.js
+scripts/toggle-debug.ps1
 
 # Reports
 reports/

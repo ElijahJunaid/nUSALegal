@@ -1,4 +1,5 @@
 import { defineEventHandler, createError } from 'h3'
+import { dWarn } from '../../utils/debug'
 
 export default defineEventHandler(async event => {
   const url = event.node?.req?.url || ''
@@ -54,7 +55,7 @@ export default defineEventHandler(async event => {
       statusText: 'Roblox API request failed'
     })
   } catch (error: unknown) {
-    console.warn(`Failed to fetch Roblox user ${userId}:`, error)
+    dWarn(`Failed to fetch Roblox user ${userId}:`, error)
     throw createError({
       status: 500,
       statusText: error instanceof Error ? error.message : 'Failed to fetch user data'

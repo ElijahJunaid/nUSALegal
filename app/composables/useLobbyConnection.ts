@@ -1,4 +1,5 @@
 import { ref, computed, onUnmounted } from 'vue'
+import { dError } from '~/plugins/debug-logger.client'
 import { useToast } from '~/composables/useToast'
 import * as Ably from 'ably'
 
@@ -116,7 +117,7 @@ export function useLobbyConnection() {
 
       return true
     } catch (err) {
-      console.error('Failed to connect to lobby:', err)
+      dError('Failed to connect to lobby:', err)
       isConnecting.value = false
       error('Failed to connect to lobby')
       return false
@@ -248,7 +249,7 @@ export function useLobbyConnection() {
       } else if (reconnectAttempts.value < 3) {
         isReconnecting.value = false
         setTimeout(
-          () => attemptReconnect().catch(err => console.error('Reconnect attempt failed:', err)),
+          () => attemptReconnect().catch(err => dError('Reconnect attempt failed:', err)),
           2000
         )
       } else {
@@ -273,7 +274,7 @@ export function useLobbyConnection() {
   function onConnectionLost() {
     isConnected.value = false
     warning('Connection lost - attempting to reconnect...')
-    attemptReconnect().catch(err => console.error('Reconnect failed:', err))
+    attemptReconnect().catch(err => dError('Reconnect failed:', err))
   }
 
   function onPlayerJoined(message: Ably.Message) {

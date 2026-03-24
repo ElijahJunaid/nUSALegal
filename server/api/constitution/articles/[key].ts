@@ -1,14 +1,15 @@
 import { articles } from '../../../data/constitution'
 import { defineEventHandler, getRouterParam, createError } from 'h3'
 import { validateApiAccess } from '../../../utils/validateApiAccess'
+import { dLog, dError } from '../../../utils/debug'
 
 export default defineEventHandler(async event => {
-  console.log('🔍 [DEBUG] Constitution Articles API called (static data)')
+  dLog('🔍 [DEBUG] Constitution Articles API called (static data)')
 
   try {
-    console.log('🔐 [DEBUG] Validating API access...')
+    dLog('🔐 [DEBUG] Validating API access...')
     validateApiAccess(event, 'constitution/articles')
-    console.log('✅ [DEBUG] API access validated')
+    dLog('✅ [DEBUG] API access validated')
 
     const key = getRouterParam(event, 'key')
 
@@ -16,10 +17,10 @@ export default defineEventHandler(async event => {
 
     if (!Object.hasOwn(articles, key)) return []
 
-    console.log('📊 [DEBUG] Returning article:', key)
+    dLog('📊 [DEBUG] Returning article:', key)
     return articles[key]
   } catch (error) {
-    console.error('❌ [ERROR] Constitution Articles API failed:', error)
+    dError('❌ [ERROR] Constitution Articles API failed:', error)
     throw createError({
       status: 500,
       statusText: 'Failed to fetch constitution article',

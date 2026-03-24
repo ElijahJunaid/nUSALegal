@@ -1,3 +1,5 @@
+import { dLog } from './debug'
+
 export function validateEnv() {
   const required = ['DATABASE_URL', 'TOKEN_SECRET', 'SESSION_SECRET']
 
@@ -28,7 +30,7 @@ export function validateEnv() {
     }
   }
 
-  console.log('✅ Environment variables validated successfully')
+  dLog('✅ Environment variables validated successfully')
 }
 
 if (process.env.NODE_ENV === 'production') {

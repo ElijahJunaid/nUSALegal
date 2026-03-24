@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { dError } from '~/plugins/debug-logger.client'
 
 interface FederalRulesGroup {
   label: string
@@ -102,7 +103,7 @@ export const useFederalRulesStore = defineStore('federal-rules', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch FRCP'
-        console.error('Failed to fetch FRCP:', err)
+        dError('Failed to fetch FRCP:', err)
       } finally {
         this.loading = false
       }
@@ -135,7 +136,7 @@ export const useFederalRulesStore = defineStore('federal-rules', {
       } catch (err: unknown) {
         const e = err as { data?: { statusMessage?: string }; message?: string }
         this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch FRCMP'
-        console.error('Failed to fetch FRCMP:', err)
+        dError('Failed to fetch FRCMP:', err)
       } finally {
         this.loading = false
       }

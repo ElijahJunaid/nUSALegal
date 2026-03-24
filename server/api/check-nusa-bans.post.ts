@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { dError } from '../utils/debug'
 import { defaultRateLimiter } from '../utils/rateLimit'
 import { defineEventHandler, createError } from 'h3'
 import { useRuntimeConfig } from '#imports'
@@ -22,7 +23,7 @@ export default defineEventHandler(async event => {
   const apiKey = config.nusaApiKey
 
   if (!apiKey || typeof apiKey !== 'string' || apiKey.trim() === '') {
-    console.error('Invalid or missing NUSA_API_KEY')
+    dError('Invalid or missing NUSA_API_KEY')
     throw createError({
       status: 500,
       statusText: 'Internal Server Error',
@@ -56,7 +57,7 @@ export default defineEventHandler(async event => {
       reason: null
     }
   } catch (error: unknown) {
-    console.error('nUSA API error:', error)
+    dError('nUSA API error:', error)
 
     if (axios.isAxiosError(error)) {
       if (error.response) {

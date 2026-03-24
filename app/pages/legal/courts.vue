@@ -414,6 +414,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
+import { dError } from '~/plugins/debug-logger.client'
 import { storeToRefs } from 'pinia'
 import { useCourtsStore, type CourtCase } from '~/stores/courts-store'
 
@@ -503,7 +504,7 @@ const fetchDistrictCases = async () => {
       }
     })
   } catch (error) {
-    console.error('Error fetching district court cases:', error)
+    dError('Error fetching district court cases:', error)
   } finally {
     loadingDistrict.value = false
   }

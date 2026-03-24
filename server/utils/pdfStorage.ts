@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
+import { dLog, dError } from './debug'
 
 interface StorageAdapter {
   getPdf(filePath: string): Promise<Buffer | null>
@@ -23,14 +24,14 @@ class FileSystemStorageAdapter implements StorageAdapter {
       const normalizedPath = filePath.replace(/\/+/g, '/').replace(/^\/+/, '')
 
       if (normalizedPath.includes('..') || normalizedPath.includes('~')) {
-        console.error('❌ [PDF Storage] Tentativa de path traversal bloqueada:', filePath)
+        dError('❌ [PDF Storage] Path traversal attempt blocked:', filePath)
         return null
       }
 
       const fullPath = join(this.basePath, normalizedPath)
 
       if (!fullPath.startsWith(this.basePath)) {
-        console.error('❌ [PDF Storage] Caminho fora do diretório base:', filePath)
+        dError('❌ [PDF Storage] Path outside the base directory:', filePath)
         return null
       }
 
@@ -40,8 +41,8 @@ class FileSystemStorageAdapter implements StorageAdapter {
 
       return await fs.readFile(fullPath)
     } catch (error: unknown) {
-      console.error(
-        '❌ [PDF Storage] Erro ao ler arquivo do sistema:',
+      dError(
+        '❌ [PDF Storage] Error reading system file:',
         error instanceof Error ? error.message : String(error)
       )
       return null
@@ -59,7 +60,7 @@ class NetlifyBlobsStorageAdapter implements StorageAdapter {
   isAvailable(): boolean {
     const isNetlify =
       process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY_DEV
-    console.log('🔍 [PDF Storage] NetlifyBlobsStorageAdapter.isAvailable():', isNetlify)
+    dLog('🔍 [PDF Storage] NetlifyBlobsStorageAdapter.isAvailable():', isNetlify)
     return !!isNetlify
   }
 
@@ -73,25 +74,25 @@ class NetlifyBlobsStorageAdapter implements StorageAdapter {
       try {
         blobsModule = (await import('@netlify/blobs')) as unknown as BlobsModule
       } catch {
-        console.error(
-          '❌ [PDF Storage] @netlify/blobs não está instalado. Instale com: npm install @netlify/blobs'
+        dError(
+          '❌ [PDF Storage] @netlify/blobs is not installed. Install with: npm install @netlify/blobs'
         )
         return null
       }
 
-      console.log('🔍 [PDF Storage] Criando store do Netlify Blobs...')
-      console.log('🔍 [PDF Storage] Store name:', this.storeName)
-      console.log('🔍 [PDF Storage] FilePath:', filePath)
+      dLog('🔍 [PDF Storage] Creating Netlify Blobs store...')
+      dLog('🔍 [PDF Storage] Store name:', this.storeName)
+      dLog('🔍 [PDF Storage] FilePath:', filePath)
 
       const store = blobsModule.getStore({
         name: this.storeName,
         consistency: 'strong'
       })
 
-      console.log('✅ [PDF Storage] Store criado, buscando arquivo...')
+      dLog('✅ [PDF Storage] Store created, fetching file...')
       const data = await store.get(filePath, { type: 'arrayBuffer' })
 
-      console.log('🔍 [PDF Storage] Dados obtidos:', data ? `${data.byteLength} bytes` : 'null')
+      dLog('🔍 [PDF Storage] Obtained data:', data ? `${data.byteLength} bytes` : 'null')
 
       if (!data) {
         return null
@@ -99,8 +100,8 @@ class NetlifyBlobsStorageAdapter implements StorageAdapter {
 
       return Buffer.from(data)
     } catch (error: unknown) {
-      console.error(
-        '❌ [PDF Storage] Erro ao buscar PDF do Netlify Blobs:',
+      dError(
+        '❌ [PDF Storage] Error fetching PDF from Netlify Blobs:',
         error instanceof Error ? error.message : String(error)
       )
       return null
@@ -144,8 +145,8 @@ class S3StorageAdapter implements StorageAdapter {
       try {
         s3Module = (await import('@aws-sdk/client-s3')) as unknown as S3Module
       } catch {
-        console.error(
-          '❌ [PDF Storage] @aws-sdk/client-s3 não está instalado. Instale com: npm install @aws-sdk/client-s3'
+        dError(
+          '❌ [PDF Storage] @aws-sdk/client-s3 is not installed. Install with: npm install @aws-sdk/client-s3'
         )
         return null
       }
@@ -182,8 +183,8 @@ class S3StorageAdapter implements StorageAdapter {
 
       return Buffer.concat(chunks)
     } catch (error: unknown) {
-      console.error(
-        '❌ [PDF Storage] Erro ao buscar PDF do S3:',
+      dError(
+        '❌ [PDF Storage] Error fetching PDF from S3:',
         error instanceof Error ? error.message : String(error)
       )
       return null
@@ -192,17 +193,17 @@ class S3StorageAdapter implements StorageAdapter {
 }
 
 function createStorageAdapter(): StorageAdapter {
-  console.log('🔍 [PDF Storage] Verificando ambiente...')
-  console.log('🔍 [PDF Storage] NETLIFY:', process.env.NETLIFY)
-  console.log('🔍 [PDF Storage] NODE_ENV:', process.env.NODE_ENV)
-  console.log('🔍 [PDF Storage] AWS_LAMBDA_FUNCTION_NAME:', process.env.AWS_LAMBDA_FUNCTION_NAME)
+  dLog('🔍 [PDF Storage] Checking environment...')
+  dLog('🔍 [PDF Storage] NETLIFY:', process.env.NETLIFY)
+  dLog('🔍 [PDF Storage] NODE_ENV:', process.env.NODE_ENV)
+  dLog('🔍 [PDF Storage] AWS_LAMBDA_FUNCTION_NAME:', process.env.AWS_LAMBDA_FUNCTION_NAME)
 
   const isNetlify =
     process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY_DEV
 
   if (isNetlify) {
     const netlifyBlobsStore = process.env.NETLIFY_BLOBS_STORE_NAME || 'pdfs'
-    console.log('📦 [PDF Storage] Usando Netlify Blobs storage:', netlifyBlobsStore)
+    dLog('📦 [PDF Storage] Using Netlify Blobs storage:', netlifyBlobsStore)
     return new NetlifyBlobsStorageAdapter(netlifyBlobsStore)
   }
 
@@ -210,7 +211,7 @@ function createStorageAdapter(): StorageAdapter {
   const s3Region = process.env.PDF_STORAGE_S3_REGION || 'us-east-1'
 
   if (s3Bucket && s3Region) {
-    console.log('📦 [PDF Storage] Usando S3 storage:', s3Bucket)
+    dLog('📦 [PDF Storage] Using S3 storage:', s3Bucket)
     return new S3StorageAdapter({
       bucket: s3Bucket,
       region: s3Region,
@@ -219,7 +220,7 @@ function createStorageAdapter(): StorageAdapter {
     })
   }
 
-  console.log('📁 [PDF Storage] Usando sistema de arquivos local (desenvolvimento)')
+  dLog('📁 [PDF Storage] Using local file system (development)')
   return new FileSystemStorageAdapter()
 }
 
@@ -233,20 +234,20 @@ function getStorageAdapter(): StorageAdapter {
 }
 
 export async function getPdfFromStorage(filePath: string): Promise<Buffer | null> {
-  console.log('🔍 [PDF Storage] getPdfFromStorage chamado com filePath:', filePath)
+  dLog('🔍 [PDF Storage] getPdfFromStorage called with filePath:', filePath)
   const adapter = getStorageAdapter()
 
-  console.log('🔍 [PDF Storage] Adaptador criado:', adapter.constructor.name)
-  console.log('🔍 [PDF Storage] Adaptador disponível?', adapter.isAvailable())
+  dLog('🔍 [PDF Storage] Adapter created:', adapter.constructor.name)
+  dLog('🔍 [PDF Storage] Adapter available?', adapter.isAvailable())
 
   if (!adapter.isAvailable()) {
-    console.error('❌ [PDF Storage] Adaptador de storage não disponível')
-    console.error('❌ [PDF Storage] Tipo do adaptador:', adapter.constructor.name)
+    dError('❌ [PDF Storage] Storage adapter not available')
+    dError('❌ [PDF Storage] Adapter type:', adapter.constructor.name)
     return null
   }
 
-  console.log('✅ [PDF Storage] Adaptador disponível, buscando PDF...')
+  dLog('✅ [PDF Storage] Adapter available, fetching PDF...')
   const result = await adapter.getPdf(filePath)
-  console.log('🔍 [PDF Storage] Resultado:', result ? `${result.length} bytes` : 'null')
+  dLog('🔍 [PDF Storage] Result:', result ? `${result.length} bytes` : 'null')
   return result
 }

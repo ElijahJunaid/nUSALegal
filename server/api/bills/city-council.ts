@@ -124,6 +124,7 @@ export const cityCouncilBills = [
 
 import { defineEventHandler, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
+import { dError } from '../../utils/debug'
 
 export default defineEventHandler(async event => {
   validateApiAccess(event, 'bills/city-council')
@@ -131,7 +132,7 @@ export default defineEventHandler(async event => {
   try {
     return cityCouncilBills
   } catch (error) {
-    console.error('Error fetching city council bills:', error)
+    dError('Error fetching city council bills:', error)
     throw createError({
       status: 500,
       statusText: 'Failed to fetch city council bills'
