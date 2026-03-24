@@ -84,6 +84,60 @@ if (fs.existsSync(nitroInternalAppPath)) {
       '// import { splitCookiesString } from "h3"; // Removed - not available in h3 v2'
     )
 
+    // Inject inline splitCookiesString if it's called but not yet defined.
+    // Idempotent: skipped if function is already present (e.g. re-run after first install).
+    if (
+      content.includes('splitCookiesString') &&
+      !content.includes('function splitCookiesString')
+    ) {
+      const inlineSplitCookiesString = `
+// Inline implementation: h3 v2 no longer exports splitCookiesString
+function splitCookiesString(cookiesString) {
+  if (Array.isArray(cookiesString)) {
+    return cookiesString.flatMap((c) => splitCookiesString(c));
+  }
+  if (typeof cookiesString !== "string") {
+    return [];
+  }
+  const cookiesStrings = [];
+  let pos = 0, start, ch, lastComma, nextStart, cookiesSeparatorFound;
+  function skipWhitespace() {
+    while (pos < cookiesString.length && /\\s/.test(cookiesString.charAt(pos))) { pos += 1; }
+    return pos < cookiesString.length;
+  }
+  function notSpecialChar() {
+    ch = cookiesString.charAt(pos);
+    return ch !== "=" && ch !== ";" && ch !== ",";
+  }
+  while (pos < cookiesString.length) {
+    start = pos;
+    cookiesSeparatorFound = false;
+    while (skipWhitespace()) {
+      ch = cookiesString.charAt(pos);
+      if (ch === ",") {
+        lastComma = pos; pos += 1; skipWhitespace(); nextStart = pos;
+        while (pos < cookiesString.length && notSpecialChar()) { pos += 1; }
+        if (pos < cookiesString.length && cookiesString.charAt(pos) === "=") {
+          cookiesSeparatorFound = true;
+          pos = nextStart;
+          cookiesStrings.push(cookiesString.substring(start, lastComma));
+          start = pos;
+        } else { pos = lastComma + 1; }
+      } else { pos += 1; }
+    }
+    if (!cookiesSeparatorFound || pos >= cookiesString.length) {
+      cookiesStrings.push(cookiesString.substring(start, cookiesString.length));
+    }
+  }
+  return cookiesStrings;
+}
+`
+      content = content.replace(
+        'export function normalizeCookieHeader(',
+        inlineSplitCookiesString + 'export function normalizeCookieHeader('
+      )
+    }
+
     fs.writeFileSync(nitropackUtilsPath, content)
     console.log('Fixed h3 import in nitropack utils')
   }

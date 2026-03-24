@@ -14,6 +14,26 @@ export default defineNuxtConfig({
   vite: {
     // @ts-ignore: dual-Vite version type mismatch between Nuxt internals and node_modules/vite
     plugins: [tailwindcss()],
+    css: {
+      postcss: {
+        plugins: [
+          {
+            postcssPlugin: 'suppress-modern-css-warnings',
+            // DaisyUI v5 uses mod()/round(to-zero,...) which PostCSS lexer cannot parse.
+            // These are valid modern CSS but PostCSS emits noisy lexical warnings for them.
+            // @ts-ignore: PostCSS plugin OnceExit typing
+            OnceExit(
+              _: unknown,
+              { result }: { result: { messages: { type: string; text?: string }[] } }
+            ) {
+              result.messages = result.messages.filter(
+                msg => !(msg.type === 'warning' && msg.text?.includes('Lexical error'))
+              )
+            }
+          }
+        ]
+      }
+    },
     build: {
       sourcemap: false
     },
