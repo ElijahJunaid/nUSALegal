@@ -113,9 +113,9 @@
                       <button
                         v-if="dt.hasArticle"
                         class="btn"
-                        @click="handleClick"
-                        @keydown.enter="handleClick"
-                        @keydown.space="handleClick"
+                        @click.stop="handleClick"
+                        @keydown.enter.stop="handleClick"
+                        @keydown.space.stop="handleClick"
                         :aria-label="`Read article: ${dt.title}`"
                       >
                         Read Article
@@ -137,12 +137,20 @@
       >
         <div class="detail-modal text-center" :class="{ 'min-h-[75vh]': dataDetail.hasArticle }">
           <h3 class="text-center font-bold text-xl">
-            {{ dataDetail.title + (articleContent ? ` | ${articleContent.title}` : '') }}
+            {{
+              dataDetail.title +
+              (articleContent && articleContent.title !== dataDetail.title
+                ? ` | ${articleContent.title}`
+                : '')
+            }}
           </h3>
+          <p v-if="dataDetail.description" class="text-center text-base-content/80 mt-1">
+            {{ dataDetail.description }}
+          </p>
           <!-- eslint-disable vue/no-v-html -->
           <p
             v-if="dataDetail.content"
-            class="text-center"
+            class="text-center mt-2"
             v-html="dataDetail.content.replace(/&lt;br&gt;/g, '<br>')"
           ></p>
           <!-- eslint-enable vue/no-v-html -->
@@ -160,10 +168,10 @@
               <div class="join">
                 <button
                   class="join-item btn"
-                  :disabled="articlePage == 1"
-                  @click="--articlePage"
-                  @keydown.enter="--articlePage"
-                  @keydown.space="--articlePage"
+                  :disabled="articlePage <= 1"
+                  @click="articlePage--"
+                  @keydown.enter="articlePage--"
+                  @keydown.space="articlePage--"
                   aria-label="Previous page"
                 >
                   «
@@ -171,11 +179,20 @@
                 <button
                   class="join-item btn"
                   disabled
-                  aria-label="Current page: {{ articleContent?.title || 'Content' }}"
+                  :aria-label="`Page ${articlePage} of ${totalArticlePages}`"
                 >
                   {{ articleContent?.title || 'Content' }}
                 </button>
-                <button class="join-item btn" disabled aria-label="Next page (disabled)">»</button>
+                <button
+                  class="join-item btn"
+                  :disabled="articlePage >= totalArticlePages"
+                  @click="articlePage++"
+                  @keydown.enter="articlePage++"
+                  @keydown.space="articlePage++"
+                  aria-label="Next page"
+                >
+                  »
+                </button>
               </div>
             </template>
           </template>
@@ -223,12 +240,19 @@ function selectDetail(dt: Constitution) {
 function closeDetail() {
   showDetail.value = false
   dataDetail.value = null
+  article.value = null
+  articlePage.value = 1
 }
 
 const article = ref<ConstitutionArticle | null>(null)
 
 const isLoadingArticle = ref<boolean>(false)
 const articlePage = ref<number>(1)
+
+const totalArticlePages = computed<number>(() => {
+  if (!article.value?.sections?.length) return 1
+  return article.value.sections.length
+})
 
 const articleContent = computed<ConstitutionArticleSection | null>(() => {
   if (!article.value) {

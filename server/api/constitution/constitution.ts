@@ -14,7 +14,7 @@ export default defineEventHandler(async event => {
     const result = constitutionArticles.map(article => ({
       title: article.title,
       description: article.summary,
-      hasArticle: true,
+      hasArticle: false,
       key: `article${article.number}`
     }))
 

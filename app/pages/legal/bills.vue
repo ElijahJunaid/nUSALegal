@@ -85,7 +85,11 @@
               </div>
             </div>
 
-            <BillsCongress v-if="selectedSection === 'congress'" @open-pdf="openPDF" />
+            <BillsCongress
+              v-if="selectedSection === 'congress'"
+              @open-pdf="openPDF"
+              @open-detail="openBillDetail"
+            />
 
             <BillsCityCouncil v-else @open-pdf="openPDF" />
           </div>
@@ -93,12 +97,31 @@
       </section>
     </template>
   </NuxtLayout>
+
+  <LazyModal
+    v-if="showBillDetail && selectedBill"
+    :show="showBillDetail"
+    max-width="max-w-3xl"
+    @close="closeBillDetail"
+  >
+    <div class="data-detail text-center">
+      <h3 class="text-center font-bold text-xl mb-2">{{ selectedBill.number }}</h3>
+      <p class="text-sm text-center mb-4">{{ selectedBill.description }}</p>
+      <button
+        v-if="selectedBill.pdfPath"
+        class="btn btn-primary"
+        @click="openPDF(selectedBill.pdfPath)"
+      >
+        [View Bill Text]
+      </button>
+    </div>
+  </LazyModal>
 </template>
 
 <script lang="ts" setup>
 import { useBillsStore } from '~/stores/bills-store'
 import { dError } from '~/plugins/debug-logger.client'
-import { useHead, definePageMeta, storeToRefs, onMounted } from '#imports'
+import { useHead, definePageMeta, storeToRefs, onMounted, ref } from '#imports'
 
 definePageMeta({
   title: 'Legislation & Bills',
@@ -116,6 +139,26 @@ onMounted(fetchCongressBills)
 interface PdfTokenResponse {
   token: string
   url: string
+}
+
+interface BillDetail {
+  number: string
+  description: string
+  pdfPath: string
+  type: string
+}
+
+const showBillDetail = ref(false)
+const selectedBill = ref<BillDetail | null>(null)
+
+function openBillDetail(bill: BillDetail) {
+  selectedBill.value = bill
+  showBillDetail.value = true
+}
+
+function closeBillDetail() {
+  showBillDetail.value = false
+  selectedBill.value = null
 }
 
 async function openPDF(pdfPath: string) {

@@ -273,7 +273,7 @@ function applyFilters(list: CongressMember[]) {
       m.state.toLowerCase().includes(q)
     const matchStatus = !filterStatus.value || m.status === filterStatus.value
     const matchParty = !filterParty.value || m.party === filterParty.value
-    const matchState = !selectedState.value || m.state === selectedState.value
+    const matchState = !selectedState.value || stateAbbr(m.state) === selectedState.value
     return matchQ && matchStatus && matchParty && matchState
   })
 }

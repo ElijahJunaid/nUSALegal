@@ -24,15 +24,16 @@
       <div
         v-for="(bill, index) in filteredCongressBills"
         :key="index"
-        class="card border border-base-300"
+        class="card border border-base-300 cursor-pointer hover:shadow-md transition-shadow"
+        @click="$emit('open-detail', bill)"
       >
         <div class="card-body text-center">
           <div>
             <h3 class="text-center font-bold text-xl">{{ bill.number }}</h3>
             <button
-              @click="$emit('open-pdf', bill.pdfPath)"
-              @keydown.enter="$emit('open-pdf', bill.pdfPath)"
-              @keydown.space="$emit('open-pdf', bill.pdfPath)"
+              @click.stop="$emit('open-pdf', bill.pdfPath)"
+              @keydown.enter.stop="$emit('open-pdf', bill.pdfPath)"
+              @keydown.space.stop="$emit('open-pdf', bill.pdfPath)"
               class="btn hover:text-primary-focus"
               :aria-label="`View PDF for bill ${bill.number}`"
             >
@@ -53,7 +54,10 @@
 import { useBillsStore } from '~/stores/bills-store'
 import { storeToRefs } from 'pinia'
 
-defineEmits(['open-pdf'])
+defineEmits<{
+  'open-pdf': [pdfPath: string]
+  'open-detail': [bill: { number: string; description: string; pdfPath: string; type: string }]
+}>()
 
 const billsStore = useBillsStore()
 const { loading, filteredCongressBills } = storeToRefs(billsStore)

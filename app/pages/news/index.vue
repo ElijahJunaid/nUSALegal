@@ -36,18 +36,18 @@
           <p class="news-orgs-eyebrow">REGISTERED OUTLETS</p>
           <h2 class="news-orgs-title">News Organizations</h2>
         </div>
-        <div v-if="loading" class="news-orgs-loading">Loading…</div>
-        <div v-else-if="newsOrgs.length === 0" class="news-orgs-empty">
+        <div v-if="pending" class="news-orgs-loading">Loading…</div>
+        <div v-else-if="!newsOrgs || newsOrgs.length === 0" class="news-orgs-empty">
           No registered news organizations found.
         </div>
         <div v-else class="news-orgs-grid">
-          <NuxtLink v-for="org in newsOrgs" :key="org.name" :to="org.route" class="news-org-card">
+          <div v-for="org in newsOrgs" :key="org.name" class="news-org-card no-link">
             <div class="news-org-icon">📰</div>
             <div class="news-org-meta">
               <p class="news-org-name">{{ org.name }}</p>
               <p class="news-org-focus">{{ org.focus }}</p>
             </div>
-          </NuxtLink>
+          </div>
         </div>
       </div>
     </section>
@@ -72,42 +72,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useDocalStore } from '~/stores/docal-store'
+import { useFetch } from '#imports'
 import { useTheme } from '~/composables/useTheme'
 import { ChatbotWidget } from '#components'
 
 const { theme, toggleTheme } = useTheme()
-const docalStore = useDocalStore()
-const { loading } = storeToRefs(docalStore)
 
-const newsOrgs = computed(() => [
-  {
-    name: 'nUSA Press & Media',
-    route: '/news',
-    focus: 'Official government news and press releases'
-  },
-  {
-    name: 'Nightgalades News Network',
-    route: '#',
-    focus: '24/7 news coverage of nUSA events'
-  },
-  {
-    name: 'The Nightgalades Times',
-    route: '#',
-    focus: 'In-depth political analysis and reporting'
-  },
-  {
-    name: 'Federal Broadcasting Service',
-    route: '#',
-    focus: 'Public service news and documentaries'
-  }
-])
+interface NewsOrg {
+  name: string
+  focus: string
+}
 
-onMounted(() => {
-  docalStore.fetchBusinesses()
-})
+const { data: newsOrgs, pending } = await useFetch<NewsOrg[]>('/api/news/orgs')
 
 definePageMeta({
   layout: false

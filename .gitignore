@@ -63,6 +63,7 @@ scripts/upload-pdfs-to-blobs.js
 scripts/sync-docal-businesses.js
 scripts/sync-congress-laws.js
 scripts/toggle-debug.ps1
+scripts/sync-news-orgs.js
 
 # Reports
 reports/

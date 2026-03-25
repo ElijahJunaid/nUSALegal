@@ -130,7 +130,11 @@ onMounted(async () => {
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     subdomains: 'abc',
     maxZoom: 19,
-    noWrap: true
+    noWrap: true,
+    bounds: [
+      [-85.051, -180],
+      [85.051, 180]
+    ] as [[number, number], [number, number]]
   }).addTo(map)
 
   try {

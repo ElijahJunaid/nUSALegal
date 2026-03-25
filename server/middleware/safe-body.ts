@@ -21,6 +21,29 @@ export async function validateAndReplaceBody<T>(
         body = JSON.parse(req.body)
       } else if (req.body instanceof Buffer) {
         body = JSON.parse(req.body.toString())
+      } else if (
+        req.body &&
+        typeof (req.body as { getReader?: unknown }).getReader === 'function'
+      ) {
+        const reader = (
+          req.body as {
+            getReader: () => { read: () => Promise<{ done: boolean; value?: Uint8Array }> }
+          }
+        ).getReader()
+        const parts: Uint8Array[] = []
+        for (;;) {
+          const { done, value } = await reader.read()
+          if (done) break
+          if (value) parts.push(value)
+        }
+        const totalLen = parts.reduce((n, p) => n + p.length, 0)
+        const merged = new Uint8Array(totalLen)
+        let offset = 0
+        for (const p of parts) {
+          merged.set(p, offset)
+          offset += p.length
+        }
+        body = JSON.parse(Buffer.from(merged).toString('utf-8'))
       } else if (typeof req.body === 'object' && !Buffer.isBuffer(req.body)) {
         body = req.body
       } else {

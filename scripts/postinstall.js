@@ -167,6 +167,64 @@ function splitCookiesString(cookiesString) {
     console.log('Fixed h3 import in @nuxt/nitro-server')
   }
 
+  const _sendShim =
+    'function send(event, body) { var res = event && event.node && event.node.res; if (res && !res.writableEnded) { res.end(typeof body === "string" || (typeof Buffer !== "undefined" && Buffer.isBuffer(body)) ? body : String(body)); } }'
+
+  // Inject send() shim into nitropack/dist/runtime/internal/renderer.mjs
+  // fixH3ImportsInDirectory removes send from imports but call sites remain — this is the ECONNRESET root cause
+  const nitropackRendererPath = path.join(
+    __dirname,
+    '../node_modules/nitropack/dist/runtime/internal/renderer.mjs'
+  )
+  if (fs.existsSync(nitropackRendererPath)) {
+    let content = fs.readFileSync(nitropackRendererPath, 'utf8')
+    const original = content
+    if (!content.includes('function send(event, body)')) {
+      content = content.replace(/^(export function defineRenderHandler)/m, `${_sendShim}\n$1`)
+    }
+    if (content !== original) {
+      fs.writeFileSync(nitropackRendererPath, content)
+      console.log('Injected send() shim into nitropack/dist/runtime/internal/renderer.mjs')
+    }
+  }
+
+  // Inject send() shim into @nuxt/nitro-server error.mjs (h3 v2 removed send(); shim writes via node res)
+  const nuxtNitroServerMjsPath = path.join(
+    __dirname,
+    '../node_modules/@nuxt/nitro-server/dist/runtime/handlers/error.mjs'
+  )
+  if (fs.existsSync(nuxtNitroServerMjsPath)) {
+    let content = fs.readFileSync(nuxtNitroServerMjsPath, 'utf8')
+    const original = content
+    if (!content.includes('function send(event, body)')) {
+      content = content.replace(
+        /^(export default \(async function errorhandler)/m,
+        `${_sendShim}\n$1`
+      )
+    }
+    if (content !== original) {
+      fs.writeFileSync(nuxtNitroServerMjsPath, content)
+      console.log('Injected send() shim into @nuxt/nitro-server error.mjs')
+    }
+  }
+
+  // Inject send() shim into nitropack/dist/runtime/error.mjs (send never imported there)
+  const nitropackRuntimeErrorPath = path.join(
+    __dirname,
+    '../node_modules/nitropack/dist/runtime/error.mjs'
+  )
+  if (fs.existsSync(nitropackRuntimeErrorPath)) {
+    let content = fs.readFileSync(nitropackRuntimeErrorPath, 'utf8')
+    const original = content
+    if (!content.includes('function send(event, body)')) {
+      content = content.replace(/^(export default defineNitroErrorHandler)/m, `${_sendShim}\n$1`)
+    }
+    if (content !== original) {
+      fs.writeFileSync(nitropackRuntimeErrorPath, content)
+      console.log('Injected send() shim into nitropack/dist/runtime/error.mjs')
+    }
+  }
+
   function fixH3ImportsInDirectory(dirPath) {
     if (!fs.existsSync(dirPath)) return
 
