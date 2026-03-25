@@ -278,6 +278,57 @@ function splitCookiesString(cookiesString) {
     }
   }
 
+  // Patch h3 v2 utilities to be backwards-compatible with h3 v1-style events.
+  // nitropack bundles its own h3 v1.15.10 and uses it to create events where
+  // event.req is a Node.js IncomingMessage (not a Web Request). h3 v2 utilities
+  // like getRequestHeader / getQuery expect a Web Request on event.req and crash.
+  const h3DistDir = path.join(__dirname, '../node_modules/h3/dist')
+  if (fs.existsSync(h3DistDir)) {
+    const h3Files = fs
+      .readdirSync(h3DistDir)
+      .filter(f => f.endsWith('.mjs') && !f.startsWith('_') && f !== 'tracing.mjs')
+    for (const fname of h3Files) {
+      const fpath = path.join(h3DistDir, fname)
+      let content = fs.readFileSync(fpath, 'utf8')
+      if (!content.includes('function getRequestHeader')) continue
+
+      const original = content
+
+      // Patch getRequestHeader: fall back to plain object headers when event.req
+      // is a Node.js IncomingMessage (no Headers.get() method).
+      content = content.replace(
+        'function getRequestHeader(event, name) {\n\treturn event.req.headers.get(name) || void 0;\n}',
+        'function getRequestHeader(event, name) {\n\tif (typeof event.req?.headers?.get === "function") {\n\t\treturn event.req.headers.get(name) || void 0;\n\t}\n\treturn event.node?.req?.headers?.[name.toLowerCase()] || event.req?.headers?.[name.toLowerCase()] || void 0;\n}'
+      )
+
+      // Patch getQuery: fall back to node req url (path-only) with a synthetic base
+      // when event.url is absent and event.req.url is not a full URL.
+      content = content.replace(
+        'function getQuery(event) {\n\treturn parseQuery((event.url || new URL(event.req.url)).search.slice(1));\n}',
+        'function getQuery(event) {\n\tif (event.url) return parseQuery(event.url.search.slice(1));\n\tconst rawUrl = event.req?.url || event.node?.req?.url || "/";\n\tconst base = rawUrl.startsWith("http") ? undefined : "http://localhost";\n\treturn parseQuery(new URL(rawUrl, base).search.slice(1));\n}'
+      )
+
+      // Patch readBody: three-way fallback for h3 v1 events where event.req is not a Web Request.
+      // Case A (fresh install): replaces original h3 v2 readBody.
+      // Case B (upgrade): replaces previous partial patch on already-patched dev machine.
+      const _readBodyImproved =
+        'async function readBody(event) {\n\tlet text;\n\tif (typeof event.req?.text === "function") {\n\t\ttext = await event.req.text();\n\t} else if (event.req?.body && typeof event.req.body.getReader === "function") {\n\t\ttext = await new Response(event.req.body).text();\n\t} else {\n\t\tconst _nodeReq = event.node?.req || event.req;\n\t\tif (_nodeReq && typeof _nodeReq.on === "function") {\n\t\t\ttext = await new Promise((resolve, reject) => { const _chunks = []; _nodeReq.on("data", (c) => _chunks.push(c)); _nodeReq.on("end", () => resolve(Buffer.concat(_chunks.map((c) => Buffer.isBuffer(c) ? c : Buffer.from(c))).toString("utf-8"))); _nodeReq.on("error", reject); });\n\t\t} else {\n\t\t\treturn undefined;\n\t\t}\n\t}\n\tif (!text) return;\n\tconst _readBodyCT = typeof event.req?.headers?.get === "function" ? event.req.headers.get("content-type") || "" : event.node?.req?.headers?.["content-type"] || event.req?.headers?.["content-type"] || "";\n\tif (_readBodyCT.startsWith("application/x-www-form-urlencoded")) return parseURLEncodedBody(text);'
+      content = content.replace(
+        'async function readBody(event) {\n\tconst text = await event.req.text();\n\tif (!text) return;\n\tif ((event.req.headers.get("content-type") || "").startsWith("application/x-www-form-urlencoded")) return parseURLEncodedBody(text);',
+        _readBodyImproved
+      )
+      content = content.replace(
+        'async function readBody(event) {\n\tlet text;\n\tif (typeof event.req?.text === "function") {\n\t\ttext = await event.req.text();\n\t} else if (event.req?.body) {\n\t\ttext = await new Response(event.req.body).text();\n\t} else {\n\t\treturn undefined;\n\t}\n\tif (!text) return;\n\tconst _readBodyCT = typeof event.req?.headers?.get === "function" ? event.req.headers.get("content-type") || "" : event.node?.req?.headers?.["content-type"] || event.req?.headers?.["content-type"] || "";\n\tif (_readBodyCT.startsWith("application/x-www-form-urlencoded")) return parseURLEncodedBody(text);',
+        _readBodyImproved
+      )
+
+      if (content !== original) {
+        fs.writeFileSync(fpath, content)
+        console.log(`Patched h3 v2 event compatibility in ${fname}`)
+      }
+    }
+  }
+
   if (isCI) {
     console.log('Skipping nuxt prepare in CI')
   } else {
