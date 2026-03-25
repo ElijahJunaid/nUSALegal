@@ -72,6 +72,19 @@ if (fs.existsSync(nitroInternalAppPath)) {
       'import { defineEventHandler, fetchWithEvent, handleCacheHeaders, isEvent } from "h3";'
     )
 
+    content = content.replace(
+      '      const event = createEvent(reqProxy, resProxy);',
+      '      const event = Object.create(Object.getPrototypeOf(incomingEvent), Object.getOwnPropertyDescriptors(incomingEvent));\n      event.node = { ...incomingEvent.node, req: reqProxy, res: resProxy };'
+    )
+
+    if (
+      content.includes('splitCookiesString') &&
+      !content.includes('function splitCookiesString')
+    ) {
+      const polyfill = `\n// Inline polyfill: splitCookiesString removed in h3 v2\nfunction splitCookiesString(cookiesString) {\n  if (Array.isArray(cookiesString)) { return cookiesString.flatMap((c) => splitCookiesString(c)); }\n  if (typeof cookiesString !== "string") { return []; }\n  const cookiesStrings = [];\n  let pos = 0, start, ch, lastComma, nextStart, cookiesSeparatorFound;\n  function skipWhitespace() { while (pos < cookiesString.length && /\\s/.test(cookiesString.charAt(pos))) { pos += 1; } return pos < cookiesString.length; }\n  function notSpecialChar() { ch = cookiesString.charAt(pos); return ch !== "=" && ch !== ";" && ch !== ","; }\n  while (pos < cookiesString.length) {\n    start = pos; cookiesSeparatorFound = false;\n    while (skipWhitespace()) {\n      ch = cookiesString.charAt(pos);\n      if (ch === ",") {\n        lastComma = pos; pos += 1; skipWhitespace(); nextStart = pos;\n        while (pos < cookiesString.length && notSpecialChar()) { pos += 1; }\n        if (pos < cookiesString.length && cookiesString.charAt(pos) === "=") {\n          cookiesSeparatorFound = true; pos = nextStart;\n          cookiesStrings.push(cookiesString.substring(start, lastComma)); start = pos;\n        } else { pos = lastComma + 1; }\n      } else { pos += 1; }\n    }\n    if (!cookiesSeparatorFound || pos >= cookiesString.length) { cookiesStrings.push(cookiesString.substring(start, cookiesString.length)); }\n  }\n  return cookiesStrings;\n}\n`
+      content = content.replace(/^(import \{[^}]+\} from "h3";)/m, `$1${polyfill}`)
+    }
+
     fs.writeFileSync(nitropackCachePath, content)
     console.log('Fixed h3 import in nitropack cache')
   }
