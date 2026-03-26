@@ -2,18 +2,18 @@
 
 A comprehensive legal information platform built with Nuxt 4, providing access to bills, laws, constitution articles, court procedures, and an AI-powered legal assistant.
 
-## ⚡ Quick Setup
+## âš¡ Quick Setup
 
 **Prerequisites:** You already have the repository cloned and Netlify account set up.
 
 1. **Import to Netlify**
-   - Go to Netlify Dashboard → Add new site → Import an existing project
+   - Go to Netlify Dashboard â†’ Add new site â†’ Import an existing project
    - Connect your Git repository
    - Netlify will auto-detect the build settings from `netlify.toml`
 
 2. **Deploy**
    - Click "Deploy site"
-   - **No environment variables needed for the build!** ✅
+   - **No environment variables needed for the build!** âœ…
    - The build will complete successfully without any env vars
 
 3. **Upload PDFs to Netlify Blobs** (Optional but recommended)
@@ -36,7 +36,7 @@ A comprehensive legal information platform built with Nuxt 4, providing access t
    - Upload them to Netlify Blobs store named `pdfs`
    - Preserve the directory structure
 
-4. **Done!** 🎉
+4. **Done!** ðŸŽ‰
    - Your site is live and functional
    - Static content (bills, laws, constitution) works immediately
    - API endpoints work (some features may be limited without env vars)
@@ -46,7 +46,7 @@ A comprehensive legal information platform built with Nuxt 4, providing access t
 
 ---
 
-## 🚀 Full Installation Guide
+## ðŸš€ Full Installation Guide
 
 ### Prerequisites
 
@@ -111,7 +111,7 @@ A comprehensive legal information platform built with Nuxt 4, providing access t
 
    The application will be available at `http://localhost:3000`
 
-## 📋 Environment Variables
+## ðŸ“‹ Environment Variables
 
 ### Required Variables
 
@@ -139,7 +139,7 @@ A comprehensive legal information platform built with Nuxt 4, providing access t
 | `NUXT_PUBLIC_ENVIRONMENT`        | Environment identifier        | `production`  | Used for Sentry               |
 | `NODE_ENV`                       | Node environment              | `development` | `development` or `production` |
 
-## 🔧 Why Redis?
+## ðŸ”§ Why Redis?
 
 Redis is used as an **optional caching layer** to improve performance:
 
@@ -152,7 +152,7 @@ Redis is used as an **optional caching layer** to improve performance:
 
 **You don't need Redis to run the application** - it's purely optional for performance optimization.
 
-## 🏗️ Building for Production
+## ðŸ—ï¸ Building for Production
 
 ### Build the application
 
@@ -172,7 +172,7 @@ npm run preview
 npm run generate
 ```
 
-## 🌐 Deployment
+## ðŸŒ Deployment
 
 ### Netlify (Recommended)
 
@@ -180,7 +180,7 @@ This application is configured for Netlify deployment:
 
 1. **Connect your repository** to Netlify
 2. **Set environment variables** in Netlify dashboard:
-   - Go to Site settings → Environment variables
+   - Go to Site settings â†’ Environment variables
    - Add all required variables from the `.env` file
 3. **Deploy settings** (auto-configured via `netlify.toml`):
    - Build command: `npm run build`
@@ -203,25 +203,25 @@ This application is configured for Netlify deployment:
 
 3. Deploy the contents to your hosting provider
 
-## 📁 Project Structure
+## ðŸ“ Project Structure
 
 ```
 nuxt/
-├── app/                    # Nuxt application source
-│   ├── components/         # Vue components
-│   ├── pages/              # Route pages
-│   ├── stores/             # Pinia stores
-│   └── composables/        # Composables
-├── server/                  # Server-side code
-│   ├── api/                # API endpoints
-│   ├── data/               # Static data files
-│   └── utils/              # Server utilities
-├── public/                 # Static assets
-├── nuxt.config.ts         # Nuxt configuration
-└── package.json            # Dependencies
+â”œâ”€â”€ app/                    # Nuxt application source
+â”‚   â”œâ”€â”€ components/         # Vue components
+â”‚   â”œâ”€â”€ pages/              # Route pages
+â”‚   â”œâ”€â”€ stores/             # Pinia stores
+â”‚   â””â”€â”€ composables/        # Composables
+â”œâ”€â”€ server/                  # Server-side code
+â”‚   â”œâ”€â”€ api/                # API endpoints
+â”‚   â”œâ”€â”€ data/               # Static data files
+â”‚   â””â”€â”€ utils/              # Server utilities
+â”œâ”€â”€ public/                 # Static assets
+â”œâ”€â”€ nuxt.config.ts         # Nuxt configuration
+â””â”€â”€ package.json            # Dependencies
 ```
 
-## 🔑 API Endpoints
+## ðŸ”‘ API Endpoints
 
 ### Public Endpoints
 
@@ -251,7 +251,7 @@ nuxt/
 - `GET /api/robloxcheck?username=...` - Roblox user verification
 - `POST /api/check-nusa-bans` - NUSA ban check
 
-## 🛠️ Development
+## ðŸ› ï¸ Development
 
 ### Available Scripts
 
@@ -269,7 +269,7 @@ nuxt/
 - **Error Monitoring**: Optional Sentry integration
 - **PDF Storage**: PDFs stored in Netlify Blobs or local filesystem
 
-## 🔒 Security
+## ðŸ”’ Security
 
 - CORS protection via `ALLOWED_ORIGINS`
 - Token-based API authentication
@@ -277,7 +277,7 @@ nuxt/
 - Input sanitization and validation
 - Secure PDF token system
 
-## 📄 PDF Storage
+## ðŸ“„ PDF Storage
 
 PDFs are stored in **Netlify Blobs** for production deployments. The application automatically detects the environment and uses the appropriate storage:
 
@@ -303,7 +303,7 @@ npm run upload-pdfs
 
 ```bash
 # Get your access token from: https://app.netlify.com/user/applications
-# Get your site ID from: Netlify Dashboard → Site settings → General → Site details
+# Get your site ID from: Netlify Dashboard â†’ Site settings â†’ General â†’ Site details
 
 # Windows
 set NETLIFY_ACCESS_TOKEN=your-access-token
@@ -325,13 +325,13 @@ The script will:
 
 **Note:** The store name can be customized with `NETLIFY_BLOBS_STORE_NAME` environment variable (default: `pdfs`).
 
-## 📝 Notes
+## ðŸ“ Notes
 
 - **No Database**: This application uses static data files - no Prisma or database setup required
 - **Redis is Optional**: The app works without Redis, but caching improves performance
 - **PDF Storage**: PDFs can be stored in Netlify Blobs (production) or local filesystem (development)
 
-## 🐛 Troubleshooting
+## ðŸ› Troubleshooting
 
 ### Redis Connection Issues
 
@@ -356,13 +356,10 @@ If you see `cache: disconnected` in health check:
   npm install
   ```
 
-## 📄 License
+## ðŸ“„ License
 
 [Your License Here]
 
-## 🤝 Contributing
+## ðŸ¤ Contributing
 
 [Contributing Guidelines Here]
-t e s t   c h a n g e 
- 
- 
