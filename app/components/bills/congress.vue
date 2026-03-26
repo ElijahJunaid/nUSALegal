@@ -29,13 +29,13 @@
       >
         <div class="card-body text-center">
           <div>
-            <h3 class="text-center font-bold text-xl">{{ bill.number }}</h3>
+            <h3 class="text-center font-bold text-xl">{{ formatBillNumber(bill.number) }}</h3>
             <button
               @click.stop="$emit('open-pdf', bill.pdfPath)"
               @keydown.enter.stop="$emit('open-pdf', bill.pdfPath)"
               @keydown.space.stop="$emit('open-pdf', bill.pdfPath)"
               class="btn hover:text-primary-focus"
-              :aria-label="`View PDF for bill ${bill.number}`"
+              :aria-label="`View PDF for bill ${formatBillNumber(bill.number)}`"
             >
               [View Bill Text]
             </button>
@@ -58,6 +58,10 @@ defineEmits<{
   'open-pdf': [pdfPath: string]
   'open-detail': [bill: { number: string; description: string; pdfPath: string; type: string }]
 }>()
+
+function formatBillNumber(num: string): string {
+  return num.replace(/^Public Law\s+/i, 'PL ').replace(/\| Public Law\s+/gi, '| PL ')
+}
 
 const billsStore = useBillsStore()
 const { loading, filteredCongressBills } = storeToRefs(billsStore)

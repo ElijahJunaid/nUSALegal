@@ -113,9 +113,9 @@
                       <button
                         v-if="dt.hasArticle"
                         class="btn"
-                        @click.stop="handleClick"
-                        @keydown.enter.stop="handleClick"
-                        @keydown.space.stop="handleClick"
+                        @click.stop="selectDetail(dt)"
+                        @keydown.enter.stop="selectDetail(dt)"
+                        @keydown.space.stop="selectDetail(dt)"
                         :aria-label="`Read article: ${dt.title}`"
                       >
                         Read Article

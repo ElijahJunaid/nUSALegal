@@ -679,6 +679,7 @@ const ToastContainer = defineAsyncComponent(() => import('~/components/ToastCont
 const ReconnectionDialog = defineAsyncComponent(() => import('~/components/ReconnectionDialog.vue'))
 
 definePageMeta({
+  ssr: false,
   title: 'Mock Trial Simulator',
   description: 'Interactive AI-powered mock trial simulator for nUSA Legal'
 })

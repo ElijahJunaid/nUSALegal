@@ -50,16 +50,16 @@ export const congressBills: CongressBill[] = [
     category: 'congress'
   },
   {
-    number: 'H.R. 5 Grand Jury Recomposition Act',
-    description: 'H.R. 5 Grand Jury Recomposition Act',
-    pdfPath: 'bills/h-r-5-grand-jury-recomposition-act.pdf',
+    number: '107-4 | Grand Jury Recomposition Act (H.R. 5)',
+    description: 'Grand Jury Recomposition Act',
+    pdfPath: 'bills/h-r-5.pdf',
     type: 'hr',
     category: 'congress'
   },
   {
-    number: 'H.R. 11 | BATHTUB Act',
-    description: 'H.R. 11 | BATHTUB Act',
-    pdfPath: 'bills/h-r-11-bathtub-act.pdf',
+    number: 'H.R. 11',
+    description: 'BATHTUB Act',
+    pdfPath: '',
     type: 'hr',
     category: 'congress'
   },
@@ -78,9 +78,9 @@ export const congressBills: CongressBill[] = [
     category: 'congress'
   },
   {
-    number: 'S. 64 Termination and Suspension Justification Act',
-    description: 'S. 64 Termination and Suspension Justification Act',
-    pdfPath: 'bills/s-64-termination-and-suspension-justification-act.pdf',
+    number: 'Public Law 89-2 | Termination and Suspension Justification Act (S. 64)',
+    description: 'Termination and Suspension Justification Act',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
@@ -401,9 +401,9 @@ export const congressBills: CongressBill[] = [
     category: 'congress'
   },
   {
-    number: 'S. 51 Federal Budget of December 2024',
-    description: 'S. 51 Federal Budget of December 2024',
-    pdfPath: 'bills/s-51-federal-budget-of-december-2024.pdf',
+    number: 'Public Law 102-1 | Federal Budget of December 2024 (S. 51)',
+    description: 'Federal Budget of December 2024',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
@@ -415,51 +415,51 @@ export const congressBills: CongressBill[] = [
     category: 'congress'
   },
   {
-    number: 'S. 49 Department of Commerce and Labor Act of 2024',
-    description: 'S. 49 Department of Commerce and Labor Act of 2024',
-    pdfPath: 'bills/s-49-department-of-commerce-and-labor-act-of-2024.pdf',
+    number: 'Public Law 102-4 | Department of Commerce and Labor Act of 2024 (S. 49)',
+    description: 'Department of Commerce and Labor Act of 2024',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
   {
-    number: 'H.R. 1 Department of Commerce and Labor Expansion Act',
-    description: 'H.R. 1 Department of Commerce and Labor Expansion Act',
-    pdfPath: 'bills/h-r-1-department-of-commerce-and-labor-expansion-act.pdf',
+    number: 'Public Law 103-1 | Department of Commerce and Labor Expansion Act (H.R. 1)',
+    description: 'Department of Commerce and Labor Expansion Act',
+    pdfPath: '',
     type: 'hr',
     category: 'congress'
   },
   {
-    number: 'S. 62 Inspect Our Soldiers',
-    description: 'S. 62 Inspect Our Soldiers',
-    pdfPath: 'bills/s-62-inspect-our-soldiers.pdf',
+    number: 'Public Law 103-2 | Inspect Our Soldiers (S. 62)',
+    description: 'Inspect Our Soldiers',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
   {
-    number: 'S. 53 Department of Justice Improvement Act',
-    description: 'S. 53 Department of Justice Improvement Act',
-    pdfPath: 'bills/s-53-department-of-justice-improvement-act.pdf',
+    number: 'Public Law 103-3 | Department of Justice Improvement Act (S. 53)',
+    description: 'Department of Justice Improvement Act',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
   {
-    number: 'S. 59 Capitol Police Jurisdiction and Authority',
-    description: 'S. 59 Capitol Police Jurisdiction and Authority',
-    pdfPath: 'bills/s-59-capitol-police-jurisdiction-and-authority.pdf',
+    number: 'Public Law 103-4 | Capitol Police Jurisdiction and Authority (S. 59)',
+    description: 'Capitol Police Jurisdiction and Authority',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
   {
-    number: 'S. 61 Notification of Retracting Nominees',
-    description: 'S. 61 Notification of Retracting Nominees',
-    pdfPath: 'bills/s-61-notification-of-retracting-nominees.pdf',
+    number: 'Public Law 103-5 | Notification of Retracting Nominees (S. 61)',
+    description: 'Notification of Retracting Nominees',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
   {
-    number: 'S. 65 Public Vehicle Usage Regulation Act',
-    description: 'S. 65 Public Vehicle Usage Regulation Act',
-    pdfPath: 'bills/s-65-public-vehicle-usage-regulation-act.pdf',
+    number: 'Public Law 103-8 | Public Vehicle Usage Regulation Act (S. 65)',
+    description: 'Public Vehicle Usage Regulation Act',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
@@ -492,58 +492,58 @@ export const congressBills: CongressBill[] = [
     category: 'congress'
   },
   {
-    number: 'H.R. 12 | RAT Act',
-    description: 'H.R. 12 | RAT Act',
-    pdfPath: 'bills/h-r-12-rat-act.pdf',
+    number: 'H.R. 12',
+    description: 'RAT Act',
+    pdfPath: '',
     type: 'hr',
     category: 'congress'
   },
   {
-    number: 'H.R. 16 | The Federal Government Protection Act',
-    description: 'H.R. 16 | The Federal Government Protection Act',
-    pdfPath: 'bills/h-r-16-the-federal-government-protection-act.pdf',
+    number: 'H.R. 16',
+    description: 'The Federal Government Protection Act',
+    pdfPath: '',
     type: 'hr',
     category: 'congress'
   },
   {
-    number: 'S. 82 | The BELLA Act',
-    description: 'S. 82 | The BELLA Act',
-    pdfPath: 'bills/s-82-the-bella-act.pdf',
+    number: '106-3 | The BELLA Act (S. 82)',
+    description: 'The BELLA Act',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
   {
-    number: 'H.R. 13 | Judicial Conference Establishment Act',
-    description: 'H.R. 13 | Judicial Conference Establishment Act',
-    pdfPath: 'bills/h-r-13-judicial-conference-establishment-act.pdf',
+    number: '106-4 | Judicial Conference Establishment Act (H.R. 13)',
+    description: 'Judicial Conference Establishment Act',
+    pdfPath: '',
     type: 'hr',
     category: 'congress'
   },
   {
-    number: 'S. 83 | Protecting Our Checks and Balances Act (The BATHACUSS Act)',
-    description: 'S. 83 | Protecting Our Checks and Balances Act (The BATHACUSS Act)',
-    pdfPath: 'bills/s-83-protecting-our-checks-and-balances-act-the-bathacuss-act.pdf',
+    number: 'S. 83',
+    description: 'Protecting Our Checks and Balances Act (The BATHACUSS Act)',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
   {
-    number: 'H.R. 15 | Electioneering Act',
-    description: 'H.R. 15 | Electioneering Act',
-    pdfPath: 'bills/h-r-15-electioneering-act.pdf',
+    number: '106-5 | Electioneering Act (H.R. 15)',
+    description: 'Electioneering Act',
+    pdfPath: '',
     type: 'hr',
     category: 'congress'
   },
   {
-    number: 'S. 79 | Financial Incentives Act',
-    description: 'S. 79 | Financial Incentives Act',
-    pdfPath: 'bills/s-79-financial-incentives-act.pdf',
+    number: '106-6 | Financial Incentives Act (S. 79)',
+    description: 'Financial Incentives Act',
+    pdfPath: '',
     type: 's',
     category: 'congress'
   },
   {
-    number: 'H.R. 18 | The American Bar Authority Act of 2025',
-    description: 'H.R. 18 | The American Bar Authority Act of 2025',
-    pdfPath: 'bills/h-r-18-the-american-bar-authority-act-of-2025.pdf',
+    number: '106-7 | The American Bar Authority Act of 2025 (H.R. 18)',
+    description: 'The American Bar Authority Act of 2025',
+    pdfPath: 'bills/h-r-18.pdf',
     type: 'hr',
     category: 'congress'
   }

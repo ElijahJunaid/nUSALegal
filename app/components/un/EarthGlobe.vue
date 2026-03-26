@@ -41,14 +41,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, shallowRef, markRaw, onMounted, onUnmounted, nextTick } from 'vue'
 import { unNations } from '~/data/un-nations'
 
 type Nation = (typeof unNations)[0]
 
 const container = ref<HTMLElement | null>(null)
 const loading = ref(true)
-const selectedNation = ref<Nation | null>(null)
+const selectedNation = shallowRef<Nation | null>(null)
 
 const STATUS_COLORS: Record<string, string> = {
   Member: '#0099CC',
@@ -125,15 +125,19 @@ onMounted(async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .onPolygonClick((feat: any) => {
       const nation = nationMap.get(Number(feat.id))
-      selectedNation.value = nation ?? {
-        numericCode: -1,
-        code: '',
-        name: (feat.properties?.name as string) ?? 'Unknown Territory',
-        flag: '🌐',
-        status: 'Member' as const,
-        owner: '—',
-        leader: '—'
-      }
+      nextTick(() => {
+        selectedNation.value = nation
+          ? markRaw({ ...nation })
+          : markRaw({
+              numericCode: -1,
+              code: '',
+              name: (feat.properties?.name as string) ?? 'Unknown Territory',
+              flag: '🌐',
+              status: 'Member' as const,
+              owner: '—',
+              leader: '—'
+            })
+      })
     })(container.value)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -173,6 +177,7 @@ onUnmounted(() => {
   position: relative;
   overflow: hidden;
   background: #000c1d;
+  clip-path: inset(0);
 }
 
 .globe-loading {

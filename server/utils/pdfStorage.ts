@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
 import { dLog, dError } from './debug'
 
 interface StorageAdapter {
@@ -132,27 +133,7 @@ class S3StorageAdapter implements StorageAdapter {
   }
 
   async getPdf(filePath: string): Promise<Buffer | null> {
-    type S3SendResult = { Body?: AsyncIterable<Uint8Array> }
-    type S3Module = {
-      S3Client: new (config: {
-        region: string
-        credentials?: { accessKeyId: string; secretAccessKey: string }
-      }) => { send: (command: unknown) => Promise<S3SendResult> }
-      GetObjectCommand: new (input: { Bucket: string; Key: string }) => unknown
-    }
     try {
-      let s3Module: S3Module
-      try {
-        s3Module = (await import('@aws-sdk/client-s3')) as unknown as S3Module
-      } catch {
-        dError(
-          '❌ [PDF Storage] @aws-sdk/client-s3 is not installed. Install with: npm install @aws-sdk/client-s3'
-        )
-        return null
-      }
-
-      const { S3Client, GetObjectCommand } = s3Module
-
       const s3Client = new S3Client({
         region: this.region,
         credentials:
@@ -175,13 +156,11 @@ class S3StorageAdapter implements StorageAdapter {
         return null
       }
 
-      const chunks: Uint8Array[] = []
+      const bytes = await (
+        response.Body as { transformToByteArray(): Promise<Uint8Array> }
+      ).transformToByteArray()
 
-      for await (const chunk of response.Body) {
-        chunks.push(chunk)
-      }
-
-      return Buffer.concat(chunks)
+      return Buffer.from(bytes)
     } catch (error: unknown) {
       dError(
         '❌ [PDF Storage] Error fetching PDF from S3:',
@@ -198,8 +177,7 @@ function createStorageAdapter(): StorageAdapter {
   dLog('🔍 [PDF Storage] NODE_ENV:', process.env.NODE_ENV)
   dLog('🔍 [PDF Storage] AWS_LAMBDA_FUNCTION_NAME:', process.env.AWS_LAMBDA_FUNCTION_NAME)
 
-  const isNetlify =
-    process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY_DEV
+  const isNetlify = process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME
 
   if (isNetlify) {
     const netlifyBlobsStore = process.env.NETLIFY_BLOBS_STORE_NAME || 'pdfs'

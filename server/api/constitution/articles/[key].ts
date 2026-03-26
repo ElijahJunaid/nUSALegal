@@ -18,7 +18,12 @@ export default defineEventHandler(async event => {
     if (!Object.hasOwn(articles, key)) return []
 
     dLog('📊 [DEBUG] Returning article:', key)
-    return articles[key]
+    const art = articles[key]
+    return {
+      title: art.title,
+      sections:
+        (art as typeof art & { sections?: { title: string; content: string }[] }).sections ?? []
+    }
   } catch (error) {
     dError('❌ [ERROR] Constitution Articles API failed:', error)
     throw createError({

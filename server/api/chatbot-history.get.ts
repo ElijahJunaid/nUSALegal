@@ -49,7 +49,14 @@ const handler = defineEventHandler(async event => {
   } catch (error: unknown) {
     dError('[Chatbot] Error fetching thread history:', error)
 
-    if (error instanceof OpenAI.APIError && error.status === 404) {
+    if (error instanceof OpenAI.APIError) {
+      if (error.status === 404 || error.status === 400 || error.status === 403) {
+        return { thread_id: null, messages: [] }
+      }
+    }
+
+    const errStatus = (error as { status?: number })?.status
+    if (errStatus === 404 || errStatus === 400) {
       return { thread_id: null, messages: [] }
     }
 

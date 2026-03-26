@@ -41,13 +41,18 @@
           No registered news organizations found.
         </div>
         <div v-else class="news-orgs-grid">
-          <div v-for="org in newsOrgs" :key="org.name" class="news-org-card no-link">
+          <NuxtLink
+            v-for="org in newsOrgs"
+            :key="org.name"
+            :to="'/news/' + slugify(org.name)"
+            class="news-org-card"
+          >
             <div class="news-org-icon">📰</div>
             <div class="news-org-meta">
               <p class="news-org-name">{{ org.name }}</p>
               <p class="news-org-focus">{{ org.focus }}</p>
             </div>
-          </div>
+          </NuxtLink>
         </div>
       </div>
     </section>
@@ -75,12 +80,14 @@
 import { useFetch } from '#imports'
 import { useTheme } from '~/composables/useTheme'
 import { ChatbotWidget } from '#components'
+import { slugify } from '~/utils/slugify'
 
 const { theme, toggleTheme } = useTheme()
 
 interface NewsOrg {
   name: string
   focus: string
+  url?: string
 }
 
 const { data: newsOrgs, pending } = await useFetch<NewsOrg[]>('/api/news/orgs')

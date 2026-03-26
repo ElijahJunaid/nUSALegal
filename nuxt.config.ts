@@ -14,6 +14,23 @@ export default defineNuxtConfig({
   vite: {
     // @ts-ignore: dual-Vite version type mismatch between Nuxt internals and node_modules/vite
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: [
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+        'web-vitals',
+        '@sentry/vue',
+        'dompurify',
+        'marked',
+        'marked-highlight',
+        'highlight.js',
+        'jspdf',
+        'lucide-vue-next',
+        'leaflet',
+        'topojson-client',
+        'globe.gl'
+      ]
+    },
     css: {
       postcss: {
         plugins: [
@@ -41,11 +58,12 @@ export default defineNuxtConfig({
       hmr: {
         // When running through Netlify Dev proxy (port 8888 → 3001), tell the browser
         // to connect the HMR WebSocket to 8888 so it goes through the proxy.
-        clientPort: process.env.NETLIFY ? 8888 : undefined,
+        clientPort: process.env.NETLIFY || process.env.NETLIFY_DEV ? 8888 : undefined,
         host: '127.0.0.1'
       }
     }
   },
+  // @ts-ignore — nitro dropped from NuxtConfig type in nuxt 4.4.2 + TypeScript 6 (type regression, config is valid)
   nitro: {
     preset: 'netlify',
     devServer: {

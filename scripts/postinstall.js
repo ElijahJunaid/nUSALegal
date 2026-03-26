@@ -387,6 +387,35 @@ function splitCookiesString(cookiesString) {
     }
   }
 
+  // Patch @typescript-eslint peer dep range to support TypeScript 6+
+  const tsEslintPackages = [
+    '../node_modules/@typescript-eslint/eslint-plugin/package.json',
+    '../node_modules/@typescript-eslint/parser/package.json',
+    '../node_modules/@typescript-eslint/typescript-estree/package.json',
+    '../node_modules/@typescript-eslint/type-utils/package.json'
+  ]
+  for (const pkgRelPath of tsEslintPackages) {
+    const pkgPath = path.join(__dirname, pkgRelPath)
+    if (!fs.existsSync(pkgPath)) continue
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'))
+    let changed = false
+    if (pkg.peerDependencies?.typescript && pkg.peerDependencies.typescript.includes('<6.0.0')) {
+      pkg.peerDependencies.typescript = pkg.peerDependencies.typescript.replace('<6.0.0', '<7.0.0')
+      changed = true
+    }
+    if (
+      pkg.peerDependenciesMeta?.typescript &&
+      pkg.peerDependencies?.typescript?.includes('<6.0.0')
+    ) {
+      pkg.peerDependencies.typescript = pkg.peerDependencies.typescript.replace('<6.0.0', '<7.0.0')
+      changed = true
+    }
+    if (changed) {
+      fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2))
+      console.log(`Patched TypeScript peer dep range in ${path.basename(path.dirname(pkgPath))}`)
+    }
+  }
+
   if (isCI) {
     console.log('Skipping nuxt prepare in CI')
   } else {

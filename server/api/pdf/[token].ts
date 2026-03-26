@@ -1,6 +1,6 @@
 import { validatePdfToken } from '../../utils/pdfTokens'
 import { getPdfFromStorage } from '../../utils/pdfStorage'
-import { defineEventHandler, getRouterParam, createError, setResponseHeaders } from 'h3'
+import { defineEventHandler, getRouterParam, createError } from 'h3'
 
 export default defineEventHandler(async event => {
   const token = getRouterParam(event, 'token')
@@ -28,32 +28,26 @@ export default defineEventHandler(async event => {
     })
   }
 
+  const pdfBuffer = await getPdfFromStorage(filePath)
+
+  if (!pdfBuffer) {
+    throw createError({
+      status: 404,
+      statusText: 'PDF file not found'
+    })
+  }
+
   try {
-    const pdfBuffer = await getPdfFromStorage(filePath)
-
-    if (!pdfBuffer) {
-      throw createError({
-        status: 404,
-        statusText: 'PDF file not found'
-      })
-    }
-
     const filename = filePath.split('/').pop() || 'document.pdf'
 
-    setResponseHeaders(event, {
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `inline; filename="${filename}"`,
-      'Cache-Control': 'private, no-cache, no-store, must-revalidate',
-      Expires: '0',
-      Pragma: 'no-cache'
-    })
+    event.node.res.setHeader('Content-Type', 'application/pdf')
+    event.node.res.setHeader('Content-Disposition', `inline; filename="${filename}"`)
+    event.node.res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+    event.node.res.setHeader('Expires', '0')
+    event.node.res.setHeader('Pragma', 'no-cache')
 
     return pdfBuffer
-  } catch (error: unknown) {
-    if ((error as Record<string, unknown>)?.statusCode) {
-      throw error
-    }
-
+  } catch (_error: unknown) {
     throw createError({
       status: 500,
       statusText: 'Error retrieving PDF file'

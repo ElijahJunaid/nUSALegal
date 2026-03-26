@@ -235,7 +235,7 @@
                       ? 'Jury Instructions'
                       : selected === 'sentencing'
                         ? 'Sentencing Calculator'
-                        : selected.replaceAll('-', ' ')
+                        : selected.replace(/-/g, ' ')
               }}
             </h2>
 
@@ -247,7 +247,7 @@
                 <input
                   v-model="searchQuery"
                   type="text"
-                  :placeholder="`Search ${selected === 'office' ? 'Defense' : selected.replaceAll('-', ' ')}...`"
+                  :placeholder="`Search ${selected === 'office' ? 'Defense' : selected.replace(/-/g, ' ')}...`"
                   class="input input-bordered w-full"
                 />
               </div>
