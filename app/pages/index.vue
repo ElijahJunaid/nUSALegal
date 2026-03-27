@@ -90,13 +90,30 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeMount, onBeforeUnmount, onUnmounted } from 'vue'
+import { dLog } from '~/plugins/debug-logger.client'
 
 definePageMeta({
   layout: false
 })
 
 const theme = ref<'light' | 'dark'>('light')
+
+onBeforeMount(() => {
+  dLog('[HOME] onBeforeMount')
+})
+
+onMounted(() => {
+  dLog('[HOME] onMounted')
+})
+
+onBeforeUnmount(() => {
+  dLog('[HOME] onBeforeUnmount')
+})
+
+onUnmounted(() => {
+  dLog('[HOME] onUnmounted')
+})
 
 onMounted(() => {
   const savedTheme = localStorage.getItem('nusalegal-theme') as 'light' | 'dark' | null

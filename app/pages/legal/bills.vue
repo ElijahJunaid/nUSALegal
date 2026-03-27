@@ -105,7 +105,9 @@
     @close="closeBillDetail"
   >
     <div class="data-detail text-center">
-      <h3 class="text-center font-bold text-xl mb-2">{{ selectedBill.number }}</h3>
+      <h3 class="text-center font-bold text-xl mb-2">
+        {{ formatBillNumber(selectedBill.number) }}
+      </h3>
       <p class="text-sm text-center mb-4">{{ selectedBill.description }}</p>
       <button
         v-if="selectedBill.pdfPath"
@@ -121,6 +123,7 @@
 <script lang="ts" setup>
 import { useBillsStore } from '~/stores/bills-store'
 import { dError } from '~/plugins/debug-logger.client'
+import { formatBillNumber } from '~/utils/formatBillNumber'
 import { useHead, definePageMeta, storeToRefs, onMounted, ref } from '#imports'
 
 definePageMeta({

@@ -28,7 +28,8 @@ export default defineNuxtConfig({
         'lucide-vue-next',
         'leaflet',
         'topojson-client',
-        'globe.gl'
+        'globe.gl',
+        'ably'
       ]
     },
     css: {

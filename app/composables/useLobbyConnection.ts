@@ -1,5 +1,5 @@
 import { ref, computed, onUnmounted } from 'vue'
-import { dError } from '~/plugins/debug-logger.client'
+import { dLog, dError } from '~/plugins/debug-logger.client'
 import { useToast } from '~/composables/useToast'
 import * as Ably from 'ably'
 
@@ -64,6 +64,7 @@ export function useLobbyConnection() {
 
   async function connect(lobbyCode: string, playerName: string, isLeader: boolean) {
     isConnecting.value = true
+    dLog('[LOBBY] connecting to Ably, lobby:', lobbyCode)
 
     try {
       ably = new Ably.Realtime({ authUrl: '/api/ably-auth' })
@@ -72,9 +73,13 @@ export function useLobbyConnection() {
       await new Promise((resolve, reject) => {
         ably.connection.on('connected', () => {
           clientId = ably.auth.clientId
+          dLog('[LOBBY] connected, clientId=', clientId)
           resolve(true)
         })
-        ably.connection.on('failed', reject)
+        ably.connection.on('failed', (err: unknown) => {
+          dError('[LOBBY] connection failed:', err)
+          reject(err)
+        })
         setTimeout(() => reject(new Error('Connection timeout')), 10000)
       })
 

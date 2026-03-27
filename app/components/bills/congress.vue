@@ -53,15 +53,12 @@
 <script lang="ts" setup>
 import { useBillsStore } from '~/stores/bills-store'
 import { storeToRefs } from 'pinia'
+import { formatBillNumber } from '~/utils/formatBillNumber'
 
 defineEmits<{
   'open-pdf': [pdfPath: string]
   'open-detail': [bill: { number: string; description: string; pdfPath: string; type: string }]
 }>()
-
-function formatBillNumber(num: string): string {
-  return num.replace(/^Public Law\s+/i, 'PL ').replace(/\| Public Law\s+/gi, '| PL ')
-}
 
 const billsStore = useBillsStore()
 const { loading, filteredCongressBills } = storeToRefs(billsStore)

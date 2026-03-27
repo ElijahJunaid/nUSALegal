@@ -111,13 +111,20 @@
 </template>
 
 <script lang="ts" setup>
+import { onBeforeMount, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
 import { useTheme } from '~/composables/useTheme'
+import { dLog } from '~/plugins/debug-logger.client'
 
 definePageMeta({
   layout: false
 })
 
 const { theme, toggleTheme } = useTheme()
+
+onBeforeMount(() => dLog('[UN-HOME] onBeforeMount'))
+onMounted(() => dLog('[UN-HOME] onMounted'))
+onBeforeUnmount(() => dLog('[UN-HOME] onBeforeUnmount'))
+onUnmounted(() => dLog('[UN-HOME] onUnmounted'))
 
 useHead({
   title: 'United Nations - nUSA',

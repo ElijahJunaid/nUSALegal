@@ -8,8 +8,8 @@ export interface CongressBill {
 
 export const congressBills: CongressBill[] = [
   {
-    number: 'S. 1',
-    description: 'Prosecutor’s Sworn Testimony Act of 2026',
+    number: "S. 1: Prosecutor's Sworn Testimony Act of 2026",
+    description: "Prosecutor's Sworn Testimony Act of 2026",
     pdfPath: 'bills/s-1.pdf',
     type: 's',
     category: 'congress'
@@ -29,14 +29,14 @@ export const congressBills: CongressBill[] = [
     category: 'congress'
   },
   {
-    number: 'H.J.Res. 9',
+    number: 'H.J.Res. 9: Declaration of War against the United Kingdom and Arab Republic of Egypt',
     description: 'Declaration of War against the United Kingdom and Arab Republic of Egypt',
     pdfPath: 'bills/h-j-res-9.pdf',
     type: 'hjres',
     category: 'congress'
   },
   {
-    number: 'H.R. 6',
+    number: 'H.R. 6: Jon_Ral Congressional Gold Medal Act',
     description: 'Jon_Ral Congressional Gold Medal Act',
     pdfPath: 'bills/h-r-6.pdf',
     type: 'hr',
@@ -57,7 +57,7 @@ export const congressBills: CongressBill[] = [
     category: 'congress'
   },
   {
-    number: 'H.R. 11',
+    number: 'H.R. 11: BATHTUB Act',
     description: 'BATHTUB Act',
     pdfPath: '',
     type: 'hr',
@@ -471,14 +471,14 @@ export const congressBills: CongressBill[] = [
     category: 'congress'
   },
   {
-    number: 'H.R. 10',
+    number: 'H.R. 10: JDA of 2025',
     description: 'JDA of 2025',
     pdfPath: 'bills/h-r-10.pdf',
     type: 'hr',
     category: 'congress'
   },
   {
-    number: 'S. 68',
+    number: 'S. 68: Office of the Auditor General Act',
     description: 'Office of the Auditor General Act',
     pdfPath: 'bills/s-68.pdf',
     type: 's',
@@ -492,14 +492,14 @@ export const congressBills: CongressBill[] = [
     category: 'congress'
   },
   {
-    number: 'H.R. 12',
+    number: 'H.R. 12: RAT Act',
     description: 'RAT Act',
     pdfPath: '',
     type: 'hr',
     category: 'congress'
   },
   {
-    number: 'H.R. 16',
+    number: 'H.R. 16: The Federal Government Protection Act',
     description: 'The Federal Government Protection Act',
     pdfPath: '',
     type: 'hr',
@@ -520,7 +520,7 @@ export const congressBills: CongressBill[] = [
     category: 'congress'
   },
   {
-    number: 'S. 83',
+    number: 'S. 83: Protecting Our Checks and Balances Act (The BATHACUSS Act)',
     description: 'Protecting Our Checks and Balances Act (The BATHACUSS Act)',
     pdfPath: '',
     type: 's',

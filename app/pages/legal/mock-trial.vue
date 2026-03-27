@@ -1090,16 +1090,21 @@ function generateCaseDetailsHtml(caseData: TrialCase, role: string, caseType: st
 async function initializeCourtroomScene() {
   courtroomLoading.value = true
   courtroomError.value = false
+  dLog('[COURTROOM] starting initialization…')
 
   try {
+    dLog('[COURTROOM] importing useCourtroomScene…')
     const { useCourtroomScene } = await import('~/composables/useCourtroomScene')
     const courtroomScene = useCourtroomScene()
 
+    dLog('[COURTROOM] loading Babylon scripts…')
     await courtroomScene.loadBabylonScripts()
+    dLog('[COURTROOM] Babylon scripts loaded, initializing engine…')
     const initialized = await courtroomScene.initialize('renderCanvas')
     if (!initialized) {
       throw new Error('Failed to initialize Babylon engine')
     }
+    dLog('[COURTROOM] engine initialized, creating scene…')
     await courtroomScene.createScene()
     if (setupRole.value) {
       courtroomScene.createAvatar('local-player', setupRole.value, {
@@ -1110,8 +1115,10 @@ async function initializeCourtroomScene() {
     courtroomScene.run()
 
     courtroomLoading.value = false
+    dLog('[COURTROOM] scene initialized successfully')
     success('3D courtroom loaded successfully!')
   } catch (err) {
+    dError('[COURTROOM] error:', err)
     dError('Error initializing courtroom:', err)
     courtroomLoading.value = false
     courtroomError.value = true

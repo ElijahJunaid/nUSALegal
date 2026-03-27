@@ -1,12 +1,12 @@
 <template>
   <div class="globe-container" ref="container">
+    <div ref="globeMount" class="globe-mount"></div>
     <div v-if="loading" class="globe-loading">
       <div class="spinner"></div>
       <span>Loading the world...</span>
     </div>
-
-    <transition name="popup-fade">
-      <div v-if="selectedNation" class="globe-popup" @click.stop>
+    <div v-show="selectedNation" class="globe-popup" @click.stop>
+      <template v-if="selectedNation">
         <button class="globe-popup-close" @click="selectedNation = null" aria-label="Close">
           ✕
         </button>
@@ -35,20 +35,22 @@
             <span class="unp-val">{{ selectedNation.joined }}</span>
           </div>
         </div>
-      </div>
-    </transition>
+      </template>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef, markRaw, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, watchEffect } from 'vue'
 import { unNations } from '~/data/un-nations'
+import { dLog, dWarn } from '~/plugins/debug-logger.client'
 
 type Nation = (typeof unNations)[0]
 
 const container = ref<HTMLElement | null>(null)
+const globeMount = ref<HTMLElement | null>(null)
 const loading = ref(true)
-const selectedNation = shallowRef<Nation | null>(null)
+const selectedNation = ref<Nation | null>(null)
 
 const STATUS_COLORS: Record<string, string> = {
   Member: '#0099CC',
@@ -59,6 +61,11 @@ const STATUS_COLORS: Record<string, string> = {
 function statusColor(s: string): string {
   return STATUS_COLORS[s] ?? '#6b7280'
 }
+
+// -- REACTIVE TRACKING: fires every time selectedNation.value changes in the template effect --
+watchEffect(() => {
+  dLog('[POPUP:WATCH] selectedNation reactive value =', selectedNation.value?.name ?? null)
+})
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let globeInstance: any = null
@@ -121,24 +128,79 @@ onMounted(async () => {
       if (container.value) container.value.style.cursor = feat ? 'pointer' : 'default'
     })
     .width(w)
-    .height(h)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .onPolygonClick((feat: any) => {
-      const nation = nationMap.get(Number(feat.id))
-      nextTick(() => {
-        selectedNation.value = nation
-          ? markRaw({ ...nation })
-          : markRaw({
-              numericCode: -1,
-              code: '',
-              name: (feat.properties?.name as string) ?? 'Unknown Territory',
-              flag: '🌐',
-              status: 'Member' as const,
-              owner: '—',
-              leader: '—'
-            })
-      })
-    })(container.value)
+    .height(h)(globeMount.value)
+
+  // Register click handler after mount so THREE.js raycasting is fully wired
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  globeInstance.onPolygonClick(async (feat: any) => {
+    const nation = nationMap.get(Number(feat.id))
+    dLog('[GLOBE] polygon clicked, feat.id=', feat?.id, 'nation=', nation?.name)
+    selectedNation.value = nation
+      ? { ...nation }
+      : {
+          numericCode: -1,
+          code: '',
+          name: (feat.properties?.name as string) ?? 'Unknown Territory',
+          flag: '🌐',
+          status: 'Member' as const,
+          owner: '—',
+          leader: '—'
+        }
+    dLog('[GLOBE] selectedNation set to:', selectedNation.value?.name)
+    dLog('[GLOBE] container children count:', container.value?.childElementCount)
+
+    // Inspect DOM state after Vue flushes
+    await nextTick()
+    const popupEls = document.querySelectorAll('.globe-popup')
+    dLog('[POPUP:DOM] .globe-popup elements in document:', popupEls.length)
+
+    if (popupEls.length > 0) {
+      const el = popupEls[0] as HTMLElement
+      const cs = window.getComputedStyle(el)
+      const rect = el.getBoundingClientRect()
+      dLog('[POPUP:CSS] display:', cs.display)
+      dLog('[POPUP:CSS] visibility:', cs.visibility)
+      dLog('[POPUP:CSS] opacity:', cs.opacity)
+      dLog('[POPUP:CSS] z-index:', cs.zIndex)
+      dLog('[POPUP:CSS] position:', cs.position)
+      dLog(
+        '[POPUP:RECT] top:',
+        rect.top,
+        'left:',
+        rect.left,
+        'width:',
+        rect.width,
+        'height:',
+        rect.height
+      )
+
+      // Walk parent chain for overflow / clip-path
+      let parent = el.parentElement
+      let depth = 0
+      while (parent && depth < 5) {
+        const pcs = window.getComputedStyle(parent)
+        dLog(
+          `[POPUP:PARENT depth=${depth}]`,
+          parent.className || parent.tagName,
+          '| overflow:',
+          pcs.overflow,
+          '| clip-path:',
+          pcs.clipPath,
+          '| z-index:',
+          pcs.zIndex,
+          '| position:',
+          pcs.position
+        )
+        parent = parent.parentElement
+        depth++
+      }
+    } else {
+      dWarn(
+        '[POPUP:DOM] popup NOT in DOM after nextTick — v-if is false or template not re-rendering'
+      )
+      dLog('[POPUP:DOM] selectedNation.value at nextTick:', selectedNation.value?.name ?? null)
+    }
+  })
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const RO = (globalThis as any).ResizeObserver
@@ -150,7 +212,7 @@ onMounted(async () => {
         globeInstance?.width(width).height(height)
       }
     })
-    resizeObserver.observe(container.value)
+    resizeObserver.observe(globeMount.value)
   }
 
   loading.value = false
@@ -178,6 +240,11 @@ onUnmounted(() => {
   overflow: hidden;
   background: #000c1d;
   clip-path: inset(0);
+}
+
+.globe-mount {
+  position: absolute;
+  inset: 0;
 }
 
 .globe-loading {

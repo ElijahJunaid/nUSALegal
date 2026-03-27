@@ -78,17 +78,27 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, onBeforeMount, onBeforeUnmount, watch } from 'vue'
 import type { Map as LeafletMap, Path as LeafletPath, LeafletMouseEvent } from 'leaflet'
 import type { FeatureCollection } from 'geojson'
 import { useTheme } from '~/composables/useTheme'
 import { unNations } from '~/data/un-nations'
+import { useRoute } from '#imports'
+import { dLog } from '~/plugins/debug-logger.client'
 
 definePageMeta({
   layout: false
 })
 
 const { theme, toggleTheme } = useTheme()
+const _debugRoute = useRoute()
+
+onBeforeMount(() => dLog('[NATIONS] onBeforeMount — route:', _debugRoute.fullPath))
+onBeforeUnmount(() => dLog('[NATIONS] onBeforeUnmount'))
+watch(
+  () => _debugRoute.fullPath,
+  p => dLog('[NATIONS] internal route changed to:', p)
+)
 const viewMode = ref<'2d' | '3d'>('2d')
 
 const mapEl = ref<HTMLElement | null>(null)
@@ -96,6 +106,7 @@ const mapLoading = ref(true)
 let map: LeafletMap | null = null
 
 onMounted(async () => {
+  dLog('[NATIONS] onMounted')
   if (!mapEl.value) return
 
   const leaflet = await import('leaflet')
@@ -211,6 +222,7 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  dLog('[NATIONS] onUnmounted')
   if (map) {
     map.remove()
     map = null
