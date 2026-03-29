@@ -279,14 +279,14 @@
           <div class="card-container" :data-case-type="setupCaseType">
             <div
               class="selection-card"
-              :class="{ selected: setupRole === 'judge' }"
-              @click="setupRole = 'judge'"
-              @keydown.enter="setupRole = 'judge'"
-              @keydown.space="setupRole = 'judge'"
+              :class="{ selected: setupRole === 'Judge' }"
+              @click="setupRole = 'Judge'"
+              @keydown.enter="setupRole = 'Judge'"
+              @keydown.space="setupRole = 'Judge'"
               role="button"
               tabindex="0"
               aria-label="Select judge role"
-              :aria-pressed="setupRole === 'judge'"
+              :aria-pressed="setupRole === 'Judge'"
             >
               <h3>Judge</h3>
               <p>
@@ -296,14 +296,14 @@
             </div>
             <div
               class="selection-card criminal-role"
-              :class="{ selected: setupRole === 'prosecutor' }"
-              @click="setupRole = 'prosecutor'"
-              @keydown.enter="setupRole = 'prosecutor'"
-              @keydown.space="setupRole = 'prosecutor'"
+              :class="{ selected: setupRole === 'Prosecutor' }"
+              @click="setupRole = 'Prosecutor'"
+              @keydown.enter="setupRole = 'Prosecutor'"
+              @keydown.space="setupRole = 'Prosecutor'"
               role="button"
               tabindex="0"
               aria-label="Select prosecutor role"
-              :aria-pressed="setupRole === 'prosecutor'"
+              :aria-pressed="setupRole === 'Prosecutor'"
             >
               <h3>Prosecutor</h3>
               <p>
@@ -312,56 +312,56 @@
             </div>
             <div
               class="selection-card civil-role"
-              :class="{ selected: setupRole === 'plaintiff' }"
-              @click="setupRole = 'plaintiff'"
-              @keydown.enter="setupRole = 'plaintiff'"
-              @keydown.space="setupRole = 'plaintiff'"
+              :class="{ selected: setupRole === 'Plaintiff' }"
+              @click="setupRole = 'Plaintiff'"
+              @keydown.enter="setupRole = 'Plaintiff'"
+              @keydown.space="setupRole = 'Plaintiff'"
               role="button"
               tabindex="0"
               aria-label="Select plaintiff role"
-              :aria-pressed="setupRole === 'plaintiff'"
+              :aria-pressed="setupRole === 'Plaintiff'"
             >
               <h3>Plaintiff</h3>
               <p>The party initiating the civil lawsuit, presents evidence to prove their case</p>
             </div>
             <div
               class="selection-card"
-              :class="{ selected: setupRole === 'defense' }"
-              @click="setupRole = 'defense'"
-              @keydown.enter="setupRole = 'defense'"
-              @keydown.space="setupRole = 'defense'"
+              :class="{ selected: setupRole === 'Defense' }"
+              @click="setupRole = 'Defense'"
+              @keydown.enter="setupRole = 'Defense'"
+              @keydown.space="setupRole = 'Defense'"
               role="button"
               tabindex="0"
               aria-label="Select defense role"
-              :aria-pressed="setupRole === 'defense'"
+              :aria-pressed="setupRole === 'Defense'"
             >
               <h3>Defense</h3>
               <p>Represent the defendant, challenge evidence, and present defense arguments</p>
             </div>
             <div
               class="selection-card"
-              :class="{ selected: setupRole === 'witness' }"
-              @click="setupRole = 'witness'"
-              @keydown.enter="setupRole = 'witness'"
-              @keydown.space="setupRole = 'witness'"
+              :class="{ selected: setupRole === 'Witness' }"
+              @click="setupRole = 'Witness'"
+              @keydown.enter="setupRole = 'Witness'"
+              @keydown.space="setupRole = 'Witness'"
               role="button"
               tabindex="0"
               aria-label="Select witness role"
-              :aria-pressed="setupRole === 'witness'"
+              :aria-pressed="setupRole === 'Witness'"
             >
               <h3>Witness</h3>
               <p>Provide testimony and respond to questioning from both sides</p>
             </div>
             <div
               class="selection-card center-card"
-              :class="{ selected: setupRole === 'jury' }"
-              @click="setupRole = 'jury'"
-              @keydown.enter="setupRole = 'jury'"
-              @keydown.space="setupRole = 'jury'"
+              :class="{ selected: setupRole === 'Jury' }"
+              @click="setupRole = 'Jury'"
+              @keydown.enter="setupRole = 'Jury'"
+              @keydown.space="setupRole = 'Jury'"
               role="button"
               tabindex="0"
               aria-label="Select jury role"
-              :aria-pressed="setupRole === 'jury'"
+              :aria-pressed="setupRole === 'Jury'"
             >
               <h3>Jury</h3>
               <p>Listen to evidence and arguments, deliberate, and reach a verdict</p>
@@ -382,131 +382,238 @@
         </div>
       </form>
 
-      <div v-if="showTrialInterface" id="trial-interface">
-        <div class="courtroom-container">
-          <canvas id="renderCanvas" touch-action="none"></canvas>
-          <div v-if="courtroomLoading" class="canvas-loading">Loading 3D courtroom...</div>
-          <div v-if="courtroomError" class="canvas-error" role="alert">
-            <span>Failed to load 3D courtroom</span>
-            <button
-              @click="initializeCourtroomScene()"
-              class="error-retry-button"
-              aria-label="Retry loading 3D courtroom"
-            >
-              Retry
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <section
-        v-if="showSimulation"
-        class="simulation-area"
+      <div
+        v-if="showTrialInterface || showSimulation"
+        class="trial-container"
         :class="{ 'single-player': isSinglePlayer }"
       >
-        <div class="trial-content">
-          <div class="case-info">
-            <h2>Case Information</h2>
-            <!-- eslint-disable vue/no-v-html -->
-            <div id="case-details" v-html="caseDetailsHtml"></div>
-            <!-- eslint-enable vue/no-v-html -->
+        <div v-if="showTrialInterface" id="trial-interface">
+          <div class="courtroom-container">
+            <canvas id="renderCanvas" touch-action="none"></canvas>
+            <div v-if="courtroomLoading" class="canvas-loading">Loading 3D courtroom...</div>
+            <div v-if="courtroomError" class="canvas-error" role="alert">
+              <span>Failed to load 3D courtroom</span>
+              <button
+                @click="initializeCourtroomScene()"
+                class="error-retry-button"
+                aria-label="Retry loading 3D courtroom"
+              >
+                Retry
+              </button>
+            </div>
           </div>
+        </div>
 
-          <div v-if="currentTurn" class="turn-indicator">
-            <strong>Current Turn:</strong>
-            {{ currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1) }}
-            <span v-if="isMyTurn()" class="your-turn">👈 Your turn!</span>
-          </div>
+        <section v-if="showSimulation" class="simulation-area">
+          <div class="trial-content">
+            <div class="case-info">
+              <h2>Case Information</h2>
+              <!-- eslint-disable vue/no-v-html -->
+              <div id="case-details" v-html="caseDetailsHtml"></div>
+              <!-- eslint-enable vue/no-v-html -->
+            </div>
 
-          <div v-if="evidenceList.length > 0" class="evidence-section">
-            <h3>Evidence</h3>
-            <div
-              v-for="ev in evidenceList"
-              :key="ev.id"
-              class="evidence-item"
-              :class="{ admitted: ev.admitted }"
-            >
-              <p>{{ ev.description }}</p>
-              <span class="evidence-status">{{ ev.admitted ? '✓ Admitted' : 'Pending' }}</span>
-              <div v-if="setupRole === 'judge' && !ev.admitted" class="evidence-actions">
+            <div v-if="currentTurn" class="turn-indicator">
+              <strong>Current Turn:</strong>
+              {{ currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1) }}
+              <span v-if="isMyTurn()" class="your-turn">👈 Your turn!</span>
+            </div>
+
+            <div v-if="evidenceList.length > 0" class="evidence-section">
+              <h3>Evidence</h3>
+              <div
+                v-for="ev in evidenceList"
+                :key="ev.id"
+                class="evidence-item"
+                :class="{ admitted: ev.admitted }"
+              >
+                <p>{{ ev.description }}</p>
+                <span class="evidence-status">{{ ev.admitted ? '✓ Admitted' : 'Pending' }}</span>
+                <div v-if="setupRole === 'judge' && !ev.admitted" class="evidence-actions">
+                  <button
+                    @click="admitEvidence(ev.id)"
+                    @keydown.enter="admitEvidence(ev.id)"
+                    @keydown.space="admitEvidence(ev.id)"
+                    class="btn-admit"
+                    :aria-label="`Admit evidence: ${ev.description}`"
+                  >
+                    Admit
+                  </button>
+                  <button
+                    @click="denyEvidence(ev.id)"
+                    @keydown.enter="denyEvidence(ev.id)"
+                    @keydown.space="denyEvidence(ev.id)"
+                    class="btn-deny"
+                    :aria-label="`Deny evidence: ${ev.description}`"
+                  >
+                    Deny
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="pendingObjections.length > 0" class="objections-section">
+              <h3>Objections</h3>
+              <div v-for="obj in pendingObjections" :key="obj.id" class="objection-item">
+                <p>
+                  <strong>{{ obj.type }}</strong>
+                  by {{ obj.madeBy }}
+                </p>
+                <span v-if="obj.ruling" class="ruling">{{ obj.ruling.toUpperCase() }}</span>
+                <div v-if="setupRole === 'judge' && !obj.ruling" class="objection-actions">
+                  <button
+                    @click="ruleOnObjection(obj.id, true)"
+                    @keydown.enter="ruleOnObjection(obj.id, true)"
+                    @keydown.space="ruleOnObjection(obj.id, true)"
+                    class="btn-sustain"
+                    :aria-label="`Sustain objection: ${obj.type}`"
+                  >
+                    Sustain
+                  </button>
+                  <button
+                    @click="ruleOnObjection(obj.id, false)"
+                    @keydown.enter="ruleOnObjection(obj.id, false)"
+                    @keydown.space="ruleOnObjection(obj.id, false)"
+                    class="btn-overrule"
+                    :aria-label="`Overrule objection: ${obj.type}`"
+                  >
+                    Overrule
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="verdictPhase" class="verdict-section">
+              <h2>Jury Deliberation</h2>
+              <p>Cast your verdict:</p>
+              <div class="verdict-buttons">
                 <button
-                  @click="admitEvidence(ev.id)"
-                  @keydown.enter="admitEvidence(ev.id)"
-                  @keydown.space="admitEvidence(ev.id)"
-                  class="btn-admit"
-                  :aria-label="`Admit evidence: ${ev.description}`"
+                  @click="castVote('guilty')"
+                  @keydown.enter="castVote('guilty')"
+                  @keydown.space="castVote('guilty')"
+                  class="btn-verdict btn-guilty"
+                  :aria-label="`Cast verdict: ${setupCaseType === 'criminal' ? 'Guilty' : 'Liable'}`"
                 >
-                  Admit
+                  {{ setupCaseType === 'criminal' ? 'Guilty' : 'Liable' }}
                 </button>
                 <button
-                  @click="denyEvidence(ev.id)"
-                  @keydown.enter="denyEvidence(ev.id)"
-                  @keydown.space="denyEvidence(ev.id)"
-                  class="btn-deny"
-                  :aria-label="`Deny evidence: ${ev.description}`"
+                  @click="castVote('not-guilty')"
+                  @keydown.enter="castVote('not-guilty')"
+                  @keydown.space="castVote('not-guilty')"
+                  class="btn-verdict btn-not-guilty"
+                  :aria-label="`Cast verdict: ${setupCaseType === 'criminal' ? 'Not Guilty' : 'Not Liable'}`"
                 >
-                  Deny
+                  {{ setupCaseType === 'criminal' ? 'Not Guilty' : 'Not Liable' }}
+                </button>
+              </div>
+              <div v-if="finalVerdict" class="final-verdict">
+                <h2>Final Verdict: {{ finalVerdict }}</h2>
+                <button
+                  @click="endTrial()"
+                  @keydown.enter="endTrial()"
+                  @keydown.space="endTrial()"
+                  class="btn-end-trial"
+                  aria-label="End trial and return to main menu"
+                >
+                  End Trial
                 </button>
               </div>
             </div>
           </div>
 
-          <div v-if="pendingObjections.length > 0" class="objections-section">
-            <h3>Objections</h3>
-            <div v-for="obj in pendingObjections" :key="obj.id" class="objection-item">
-              <p>
-                <strong>{{ obj.type }}</strong>
-                by {{ obj.madeBy }}
-              </p>
-              <span v-if="obj.ruling" class="ruling">{{ obj.ruling.toUpperCase() }}</span>
-              <div v-if="setupRole === 'judge' && !obj.ruling" class="objection-actions">
+          <div class="trial-controls">
+            <div id="interaction-area" class="interaction-area">
+              <h3>Actions</h3>
+
+              <div v-if="setupRole === 'Judge'" class="role-actions">
                 <button
-                  @click="ruleOnObjection(obj.id, true)"
-                  @keydown.enter="ruleOnObjection(obj.id, true)"
-                  @keydown.space="ruleOnObjection(obj.id, true)"
-                  class="btn-sustain"
-                  :aria-label="`Sustain objection: ${obj.type}`"
+                  @click="performRoleAction('call-witness')"
+                  @keydown.enter="performRoleAction('call-witness')"
+                  @keydown.space="performRoleAction('call-witness')"
+                  :disabled="!isMyTurn()"
+                  aria-label="Call witness to stand"
                 >
-                  Sustain
+                  Call Witness
                 </button>
                 <button
-                  @click="ruleOnObjection(obj.id, false)"
-                  @keydown.enter="ruleOnObjection(obj.id, false)"
-                  @keydown.space="ruleOnObjection(obj.id, false)"
-                  class="btn-overrule"
-                  :aria-label="`Overrule objection: ${obj.type}`"
+                  @click="advanceTurn()"
+                  @keydown.enter="advanceTurn()"
+                  @keydown.space="advanceTurn()"
+                  aria-label="Advance to next turn"
                 >
-                  Overrule
+                  Advance Turn
                 </button>
               </div>
-            </div>
-          </div>
 
-          <div v-if="verdictPhase" class="verdict-section">
-            <h2>Jury Deliberation</h2>
-            <p>Cast your verdict:</p>
-            <div class="verdict-buttons">
-              <button
-                @click="castVote('guilty')"
-                @keydown.enter="castVote('guilty')"
-                @keydown.space="castVote('guilty')"
-                class="btn-verdict btn-guilty"
-                :aria-label="`Cast verdict: ${setupCaseType === 'criminal' ? 'Guilty' : 'Liable'}`"
+              <div
+                v-if="setupRole === 'Prosecutor' || setupRole === 'Defense'"
+                class="role-actions"
               >
-                {{ setupCaseType === 'criminal' ? 'Guilty' : 'Liable' }}
-              </button>
-              <button
-                @click="castVote('not-guilty')"
-                @keydown.enter="castVote('not-guilty')"
-                @keydown.space="castVote('not-guilty')"
-                class="btn-verdict btn-not-guilty"
-                :aria-label="`Cast verdict: ${setupCaseType === 'criminal' ? 'Not Guilty' : 'Not Liable'}`"
-              >
-                {{ setupCaseType === 'criminal' ? 'Not Guilty' : 'Not Liable' }}
-              </button>
-            </div>
-            <div v-if="finalVerdict" class="final-verdict">
-              <h2>Final Verdict: {{ finalVerdict }}</h2>
+                <button
+                  @click="performRoleAction('examine-witness')"
+                  @keydown.enter="performRoleAction('examine-witness')"
+                  @keydown.space="performRoleAction('examine-witness')"
+                  :disabled="!isMyTurn()"
+                  aria-label="Examine witness"
+                >
+                  Examine Witness
+                </button>
+                <div class="evidence-input-group">
+                  <input
+                    v-model="evidenceInput"
+                    type="text"
+                    placeholder="Describe evidence..."
+                    aria-label="Evidence description"
+                  />
+                  <button
+                    @click="performRoleAction('present-evidence')"
+                    @keydown.enter="performRoleAction('present-evidence')"
+                    @keydown.space="performRoleAction('present-evidence')"
+                    :disabled="!isMyTurn()"
+                    aria-label="Present evidence"
+                  >
+                    Present Evidence
+                  </button>
+                </div>
+                <div class="objection-buttons">
+                  <button
+                    v-for="objType in objectionTypes"
+                    :key="objType.id"
+                    @click="makeObjection(objType.label)"
+                    @keydown.enter="makeObjection(objType.label)"
+                    @keydown.space="makeObjection(objType.label)"
+                    :disabled="!isMyTurn()"
+                    class="btn-objection"
+                    :aria-label="`Make objection: ${objType.label}`"
+                  >
+                    {{ objType.label }}
+                  </button>
+                </div>
+              </div>
+
+              <div v-if="setupRole === 'Witness'" class="role-actions">
+                <button
+                  @click="performRoleAction('respond')"
+                  @keydown.enter="performRoleAction('respond')"
+                  @keydown.space="performRoleAction('respond')"
+                  :disabled="!isMyTurn()"
+                  aria-label="Respond to question"
+                >
+                  Respond to Question
+                </button>
+              </div>
+
+              <div v-if="setupRole === 'Jury'" class="role-actions">
+                <button
+                  @click="performRoleAction('deliberate')"
+                  @keydown.enter="performRoleAction('deliberate')"
+                  @keydown.space="performRoleAction('deliberate')"
+                  aria-label="Begin jury deliberation"
+                >
+                  Begin Deliberation
+                </button>
+              </div>
+
               <button
                 @click="endTrial()"
                 @keydown.enter="endTrial()"
@@ -517,154 +624,52 @@
                 End Trial
               </button>
             </div>
-          </div>
-        </div>
 
-        <div class="trial-controls">
-          <div id="interaction-area" class="interaction-area">
-            <h3>Actions</h3>
-
-            <div v-if="setupRole === 'judge'" class="role-actions">
-              <button
-                @click="performRoleAction('call-witness')"
-                @keydown.enter="performRoleAction('call-witness')"
-                @keydown.space="performRoleAction('call-witness')"
-                :disabled="!isMyTurn()"
-                aria-label="Call witness to stand"
-              >
-                Call Witness
-              </button>
-              <button
-                @click="advanceTurn()"
-                @keydown.enter="advanceTurn()"
-                @keydown.space="advanceTurn()"
-                aria-label="Advance to next turn"
-              >
-                Advance Turn
-              </button>
-            </div>
-
-            <div v-if="setupRole === 'prosecutor' || setupRole === 'defense'" class="role-actions">
-              <button
-                @click="performRoleAction('examine-witness')"
-                @keydown.enter="performRoleAction('examine-witness')"
-                @keydown.space="performRoleAction('examine-witness')"
-                :disabled="!isMyTurn()"
-                aria-label="Examine witness"
-              >
-                Examine Witness
-              </button>
-              <div class="evidence-input-group">
+            <div id="chat-interface" class="chat-interface">
+              <h3>Chat</h3>
+              <div class="chat-messages" id="chat-messages">
+                <div v-for="msg in chatMessages" :key="msg.id" class="chat-message">
+                  <strong>{{ msg.sender }}:</strong>
+                  {{ msg.content }}
+                </div>
+              </div>
+              <div class="chat-input-container">
+                <select
+                  v-model="chatRecipient"
+                  id="chat-recipient"
+                  class="chat-recipient"
+                  aria-label="Message recipient"
+                >
+                  <option value="all">Everyone</option>
+                  <option value="judge">Judge</option>
+                  <option value="prosecutor">Prosecutor</option>
+                  <option value="defense">Defense</option>
+                  <option value="witness">Witness</option>
+                  <option value="jury">Jury</option>
+                </select>
                 <input
-                  v-model="evidenceInput"
+                  v-model="chatInput"
                   type="text"
-                  placeholder="Describe evidence..."
-                  aria-label="Evidence description"
+                  id="chat-input"
+                  class="chat-input"
+                  placeholder="Type your message..."
+                  autocomplete="off"
                 />
                 <button
-                  @click="performRoleAction('present-evidence')"
-                  @keydown.enter="performRoleAction('present-evidence')"
-                  @keydown.space="performRoleAction('present-evidence')"
-                  :disabled="!isMyTurn()"
-                  aria-label="Present evidence"
+                  id="chat-send"
+                  class="chat-send"
+                  @click="sendChatMessage"
+                  @keydown.enter="sendChatMessage"
+                  @keydown.space="sendChatMessage"
+                  aria-label="Send chat message"
                 >
-                  Present Evidence
-                </button>
-              </div>
-              <div class="objection-buttons">
-                <button
-                  v-for="objType in objectionTypes"
-                  :key="objType.id"
-                  @click="makeObjection(objType.label)"
-                  @keydown.enter="makeObjection(objType.label)"
-                  @keydown.space="makeObjection(objType.label)"
-                  :disabled="!isMyTurn()"
-                  class="btn-objection"
-                  :aria-label="`Make objection: ${objType.label}`"
-                >
-                  {{ objType.label }}
+                  Send
                 </button>
               </div>
             </div>
-
-            <div v-if="setupRole === 'witness'" class="role-actions">
-              <button
-                @click="performRoleAction('respond')"
-                @keydown.enter="performRoleAction('respond')"
-                @keydown.space="performRoleAction('respond')"
-                :disabled="!isMyTurn()"
-                aria-label="Respond to question"
-              >
-                Respond to Question
-              </button>
-            </div>
-
-            <div v-if="setupRole === 'jury'" class="role-actions">
-              <button
-                @click="performRoleAction('deliberate')"
-                @keydown.enter="performRoleAction('deliberate')"
-                @keydown.space="performRoleAction('deliberate')"
-                aria-label="Begin jury deliberation"
-              >
-                Begin Deliberation
-              </button>
-            </div>
-
-            <button
-              @click="endTrial()"
-              @keydown.enter="endTrial()"
-              @keydown.space="endTrial()"
-              class="btn-end-trial"
-              aria-label="End trial and return to main menu"
-            >
-              End Trial
-            </button>
           </div>
-
-          <div id="chat-interface" class="chat-interface">
-            <h3>Chat</h3>
-            <div class="chat-messages" id="chat-messages">
-              <div v-for="msg in chatMessages" :key="msg.id" class="chat-message">
-                <strong>{{ msg.sender }}:</strong>
-                {{ msg.content }}
-              </div>
-            </div>
-            <div class="chat-input-container">
-              <select
-                v-model="chatRecipient"
-                id="chat-recipient"
-                class="chat-recipient"
-                aria-label="Message recipient"
-              >
-                <option value="all">Everyone</option>
-                <option value="judge">Judge</option>
-                <option value="prosecutor">Prosecutor</option>
-                <option value="defense">Defense</option>
-                <option value="witness">Witness</option>
-                <option value="jury">Jury</option>
-              </select>
-              <input
-                v-model="chatInput"
-                type="text"
-                id="chat-input"
-                class="chat-input"
-                placeholder="Type your message..."
-                autocomplete="off"
-              />
-              <button
-                id="chat-send"
-                class="chat-send"
-                @click="sendChatMessage"
-                @keydown.enter="sendChatMessage"
-                @keydown.space="sendChatMessage"
-                aria-label="Send chat message"
-              >
-                Send
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   </div>
 </template>
@@ -745,6 +750,7 @@ const setupRole = ref<string | null>(null)
 
 const courtroomLoading = ref(false)
 const courtroomError = ref(false)
+const courtroomScene = ref(null)
 
 const caseDetailsHtml = ref('')
 
@@ -966,6 +972,19 @@ function startTrialFromLobby() {
 
   isLoading.value = true
 
+  const currentPlayer = players.value.find(p => p.name === 'You')
+  if (currentPlayer && currentPlayer.role) {
+    setupRole.value = currentPlayer.role
+  }
+
+  if (selectedCase.value) {
+    caseDetailsHtml.value = generateCaseDetailsHtml(
+      selectedCase.value,
+      setupRole.value || 'Participant',
+      selectedCaseType.value || 'criminal'
+    )
+  }
+
   lobbyConnection.startTrial()
 
   setTimeout(() => {
@@ -973,6 +992,11 @@ function startTrialFromLobby() {
     showTrialInterface.value = true
     showSimulation.value = true
     isLoading.value = false
+
+    // Initialize 3D courtroom scene after a short delay
+    setTimeout(() => {
+      initializeCourtroomScene()
+    }, 100)
 
     success('Trial started! Good luck!')
   }, 600)
@@ -1023,6 +1047,7 @@ async function confirmSetup() {
 
       success(`Starting ${response.case.title}!`)
 
+      // Initialize 3D scene after a short delay
       setTimeout(() => {
         initializeCourtroomScene()
       }, 100)
@@ -1088,41 +1113,39 @@ function generateCaseDetailsHtml(caseData: TrialCase, role: string, caseType: st
 }
 
 async function initializeCourtroomScene() {
-  courtroomLoading.value = true
-  courtroomError.value = false
-  dLog('[COURTROOM] starting initialization…')
+  if (courtroomScene.value) {
+    dLog('[COURTROOM] Scene already initialized, cleaning up...')
+    courtroomScene.value.dispose()
+    courtroomScene.value = null
+  }
 
   try {
     dLog('[COURTROOM] importing useCourtroomScene…')
     const { useCourtroomScene } = await import('~/composables/useCourtroomScene')
-    const courtroomScene = useCourtroomScene()
+    const scene = useCourtroomScene()
+    courtroomScene.value = scene
 
     dLog('[COURTROOM] loading Babylon scripts…')
-    await courtroomScene.loadBabylonScripts()
+    await scene.loadBabylonScripts()
     dLog('[COURTROOM] Babylon scripts loaded, initializing engine…')
-    const initialized = await courtroomScene.initialize('renderCanvas')
+    const initialized = await scene.initialize('renderCanvas')
     if (!initialized) {
       throw new Error('Failed to initialize Babylon engine')
     }
     dLog('[COURTROOM] engine initialized, creating scene…')
-    await courtroomScene.createScene()
+    await scene.createScene()
     if (setupRole.value) {
-      courtroomScene.createAvatar('local-player', setupRole.value, {
+      scene.createAvatar('local-player', setupRole.value, {
         name: 'You',
         isLocal: true
       })
     }
-    courtroomScene.run()
-
-    courtroomLoading.value = false
-    dLog('[COURTROOM] scene initialized successfully')
-    success('3D courtroom loaded successfully!')
-  } catch (err) {
-    dError('[COURTROOM] error:', err)
-    dError('Error initializing courtroom:', err)
-    courtroomLoading.value = false
-    courtroomError.value = true
-    error('Failed to load 3D courtroom')
+    dLog('[COURTROOM] Scene created and avatar added')
+    success('Courtroom scene initialized successfully')
+  } catch (error) {
+    console.error('[COURTROOM] Failed to initialize scene:', error)
+    error('Failed to initialize courtroom scene')
+    courtroomScene.value = null
   }
 }
 
@@ -2024,7 +2047,7 @@ main h3 {
   color: #ff6b6b;
 }
 
-.simulation-area {
+.simulation-area:not(.trial-container .simulation-area) {
   padding: 2rem;
   max-width: 1600px;
   margin: 0 auto;
@@ -2444,7 +2467,7 @@ main h3 {
   animation: fadeIn 0.5s ease;
 }
 
-.simulation-area {
+.simulation-area:not(.trial-container .simulation-area) {
   animation: fadeIn 0.6s ease;
 }
 
@@ -2473,15 +2496,134 @@ main h3 {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.simulation-area.single-player {
-  position: fixed;
-  top: 70px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--background-color);
-  z-index: 100;
+.trial-container.single-player {
+  position: relative;
+  padding: 2rem;
+  height: calc(100vh - 70px);
   overflow-y: auto;
+}
+
+.trial-container:not(.single-player) {
+  position: relative;
+  padding: 2rem;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+}
+
+/* Removed debug borders */
+
+.trial-container.single-player #trial-interface {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 40%;
+  z-index: 1;
+}
+
+.trial-container:not(.single-player) #trial-interface {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 40%;
+  z-index: 1;
+}
+
+.trial-container.single-player .simulation-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.trial-container:not(.single-player) .simulation-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.trial-container.single-player .simulation-area > * {
+  pointer-events: auto;
+}
+
+.trial-container:not(.single-player) .simulation-area > * {
+  pointer-events: auto;
+}
+
+.trial-container.single-player .trial-content {
+  position: absolute;
+  top: 42%;
+  left: 0.25rem;
+  transform: translateY(-50%);
+  width: 29.5%;
+  max-width: 348px;
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 3;
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.trial-container.single-player .trial-controls {
+  position: absolute;
+  bottom: 4%;
+  left: 63%;
+  transform: translateX(-50%);
+  width: 70%;
+  max-width: 750px;
+  max-height: 35vh;
+  overflow-y: auto;
+  z-index: 3;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.trial-container:not(.single-player) .trial-content {
+  position: absolute;
+  top: 42%;
+  left: 0.25rem;
+  transform: translateY(-50%);
+  width: 29.5%;
+  max-width: 348px;
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 3;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.trial-container:not(.single-player) .trial-controls {
+  position: absolute;
+  bottom: 4%;
+  left: 63%;
+  transform: translateX(-50%);
+  width: 70%;
+  max-width: 750px;
+  max-height: 35vh;
+  overflow-y: auto;
+  z-index: 3;
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .canvas-error {
@@ -2569,31 +2711,13 @@ main h3 {
   border-width: 0;
 }
 
-.trial-content {
-  display: grid;
-  gap: 1.5rem;
-}
+/* Removed conflicting grid styles - using absolute positioning only */
 
-.trial-controls {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr;
-}
+/* Removed conflicting base trial-controls styling */
 
-@media (min-width: 1200px) {
-  .simulation-area:not(.single-player) {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-  }
-}
+/* Removed grid layout media query - using absolute positioning for both modes */
 
-.trial-content {
-  display: grid;
-  grid-template-columns: minmax(300px, 1fr);
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
+/* Removed conflicting grid styles - using absolute positioning only */
 
 .case-info {
   background-color: var(--card-background);
@@ -2605,6 +2729,14 @@ main h3 {
 .case-info h2 {
   color: var(--primary-color);
   margin-bottom: 1rem;
+}
+
+/* Dark theme for case info and trial controls */
+[data-theme='dark'] .case-info,
+[data-theme='dark'] .trial-controls {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: var(--accent-blue);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .case-browser,
