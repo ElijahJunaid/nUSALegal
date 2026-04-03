@@ -44,7 +44,25 @@ export function useStreamingChat() {
           })
         } else if (response.status === 503) {
           store.addMessage({
-            text: '⚠️ CaseBot is temporarily unavailable. Please try again in a moment.',
+            text: '⚠️ nUSA Legal Assistant is temporarily unavailable. Please try again in a moment.',
+            type: 'bot',
+            isMarkdown: false
+          })
+        } else if (response.status === 500) {
+          store.addMessage({
+            text: '⚠️ nUSA Legal Assistant encountered an internal error. Our team has been notified. Please try rephrasing your question or try again later.',
+            type: 'bot',
+            isMarkdown: false
+          })
+        } else if (response.status === 502) {
+          store.addMessage({
+            text: '⚠️ nUSA Legal Assistant is currently updating. Please try again in a few moments.',
+            type: 'bot',
+            isMarkdown: false
+          })
+        } else if (response.status === 504) {
+          store.addMessage({
+            text: '⚠️ Request timed out. The question may be too complex. Please try a shorter, more specific question.',
             type: 'bot',
             isMarkdown: false
           })

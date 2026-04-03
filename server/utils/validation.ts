@@ -8,7 +8,7 @@ const patterns = {
   numeric: /^[0-9]+$/,
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   url: /^https?:\/\/.+/,
-  threadId: /^thread_[a-zA-Z0-9]{24,}$/,
+  threadId: /^(thread_[a-zA-Z0-9]{24,}|fallback-[0-9]+|chat-fallback-[0-9]+)$/,
   vectorStoreId: /^vs_[a-zA-Z0-9]{24,}$/,
   objectId: /^[0-9a-fA-F]{24}$/,
   safeString: /^[^<>"'&]*$/,
@@ -117,7 +117,8 @@ export const validationSchemas = {
       'docal/businesses',
       'congress/members',
       'congress/former-members',
-      'statistics'
+      'statistics',
+      'quiz/validate-answer'
     ])
   }),
 
@@ -147,7 +148,9 @@ export const validationSchemas = {
       .max(5000, errorMessages.tooLong)
       .min(1, errorMessages.required)
       .transform(val => val.trim().replace(/\s+/g, ' '))
-      .optional(),
+      .refine(customValidators.noXss, {
+        message: errorMessages.xssRisk
+      }),
     thread_id: z.string().regex(patterns.threadId, errorMessages.invalidId).nullish()
   }),
 

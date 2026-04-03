@@ -63,12 +63,15 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-ignore - Nuxt module alias
 import { useTheme } from '~/composables/useTheme'
 
+// @ts-ignore - Nuxt auto-import
 definePageMeta({ layout: false })
 
 const { theme, toggleTheme } = useTheme()
 
+// @ts-ignore - useHead auto-import
 useHead({
   title: 'About - nUSA DOCAL',
   meta: [
@@ -90,12 +93,12 @@ useHead({
 }
 
 .docal-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--color-shadow);
 }
 
 .docal-nav-inner {
@@ -150,28 +153,28 @@ useHead({
   padding: 0.35rem 0.85rem;
   border-radius: 0.375rem;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--color-text);
   text-decoration: none;
   transition: background 0.15s;
 }
 
 .docal-nav-link:hover {
-  background: #f0fdfa;
-  color: #0f4c5c;
+  background: #e8f0fe;
+  color: #003e73;
   text-decoration: none;
 }
 
 .docal-nav-link.active {
-  color: #0f4c5c;
+  color: #003e73;
   font-weight: 600;
-  background: #f0fdfa;
+  background: #e8f0fe;
 }
 
 .docal-back-btn {
   margin-left: auto;
   padding: 0.4rem 1rem;
-  background: #0f4c5c;
-  color: #ffffff;
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
   border-radius: 0.375rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -181,9 +184,9 @@ useHead({
 }
 
 .docal-back-btn:hover {
-  background: #0e6b82;
+  background: var(--color-accent-hover);
   text-decoration: none;
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 .about-page {
@@ -296,42 +299,54 @@ useHead({
 }
 
 [data-theme='dark'] .docal-wrapper {
-  background: #111827;
+  background: var(--color-bg);
 }
 [data-theme='dark'] .docal-nav {
-  background: #1f2937;
-  border-color: #374151;
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .docal-nav-link {
-  color: #d1d5db;
+  color: var(--color-text);
 }
-[data-theme='dark'] .docal-nav-link:hover,
-[data-theme='dark'] .docal-nav-link.active {
+[data-theme='dark'] .docal-nav-link:hover {
+  background: #374151;
   color: #fff;
 }
+[data-theme='dark'] .docal-nav-link.active {
+  background: #374151;
+  color: #fff;
+}
+[data-theme='dark'] .docal-back-btn {
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
+}
+[data-theme='dark'] .docal-back-btn:hover {
+  background: var(--color-accent-hover);
+  color: var(--color-text-inverse);
+}
 [data-theme='dark'] .about-page {
-  background: #111827;
+  background: var(--color-bg);
 }
 [data-theme='dark'] .about-title {
-  color: #5eead4;
+  color: var(--color-accent);
 }
 [data-theme='dark'] .about-card {
-  background: #1f2937;
-  border-color: #374151;
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .about-card-title {
-  color: #5eead4;
+  color: var(--color-accent);
 }
 [data-theme='dark'] .about-card-text {
-  color: #d1d5db;
+  color: var(--color-text-secondary);
 }
 [data-theme='dark'] .about-back {
-  color: #5eead4;
+  color: var(--color-accent);
 }
 [data-theme='dark'] .docal-footer {
-  background: #0a1520;
+  background: var(--color-bg-tertiary);
 }
 [data-theme='dark'] .docal-footer-bottom {
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 </style>

@@ -64,14 +64,21 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-ignore - Nuxt module alias
 import { useTheme } from '~/composables/useTheme'
 
-const { theme, toggleTheme } = useTheme()
+// @ts-ignore - Nuxt auto-import
+definePageMeta({
+  layout: false
+})
 
+// @ts-ignore - useHead auto-import
 useHead({
   title: 'About - nUSA Library of Congress',
   meta: [{ name: 'description', content: 'About the nUSA Library of Congress community database.' }]
 })
+
+const { theme, toggleTheme } = useTheme()
 </script>
 
 <style scoped>
@@ -84,12 +91,12 @@ useHead({
 }
 
 .loc-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--color-shadow);
 }
 
 .loc-nav-inner {
@@ -144,28 +151,26 @@ useHead({
   padding: 0.35rem 0.85rem;
   border-radius: 0.375rem;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--color-text);
   text-decoration: none;
   transition: background 0.15s;
 }
-
 .loc-nav-link:hover {
-  background: #f3f4f6;
-  color: #1e3a5f;
+  background: #e8f0fe;
+  color: #003e73;
   text-decoration: none;
 }
-
 .loc-nav-link.active {
-  color: #1e3a5f;
+  color: #003e73;
   font-weight: 600;
-  background: #eff6ff;
+  background: #e8f0fe;
 }
 
 .loc-back-btn {
   margin-left: auto;
   padding: 0.4rem 1rem;
-  background: #1e3a5f;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
   border-radius: 0.375rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -173,11 +178,10 @@ useHead({
   white-space: nowrap;
   transition: background 0.15s;
 }
-
 .loc-back-btn:hover {
-  background: #2d5282;
+  background: var(--color-primary-hover);
   text-decoration: none;
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 .about-page {
@@ -290,45 +294,54 @@ useHead({
 }
 
 [data-theme='dark'] .loc-wrapper {
-  background: #111827;
+  background: var(--color-bg);
 }
 [data-theme='dark'] .loc-nav {
-  background: #1f2937;
-  border-color: #374151;
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .loc-nav-link {
-  color: #d1d5db;
+  color: var(--color-text);
 }
-[data-theme='dark'] .loc-nav-link:hover,
+[data-theme='dark'] .loc-nav-link:hover {
+  background: #374151;
+  color: #fff;
+}
 [data-theme='dark'] .loc-nav-link.active {
+  background: #374151;
   color: #fff;
 }
 [data-theme='dark'] .loc-back-btn {
-  color: #9ca3af;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+[data-theme='dark'] .loc-back-btn:hover {
+  background: var(--color-primary-hover);
+  color: var(--color-text-inverse);
 }
 [data-theme='dark'] .about-page {
-  background: #111827;
+  background: var(--color-bg);
 }
 [data-theme='dark'] .about-title {
-  color: #f3f4f6;
+  color: var(--color-info);
 }
 [data-theme='dark'] .about-card {
-  background: #1f2937;
-  border-color: #374151;
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .about-card-title {
-  color: #93c5fd;
+  color: var(--color-info);
 }
 [data-theme='dark'] .about-card-text {
-  color: #d1d5db;
+  color: var(--color-text-secondary);
 }
 [data-theme='dark'] .about-back {
-  color: #93c5fd;
+  color: var(--color-info);
 }
 [data-theme='dark'] .loc-footer {
-  background: #0a0f1a;
+  background: var(--color-bg-tertiary);
 }
 [data-theme='dark'] .loc-footer-bottom {
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 </style>

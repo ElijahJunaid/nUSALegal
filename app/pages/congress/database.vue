@@ -15,7 +15,7 @@
           <NuxtLink to="/congress/former-members" class="loc-nav-link">Former Members</NuxtLink>
           <NuxtLink to="/congress/about" class="loc-nav-link">About</NuxtLink>
         </div>
-        <NuxtLink to="/congress" class="loc-back-btn">← Back to nUSA</NuxtLink>
+        <NuxtLink to="/" class="loc-back-btn">← Back to nUSA</NuxtLink>
       </div>
     </nav>
 
@@ -239,9 +239,30 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+// @ts-ignore - Nuxt module alias
 import { useCongressStore } from '~/stores/congress-store'
-import type { CongressMember } from '~/stores/congress-store'
+// @ts-ignore - Nuxt module alias
 import { useTheme } from '~/composables/useTheme'
+
+// @ts-ignore - Nuxt auto-import
+definePageMeta({
+  layout: false
+})
+
+// Type definition for Congress members
+type CongressMember = {
+  name: string
+  username: string
+  role: string
+  state: string
+  party: string
+  chamber: string
+  status: string
+  initials: string
+  term?: string
+  class?: string
+  [key: string]: unknown
+}
 
 const { theme, toggleTheme } = useTheme()
 const congressStore = useCongressStore()
@@ -254,17 +275,29 @@ const filterParty = ref('')
 const selectedState = ref('')
 
 const totalMembers = computed(() => congressStore.members.length)
-const allForward = computed(() => congressStore.members.filter(m => m.party === 'Forward').length)
-const allPioneer = computed(() => congressStore.members.filter(m => m.party === 'Pioneer').length)
+const allForward = computed(
+  () => congressStore.members.filter((m: CongressMember) => m.party === 'Forward').length
+)
+const allPioneer = computed(
+  () => congressStore.members.filter((m: CongressMember) => m.party === 'Pioneer').length
+)
 const forwardPct = computed(() => (totalMembers.value ? allForward.value / totalMembers.value : 0))
 const pioneerPct = computed(() => (totalMembers.value ? allPioneer.value / totalMembers.value : 0))
-const senateForward = computed(() => senateMembers.value.filter(m => m.party === 'Forward').length)
-const senatePioneer = computed(() => senateMembers.value.filter(m => m.party === 'Pioneer').length)
-const houseForward = computed(() => houseMembers.value.filter(m => m.party === 'Forward').length)
-const housePioneer = computed(() => houseMembers.value.filter(m => m.party === 'Pioneer').length)
+const senateForward = computed(
+  () => senateMembers.value.filter((m: CongressMember) => m.party === 'Forward').length
+)
+const senatePioneer = computed(
+  () => senateMembers.value.filter((m: CongressMember) => m.party === 'Pioneer').length
+)
+const houseForward = computed(
+  () => houseMembers.value.filter((m: CongressMember) => m.party === 'Forward').length
+)
+const housePioneer = computed(
+  () => houseMembers.value.filter((m: CongressMember) => m.party === 'Pioneer').length
+)
 
 function applyFilters(list: CongressMember[]) {
-  return list.filter(m => {
+  return list.filter((m: CongressMember) => {
     const q = searchQuery.value.toLowerCase()
     const matchQ =
       !q ||
@@ -294,7 +327,8 @@ interface StateCell {
 
 const stateGrid = computed<StateCell[]>(() => {
   const stateCounts: Record<string, { count: number; parties: string[] }> = {}
-  congressStore.members.forEach(m => {
+
+  congressStore.members.forEach((m: CongressMember) => {
     if (!m.state) return
     const abbr = stateAbbr(m.state)
     if (!abbr) return
@@ -477,6 +511,7 @@ onMounted(async () => {
   await congressStore.fetchMembers()
 })
 
+// @ts-ignore - useHead auto-import
 useHead({
   title: 'Congressional Database - nUSA',
   meta: [
@@ -496,12 +531,12 @@ useHead({
 }
 
 .loc-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--color-shadow);
 }
 .loc-nav-inner {
   max-width: 1200px;
@@ -548,25 +583,25 @@ useHead({
   padding: 0.35rem 0.85rem;
   border-radius: 0.375rem;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--color-text);
   text-decoration: none;
   transition: background 0.15s;
 }
 .loc-nav-link:hover {
-  background: #f3f4f6;
-  color: #1e3a5f;
+  background: #e8f0fe;
+  color: #003e73;
   text-decoration: none;
 }
 .loc-nav-link.active {
-  color: #1e3a5f;
+  color: #003e73;
   font-weight: 600;
-  background: #eff6ff;
+  background: #e8f0fe;
 }
 .loc-back-btn {
   margin-left: auto;
   padding: 0.4rem 1rem;
-  background: #1e3a5f;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
   border-radius: 0.375rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -575,9 +610,9 @@ useHead({
   transition: background 0.15s;
 }
 .loc-back-btn:hover {
-  background: #2d5282;
+  background: var(--color-primary-hover);
   text-decoration: none;
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 .db-page {
@@ -1002,8 +1037,12 @@ useHead({
 [data-theme='dark'] .loc-nav-link {
   color: #d1d5db;
 }
-[data-theme='dark'] .loc-nav-link:hover,
+[data-theme='dark'] .loc-nav-link:hover {
+  background: #374151;
+  color: #fff;
+}
 [data-theme='dark'] .loc-nav-link.active {
+  background: #374151;
   color: #fff;
 }
 [data-theme='dark'] .loc-back-btn {

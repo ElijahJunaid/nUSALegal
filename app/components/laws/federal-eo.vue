@@ -3,7 +3,7 @@
     <div v-if="loading" class="flex justify-center">
       <span class="loading"></span>
     </div>
-    <div v-else-if="filteredLaws.length === 0" class="alert alert-warning">
+    <div v-else-if="filteredFederal.length === 0" class="alert alert-warning">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -21,22 +21,29 @@
     </div>
 
     <div v-else class="grid gap-4">
-      <template v-for="(dt, index) in filteredLaws" :key="index">
+      <template v-for="(data, index) in filteredFederal" :key="index">
+        <div class="data-group">
+          <div class="text-center">
+            <h3 class="text-center">{{ data.label }}</h3>
+          </div>
+        </div>
         <div
+          v-for="(dt, index) in data.data"
+          :key="index"
           @click="$emit('show-detail', dt)"
           @keydown.enter="$emit('show-detail', dt)"
           @keydown.space="$emit('show-detail', dt)"
-          class="card border border-base-300 h-fit"
+          class="data-list border border-base-300 h-fit"
           role="button"
           tabindex="0"
           :aria-label="`View details for ${dt.title}`"
         >
-          <div class="card-body text-center">
-            <h3 class="text-center font-bold text-xl">{{ dt.title }}</h3>
+          <div class="text-center">
+            <h3 class="text-center font-bold text-2xl">{{ dt.title }}</h3>
             <p
               class="text-center"
               v-html="
-                dt.excerp
+                dt.content
                   .replace(/&lt;br&gt;/g, '<br>')
                   .replace(/&amp;lt;br&amp;gt;/g, '<br>')
                   .replace(/\n\n/g, '<br><br>')
@@ -55,7 +62,7 @@ import { useLawsStore } from '~/stores/laws-store'
 import { storeToRefs } from 'pinia'
 
 defineEmits(['show-detail'])
-const LawsStore = useLawsStore()
 
-const { loading, filteredLaws } = storeToRefs(LawsStore)
+const lawsStore = useLawsStore()
+const { loading, filteredFederal } = storeToRefs(lawsStore)
 </script>

@@ -14,7 +14,7 @@
 
     <div v-if="isOpen" id="chat-container" role="region" aria-label="Chatbot window">
       <div id="chat-header">
-        <span>🧑‍⚖️ CaseBot</span>
+        <span>🧑‍⚖️ nUSA Legal Assistant</span>
         <div class="header-actions">
           <button class="header-btn" title="Minimize" @click="isOpen = false">
             <svg viewBox="0 0 24 24" width="18" height="18">
@@ -57,7 +57,9 @@
           role="log"
         >
           <div class="msg-label">
-            <span v-if="message.type === 'bot'" class="label-bot">&#9878;&#65039; CaseBot</span>
+            <span v-if="message.type === 'bot'" class="label-bot">
+              &#9878;&#65039; nUSA Legal Assistant
+            </span>
             <span v-else class="label-user">&#128100; You</span>
           </div>
           <div
@@ -222,7 +224,7 @@ onMounted(async () => {
 const newChat = () => {
   store.clearChat()
   store.addMessage({
-    text: 'Hello! I am CaseBot 🤖. Ask me your legal questions.',
+    text: 'Hello! I am nUSA Legal Assistant 🤖. Ask me your legal questions.',
     type: 'bot',
     isMarkdown: false
   })
@@ -286,7 +288,7 @@ const toggleChat = () => {
 
   if (isOpen.value && store.messages.length === 0) {
     store.addMessage({
-      text: 'Hello! I am CaseBot 🤖. Ask me your legal questions.',
+      text: 'Hello! I am nUSA Legal Assistant 🤖. Ask me your legal questions.',
       type: 'bot',
       isMarkdown: false
     })

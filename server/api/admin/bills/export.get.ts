@@ -9,15 +9,22 @@ export default defineEventHandler(async event => {
 
   try {
     const allBills = [...congressBills, ...cityCouncilBills]
-      .sort((a, b) => a.number.localeCompare(b.number))
-      .map((bill, index) => ({
-        id: `bill-${index}`,
-        number: bill.number,
-        type: bill.type,
-        category: bill.category,
-        description: bill.description,
-        pdfPath: bill.pdfPath || ''
-      }))
+      .sort((a, b) => {
+        const aNumber = 'number' in a ? a.number : a.billNumber
+        const bNumber = 'number' in b ? b.number : b.billNumber
+        return aNumber.localeCompare(bNumber)
+      })
+      .map((bill, index) => {
+        const billNumber = 'number' in bill ? bill.number : bill.billNumber
+        return {
+          id: `bill-${index}`,
+          number: billNumber,
+          type: bill.type,
+          category: bill.category,
+          description: bill.description,
+          pdfPath: bill.pdfPath || ''
+        }
+      })
 
     const bills = allBills
 

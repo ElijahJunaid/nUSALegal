@@ -4,50 +4,69 @@ export interface CongressBill {
   pdfPath: string
   type: 'hr' | 's' | 'hjres' | 'sjres' | 'hconres' | 'sconres' | 'hres' | 'sres'
   category: 'congress'
+  title?: string
+  congress?: number
+  publicLaw?: string
 }
 
 export const congressBills: CongressBill[] = [
   {
-    number: "S. 1: Prosecutor's Sworn Testimony Act of 2026",
-    description: "Prosecutor's Sworn Testimony Act of 2026",
+    number: 'S. 1',
+    title: "Prosecutor's Sworn Testimony Act of 2026",
+    description:
+      'Establishes requirements for sworn testimony from prosecutors in criminal proceedings',
     pdfPath: 'bills/s-1.pdf',
     type: 's',
-    category: 'congress'
+    category: 'congress',
+    congress: 118
   },
   {
-    number: '109-2 | Executive Consolidation of Holdings and Organization Act of 2025 (H.R. 5)',
-    description: 'Executive Consolidation of Holdings and Organization Act of 2025',
+    number: 'H.R. 5',
+    title: 'Executive Consolidation of Holdings and Organization Act of 2025',
+    description: 'Consolidates executive branch holdings and reorganizes federal agencies',
     pdfPath: 'bills/h-r-5.pdf',
     type: 'hr',
-    category: 'congress'
+    category: 'congress',
+    congress: 109,
+    publicLaw: '109-2'
   },
   {
-    number: '109-1 | Cuffrushing Prohibition Act of 2025 (H.R. 2)',
-    description: 'Cuffrushing Prohibition Act of 2025',
+    number: 'H.R. 2',
+    title: 'Cuffrushing Prohibition Act of 2025',
+    description: 'Prohibits the practice of cuffrushing in law enforcement procedures',
     pdfPath: 'bills/h-r-2.pdf',
     type: 'hr',
-    category: 'congress'
+    category: 'congress',
+    congress: 109,
+    publicLaw: '109-1'
   },
   {
-    number: 'H.J.Res. 9: Declaration of War against the United Kingdom and Arab Republic of Egypt',
-    description: 'Declaration of War against the United Kingdom and Arab Republic of Egypt',
+    number: 'H.J.Res. 9',
+    title: 'Declaration of War against the United Kingdom and Arab Republic of Egypt',
+    description: 'Declares war against the United Kingdom and Arab Republic of Egypt',
     pdfPath: 'bills/h-j-res-9.pdf',
     type: 'hjres',
-    category: 'congress'
+    category: 'congress',
+    congress: 118
   },
   {
-    number: 'H.R. 6: Jon_Ral Congressional Gold Medal Act',
-    description: 'Jon_Ral Congressional Gold Medal Act',
+    number: 'H.R. 6',
+    title: 'Jon_Ral Congressional Gold Medal Act',
+    description: 'Awards the Congressional Gold Medal to Jon_Ral for distinguished service',
     pdfPath: 'bills/h-r-6.pdf',
     type: 'hr',
-    category: 'congress'
+    category: 'congress',
+    congress: 118
   },
   {
-    number: '108-1 | Department of War Restoration Act (S. 103)',
-    description: 'Department of War Restoration Act',
+    number: 'S. 103',
+    title: 'Department of War Restoration Act',
+    description: 'Restores and reorganizes the Department of War',
     pdfPath: 'bills/s-103.pdf',
     type: 's',
-    category: 'congress'
+    category: 'congress',
+    congress: 108,
+    publicLaw: '108-1'
   },
   {
     number: '107-4 | Grand Jury Recomposition Act (H.R. 5)',

@@ -29,13 +29,23 @@
       >
         <div class="card-body text-center">
           <div>
-            <h3 class="text-center font-bold text-xl">{{ formatBillNumber(bill.number) }}</h3>
+            <h3 class="text-center font-bold text-xl">
+              {{
+                formatBillNumber(
+                  bill.title || bill.number,
+                  bill.publicLaw,
+                  bill.type,
+                  extractBillNumberFromBill(bill),
+                  'congress'
+                )
+              }}
+            </h3>
             <button
               @click.stop="$emit('open-pdf', bill.pdfPath)"
               @keydown.enter.stop="$emit('open-pdf', bill.pdfPath)"
               @keydown.space.stop="$emit('open-pdf', bill.pdfPath)"
               class="btn hover:text-primary-focus"
-              :aria-label="`View PDF for bill ${formatBillNumber(bill.number)}`"
+              :aria-label="`View PDF for bill ${formatBillNumber(bill.title || bill.number, bill.publicLaw, bill.type, extractBillNumberFromBill(bill))}`"
             >
               [View Bill Text]
             </button>
@@ -53,7 +63,12 @@
 <script lang="ts" setup>
 import { useBillsStore } from '~/stores/bills-store'
 import { storeToRefs } from 'pinia'
-import { formatBillNumber } from '~/utils/formatBillNumber'
+import { formatBillNumber, extractBillNumber } from '~/utils/formatBillNumber'
+
+// Helper function to extract bill number from bill object
+const extractBillNumberFromBill = (bill: { number: string }) => {
+  return extractBillNumber(bill.number)
+}
 
 defineEmits<{
   'open-pdf': [pdfPath: string]

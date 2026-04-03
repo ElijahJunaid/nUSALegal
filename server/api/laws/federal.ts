@@ -9,12 +9,13 @@ export default defineEventHandler(async event => {
   try {
     return federalLaws.map(law => ({
       title: law.title,
-      subtitle: law.title,
+      subtitle: law.code,
       content: law.description,
       excerp:
         law.description?.substring(0, 200) +
         (law.description && law.description.length > 200 ? '...' : ''),
-      category: law.category
+      category: law.category,
+      section: law.section
     }))
   } catch (error) {
     dError('Error fetching federal laws:', error)

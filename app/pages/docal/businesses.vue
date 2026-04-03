@@ -43,9 +43,40 @@
           <option value="Active">Active</option>
           <option value="Special">Special</option>
           <option value="Pending">Pending</option>
+          <option value="Expiring Soon">Expiring Soon</option>
           <option value="Expired">Expired</option>
           <option value="Revoked">Revoked</option>
         </select>
+      </div>
+
+      <div class="biz-legend">
+        <p class="legend-title">Status Legend:</p>
+        <div class="legend-items">
+          <div class="legend-item">
+            <span class="legend-dot active"></span>
+            <span>Active</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot special"></span>
+            <span>Special</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot pending"></span>
+            <span>Pending</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot expiring-soon"></span>
+            <span>Expiring Soon</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot expired"></span>
+            <span>Expired</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot revoked"></span>
+            <span>Revoked</span>
+          </div>
+        </div>
       </div>
 
       <div v-if="docalStore.loading" class="biz-empty">Loading…</div>
@@ -56,7 +87,11 @@
           found
         </p>
         <div class="biz-grid">
-          <div v-for="b in filteredBusinesses" :key="b.name" class="biz-card">
+          <div
+            v-for="b in filteredBusinesses"
+            :key="b.name"
+            :class="['biz-card', `biz-card-${b.status.toLowerCase()}`]"
+          >
             <div class="biz-card-header">
               <div class="biz-card-icon">🏢</div>
               <div class="biz-card-titles">
@@ -115,10 +150,31 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
+// @ts-ignore - Nuxt module alias
 import { useDocalStore } from '~/stores/docal-store'
+// @ts-ignore - Nuxt module alias
 import { useTheme } from '~/composables/useTheme'
 
+// @ts-ignore - Nuxt auto-import
 definePageMeta({ layout: false })
+
+// Type definition for businesses
+type Business = {
+  name: string
+  ownerUsername: string
+  ownerDiscord: string
+  representativeUsername: string
+  representativeDiscord: string
+  discord: string
+  group: string
+  sector: string
+  ownership: string
+  issuingAuthority: string
+  issuingDate: string
+  expirationDate: string
+  status: 'Active' | 'Pending' | 'Revoked' | 'Special' | 'Expired'
+  [key: string]: unknown
+}
 
 const { theme, toggleTheme } = useTheme()
 const docalStore = useDocalStore()
@@ -129,12 +185,12 @@ const filteredBusinesses = computed(() => {
   let list = docalStore.businesses
 
   if (filterStatus.value) {
-    list = list.filter(b => b.status === filterStatus.value)
+    list = list.filter((b: Business) => b.status === filterStatus.value)
   }
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.toLowerCase()
     list = list.filter(
-      b => b.name.toLowerCase().includes(q) || b.ownerUsername.toLowerCase().includes(q)
+      (b: Business) => b.name.toLowerCase().includes(q) || b.ownerUsername.toLowerCase().includes(q)
     )
   }
   return list
@@ -144,6 +200,7 @@ onMounted(async () => {
   await docalStore.fetchBusinesses()
 })
 
+// @ts-ignore - useHead auto-import
 useHead({
   title: 'Business Database - nUSA DOCAL',
   meta: [
@@ -231,15 +288,15 @@ useHead({
 }
 
 .docal-nav-link:hover {
-  background: #f0fdfa;
-  color: #0f4c5c;
+  background: #e8f0fe;
+  color: #003e73;
   text-decoration: none;
 }
 
 .docal-nav-link.active {
-  color: #0f4c5c;
+  color: #003e73;
   font-weight: 600;
-  background: #f0fdfa;
+  background: #e8f0fe;
 }
 
 .docal-back-btn {
@@ -285,9 +342,84 @@ useHead({
   color: #6b7280;
 }
 
+.biz-legend {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.legend-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #e5e7eb;
+}
+
+.legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.legend-title {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-dot.active {
+  background: linear-gradient(135deg, var(--color-success-bg), var(--color-success-bg-light));
+  border: 1px solid var(--color-success-border);
+}
+
+.legend-dot.special {
+  background: linear-gradient(135deg, var(--color-special-bg), var(--color-special-bg-light));
+  border: 1px solid var(--color-special-border);
+}
+
+.legend-dot.pending {
+  background: linear-gradient(135deg, var(--color-warning-bg), var(--color-warning-bg-light));
+  border: 1px solid var(--color-warning-border);
+}
+
+.legend-dot.expiring-soon {
+  background: linear-gradient(135deg, var(--color-expiring-bg), var(--color-expiring-bg-light));
+  border: 1px solid var(--color-expiring-border);
+}
+
+.legend-dot.expired {
+  background: linear-gradient(135deg, var(--color-danger-bg), var(--color-danger-bg-light));
+  border: 1px solid var(--color-danger-border);
+}
+
+.legend-dot.revoked {
+  background: linear-gradient(135deg, var(--color-revoked-bg), var(--color-revoked-bg-light));
+  border: 1px solid var(--color-revoked-border);
+}
+
 .biz-toolbar {
   display: flex;
-  gap: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
@@ -363,6 +495,83 @@ useHead({
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Color-coded business cards */
+.biz-card-active {
+  border-left: 4px solid #10b981;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce2 100%);
+}
+
+.biz-card-active:hover {
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.biz-card-special {
+  border-left: 4px solid #8b5cf6;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+}
+
+.biz-card-special:hover {
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+.biz-card-pending {
+  border-left: 4px solid #f59e0b;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.biz-card-pending:hover {
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.biz-card-expired {
+  border-left: 4px solid #991b1b;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.biz-card-expired:hover {
+  box-shadow: 0 4px 12px rgba(153, 27, 27, 0.2);
+}
+
+.biz-card-revoked {
+  border-left: 4px solid #000000;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+}
+
+.biz-card-revoked:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode variants */
+[data-theme='dark'] .biz-card-active {
+  background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+  border-left-color: #10b981;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+[data-theme='dark'] .biz-card-special {
+  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
+  border-left-color: #8b5cf6;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+[data-theme='dark'] .biz-card-pending {
+  background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
+  border-left-color: #f59e0b;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+[data-theme='dark'] .biz-card-expired {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  border-left-color: #ef4444;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+[data-theme='dark'] .biz-card-revoked {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+  border-left-color: #ef4444;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
 .biz-card-header {
   display: flex;
   align-items: flex-start;
@@ -401,19 +610,56 @@ useHead({
 }
 
 .biz-status.active {
-  background: #d1fae5;
-  color: #065f46;
+  background: linear-gradient(135deg, var(--color-success-bg), var(--color-success-bg-light));
+  color: var(--color-success-text);
+  border: 1px solid var(--color-success-border);
+  font-weight: 600;
 }
 
-.biz-status.inactive {
-  background: #f3f4f6;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
+.biz-status.special {
+  background: linear-gradient(135deg, var(--color-special-bg), var(--color-special-bg-light));
+  color: var(--color-special-text);
+  border: 1px solid var(--color-special-border);
+  font-weight: 600;
 }
 
 .biz-status.pending {
-  background: #fef3c7;
-  color: #92400e;
+  background: linear-gradient(135deg, var(--color-warning-bg), var(--color-warning-bg-light));
+  color: var(--color-warning-text);
+  border: 1px solid var(--color-warning-border);
+  font-weight: 600;
+}
+
+.biz-status.expired {
+  background: linear-gradient(135deg, var(--color-danger-bg), var(--color-danger-bg-light));
+  color: var(--color-danger-text);
+  border: 1px solid var(--color-danger-border);
+  font-weight: 600;
+}
+
+.biz-status.revoked {
+  background: linear-gradient(135deg, var(--color-revoked-bg), var(--color-revoked-bg-light));
+  color: var(--color-revoked-text);
+  border: 1px solid var(--color-revoked-border);
+  font-weight: 600;
+}
+
+.biz-status.expiring-soon {
+  background: linear-gradient(135deg, var(--color-expiring-bg), var(--color-expiring-bg-light));
+  color: var(--color-expiring-text);
+  border: 1px solid var(--color-expiring-border);
+  font-weight: 600;
+  animation: pulse-warning 2s infinite;
+}
+
+@keyframes pulse-warning {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 .biz-desc {
@@ -542,8 +788,12 @@ useHead({
 [data-theme='dark'] .docal-nav-link {
   color: #d1d5db;
 }
-[data-theme='dark'] .docal-nav-link:hover,
+[data-theme='dark'] .docal-nav-link:hover {
+  background: #374151;
+  color: #fff;
+}
 [data-theme='dark'] .docal-nav-link.active {
+  background: #374151;
   color: #fff;
 }
 [data-theme='dark'] .biz-page {
@@ -588,5 +838,33 @@ useHead({
 }
 [data-theme='dark'] .docal-footer-bottom {
   color: #6b7280;
+}
+
+/* Dark mode legend */
+[data-theme='dark'] .legend-title {
+  color: #f9fafb;
+}
+[data-theme='dark'] .legend-item {
+  color: #e5e7eb;
+  font-weight: 500;
+}
+
+/* Dark mode card text improvements */
+[data-theme='dark'] .biz-card-header {
+  color: #f9fafb;
+}
+[data-theme='dark'] .biz-name {
+  color: #f9fafb;
+}
+[data-theme='dark'] .biz-owner {
+  color: #d1d5db;
+}
+[data-theme='dark'] .biz-desc {
+  color: #e5e7eb;
+}
+[data-theme='dark'] .biz-tag {
+  background: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
 }
 </style>

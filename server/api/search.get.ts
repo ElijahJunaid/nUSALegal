@@ -49,14 +49,14 @@ export default defineEventHandler(async event => {
       const cityCouncilResults = cityCouncilBills
         .filter(
           bill =>
-            bill.number?.toLowerCase().includes(searchLower) ||
+            bill.billNumber?.toLowerCase().includes(searchLower) ||
             bill.description?.toLowerCase().includes(searchLower)
         )
         .slice(0, 10)
         .map(b => ({
           type: 'bill',
-          id: b.number,
-          title: b.number,
+          id: b.billNumber,
+          title: b.billNumber,
           description: b.description,
           category: b.category,
           data: b

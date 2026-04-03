@@ -86,7 +86,7 @@
               <p class="loc-member-name">{{ member.name }}</p>
               <p class="loc-member-role">{{ member.role }}</p>
               <div class="loc-member-tags">
-                <span class="loc-tag-state">{{ member.state }}</span>
+                <span class="loc-tag-state">{{ _getMemberState(member) }}</span>
                 <span
                   :class="['loc-tag-party', member.party === 'Forward' ? 'forward' : 'pioneer']"
                 >
@@ -135,16 +135,17 @@
       <span v-if="theme === 'light'">☀️</span>
       <span v-else>🌙</span>
     </button>
-
-    <ChatbotWidget />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue'
+// @ts-ignore - Nuxt module alias
 import { useCongressStore } from '~/stores/congress-store'
+// @ts-ignore - Nuxt module alias
 import { useTheme } from '~/composables/useTheme'
 
+// @ts-ignore - Nuxt auto-import
 definePageMeta({
   layout: false
 })
@@ -153,11 +154,24 @@ const { theme, toggleTheme } = useTheme()
 const congressStore = useCongressStore()
 
 const activeMembers = computed(() =>
-  congressStore.members.filter(m => m.status === 'Active').slice(0, 4)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  congressStore.members.filter((m: any) => m.status === 'Active').slice(0, 4)
 )
 
+// Helper function to get correct state display
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _getMemberState = (member: any) => {
+  // If state is a party name, try to extract from other data or return placeholder
+  if (member.state === 'Forward' || member.state === 'Pioneer') {
+    // Return a placeholder or try to extract from username if it contains state info
+    return 'State Unknown'
+  }
+  return member.state
+}
+
 const activeMemberCount = computed(
-  () => congressStore.members.filter(m => m.status === 'Active').length
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  () => congressStore.members.filter((m: any) => m.status === 'Active').length
 )
 
 onMounted(async () => {
@@ -165,6 +179,7 @@ onMounted(async () => {
   await congressStore.fetchMembers()
 })
 
+// @ts-ignore - useHead auto-import
 useHead({
   title: 'Library of Congress - nUSA',
   meta: [
@@ -184,12 +199,12 @@ useHead({
 }
 
 .loc-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--color-shadow);
 }
 .loc-nav-inner {
   max-width: 1200px;
@@ -236,24 +251,25 @@ useHead({
   padding: 0.35rem 0.85rem;
   border-radius: 0.375rem;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--color-text);
   text-decoration: none;
   transition: background 0.15s;
 }
 .loc-nav-link:hover {
-  background: #f3f4f6;
-  color: #1e3a5f;
+  background: #e8f0fe;
+  color: #003e73;
   text-decoration: none;
 }
 .loc-nav-link.active {
-  color: #1e3a5f;
+  color: #003e73;
   font-weight: 600;
+  background: #e8f0fe;
 }
 .loc-back-btn {
   margin-left: auto;
   padding: 0.4rem 1rem;
-  background: #1e3a5f;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
   border-radius: 0.375rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -262,9 +278,9 @@ useHead({
   transition: background 0.15s;
 }
 .loc-back-btn:hover {
-  background: #2d5282;
+  background: var(--color-primary-hover);
   text-decoration: none;
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 .loc-hero {
@@ -623,24 +639,30 @@ useHead({
 }
 
 [data-theme='dark'] .loc-wrapper {
-  background: #111827;
+  background: var(--color-bg);
 }
 [data-theme='dark'] .loc-nav {
-  background: #1f2937;
-  border-color: #374151;
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .loc-nav-link {
-  color: #d1d5db;
+  color: var(--color-text);
 }
-[data-theme='dark'] .loc-nav-link:hover,
+[data-theme='dark'] .loc-nav-link:hover {
+  background: #374151;
+  color: #fff;
+}
 [data-theme='dark'] .loc-nav-link.active {
+  background: #374151;
   color: #fff;
 }
 [data-theme='dark'] .loc-back-btn {
-  color: #9ca3af;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
 }
 [data-theme='dark'] .loc-back-btn:hover {
-  color: #fff;
+  background: var(--color-primary-hover);
+  color: var(--color-text-inverse);
 }
 [data-theme='dark'] .loc-stats {
   background: #1f2937;

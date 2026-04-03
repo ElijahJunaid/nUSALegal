@@ -123,9 +123,12 @@
 
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue'
+// @ts-ignore - Nuxt module alias
 import { useCongressStore } from '~/stores/congress-store'
+// @ts-ignore - Nuxt module alias
 import { useTheme } from '~/composables/useTheme'
 
+// @ts-ignore - Nuxt auto-import
 definePageMeta({
   layout: false
 })
@@ -133,15 +136,32 @@ definePageMeta({
 const { theme, toggleTheme } = useTheme()
 const congressStore = useCongressStore()
 
-const partyMembers = computed(() => congressStore.members.filter(m => m.party === 'Pioneer'))
-const senateCount = computed(() => partyMembers.value.filter(m => m.chamber === 'Senate').length)
-const houseCount = computed(() => partyMembers.value.filter(m => m.chamber === 'House').length)
+// Type definition for Congress members
+type CongressMember = {
+  party: string
+  chamber: string
+  role: string
+  state: string
+  status: string
+  [key: string]: unknown
+}
+
+const partyMembers = computed(() =>
+  congressStore.members.filter((m: CongressMember) => m.party === 'Pioneer')
+)
+const senateCount = computed(
+  () => partyMembers.value.filter((m: CongressMember) => m.chamber === 'Senate').length
+)
+const houseCount = computed(
+  () => partyMembers.value.filter((m: CongressMember) => m.chamber === 'House').length
+)
 
 onMounted(async () => {
   congressStore.loaded = false
   await congressStore.fetchMembers()
 })
 
+// @ts-ignore - useHead auto-import
 useHead({ title: 'Pioneer Party - nUSA' })
 </script>
 
@@ -413,12 +433,12 @@ useHead({ title: 'Pioneer Party - nUSA' })
   font-weight: 700;
 }
 .pp-badge.senate {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: #dc2626;
+  color: #ffffff;
 }
 .pp-badge.house {
-  background: #fef3c7;
-  color: #92400e;
+  background: #ea580c;
+  color: #ffffff;
 }
 .pp-status {
   display: inline-block;

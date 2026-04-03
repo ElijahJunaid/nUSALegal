@@ -129,7 +129,7 @@ export function useLobbyConnection() {
     }
   }
 
-  function disconnect() {
+  function disconnect(showMessage: boolean = true) {
     stopHeartbeat()
     stopActivityMonitoring()
     stopReconnection()
@@ -161,7 +161,9 @@ export function useLobbyConnection() {
       roles: {}
     }
 
-    info('Disconnected from lobby')
+    if (showMessage) {
+      info('Disconnected from lobby')
+    }
   }
 
   function startHeartbeat() {
@@ -449,7 +451,7 @@ export function useLobbyConnection() {
   }
 
   onUnmounted(() => {
-    disconnect()
+    disconnect(false) // Don't show message during component cleanup
   })
 
   return {

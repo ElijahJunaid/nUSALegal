@@ -9,7 +9,8 @@
             <span class="un-logo-bottom">United Nations</span>
           </div>
         </NuxtLink>
-        <div class="un-nav-links">
+        <button @click="toggleMobileMenu" class="mobile-menu-toggle">☰</button>
+        <div class="un-nav-links" :class="{ 'mobile-open': mobileMenuOpen }">
           <NuxtLink to="/un" class="un-nav-link">Home</NuxtLink>
           <NuxtLink to="/un/nations" class="un-nav-link active">Member Nations</NuxtLink>
           <NuxtLink to="/un/about" class="un-nav-link">About</NuxtLink>
@@ -80,23 +81,41 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted, onBeforeMount, onBeforeUnmount, watch } from 'vue'
 import type { Map as LeafletMap, Path as LeafletPath, LeafletMouseEvent } from 'leaflet'
-import type { FeatureCollection } from 'geojson'
+// import type { FeatureCollection } from 'geojson'
+// @ts-ignore - Nuxt module alias
 import { useTheme } from '~/composables/useTheme'
+// @ts-ignore - Nuxt module alias
 import { unNations } from '~/data/un-nations'
+// @ts-ignore - Nuxt module alias
 import { useRoute } from '#imports'
+// @ts-ignore - Nuxt module alias
 import { dLog } from '~/plugins/debug-logger.client'
 
+// @ts-ignore - Nuxt auto-import
 definePageMeta({
   layout: false
 })
 
 const { theme, toggleTheme } = useTheme()
-const _debugRoute = useRoute()
+const mobileMenuOpen = ref(false)
+const route = useRoute()
 
-onBeforeMount(() => dLog('[NATIONS] onBeforeMount — route:', _debugRoute.fullPath))
+const toggleMobileMenu = () => {
+  mobileMenuOpen.value = !mobileMenuOpen.value
+}
+
+// Close mobile menu when navigating
+watch(
+  () => route.path,
+  () => {
+    mobileMenuOpen.value = false
+  }
+)
+
+onBeforeMount(() => dLog('[NATIONS] onBeforeMount — route:', route.fullPath))
 onBeforeUnmount(() => dLog('[NATIONS] onBeforeUnmount'))
 watch(
-  () => _debugRoute.fullPath,
+  () => route.fullPath,
   p => dLog('[NATIONS] internal route changed to:', p)
 )
 const viewMode = ref<'2d' | '3d'>('2d')
@@ -112,10 +131,17 @@ onMounted(async () => {
   const leaflet = await import('leaflet')
   const L = leaflet.default
 
-  const linkEl = document.createElement('link')
-  linkEl.rel = 'stylesheet'
-  linkEl.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
-  document.head.appendChild(linkEl)
+  try {
+    const linkEl = document.createElement('link')
+    linkEl.rel = 'stylesheet'
+    linkEl.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+    linkEl.crossOrigin = 'anonymous'
+    linkEl.referrerPolicy = 'no-referrer'
+    document.head.appendChild(linkEl)
+    dLog('[NATIONS] Leaflet CSS loaded successfully')
+  } catch (error) {
+    console.error('[NATIONS] Failed to load Leaflet CSS:', error)
+  }
 
   map = L.map(mapEl.value, {
     center: [0, 0],
@@ -137,8 +163,7 @@ onMounted(async () => {
   })
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribution: '', // Remove attribution
     subdomains: 'abc',
     maxZoom: 19,
     noWrap: true,
@@ -150,34 +175,57 @@ onMounted(async () => {
 
   try {
     const topoRes = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    if (!topoRes.ok) {
+      throw new Error(`Failed to fetch world atlas data: ${topoRes.status}`)
+    }
     const topology = await topoRes.json()
     const { feature } = await import('topojson-client')
-    const geojson = feature(topology, topology.objects.countries) as unknown as FeatureCollection
+    const geojson = feature(topology, topology.objects.countries)
 
-    const nationMap = new Map(unNations.map(n => [n.numericCode, n]))
+    // Type definition for UN nations data
+    type UNNation = {
+      numericCode: number
+      code: string
+      name: string
+      flag: string
+      status: 'Member' | 'Observer' | 'Allied'
+      owner: string
+      leader: string
+      capital?: string
+      joined?: string
+
+      [key: string]: unknown
+    }
+
+    const nationMap = new Map(unNations.map((n: UNNation) => [n.numericCode, n]))
 
     const STATUS_COLORS: Record<string, string> = {
-      Member: '#0099CC',
-      Observer: '#22c55e',
-      Allied: '#f59e0b'
+      Member: 'var(--nusa-primary, #0099CC)',
+      Observer: 'var(--nusa-success, #22c55e)',
+      Allied: 'var(--nusa-warning, #f59e0b)'
     }
 
     const geoLayer = L.geoJSON(geojson, {
       style: feat => {
         const id = feat?.id != null ? Number(feat.id) : -1
-        const nation = nationMap.get(id)
+        const nation = nationMap.get(id) as UNNation | undefined
         if (!nation)
-          return { fillColor: '#d1d5db', fillOpacity: 0.65, color: '#b0b7c0', weight: 0.5 }
+          return {
+            fillColor: 'var(--nusa-muted, #d1d5db)',
+            fillOpacity: 0.65,
+            color: 'var(--nusa-border, #b0b7c0)',
+            weight: 0.5
+          }
         return {
-          fillColor: STATUS_COLORS[nation.status] ?? '#0099CC',
+          fillColor: STATUS_COLORS[nation.status] ?? 'var(--nusa-primary, #0099CC)',
           fillOpacity: 0.75,
-          color: '#ffffff',
+          color: 'var(--nusa-white, #ffffff)',
           weight: 0.5
         }
       },
       onEachFeature: (feat, layer) => {
         const id = feat?.id != null ? Number(feat.id) : -1
-        const nation = nationMap.get(id)
+        const nation = nationMap.get(id) as UNNation | undefined
 
         layer.on('mouseover', function (this: LeafletPath) {
           this.setStyle({ fillOpacity: 0.95, weight: 1.5 })
@@ -189,7 +237,7 @@ onMounted(async () => {
         layer.on('click', (e: LeafletMouseEvent) => {
           let html: string
           if (nation) {
-            const color = STATUS_COLORS[nation.status] ?? '#6b7280'
+            const color = STATUS_COLORS[nation.status] ?? 'var(--nusa-muted, #6b7280)'
             html = `
               <div class="unp">
                 <div class="unp-head">
@@ -216,6 +264,14 @@ onMounted(async () => {
         })
       }
     }).addTo(map)
+  } catch (error) {
+    console.error('[NATIONS] Error loading map data:', error)
+    dLog('[NATIONS] Error loading map data:', error)
+    // Show error message to user
+    if (mapEl.value) {
+      mapEl.value.innerHTML =
+        '<div style="padding: 2rem; text-align: center; color: #666;">Failed to load map data. Please refresh the page.</div>'
+    }
   } finally {
     mapLoading.value = false
   }
@@ -229,7 +285,20 @@ onUnmounted(() => {
   }
 })
 
-useHead({ title: 'Member Nations - nUSA United Nations' })
+// @ts-ignore - useHead auto-import
+useHead({
+  title: 'Member Nations - nUSA United Nations',
+  meta: [
+    { charset: 'utf-8' },
+    { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+    { name: 'referrer', content: 'no-referrer-when-downgrade' },
+    {
+      'http-equiv': 'Content-Security-Policy',
+      content:
+        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com; img-src 'self' data: blob: https://unpkg.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com; font-src 'self' data:; connect-src 'self' blob: ws: wss: https://cdn.jsdelivr.net https://*.basemaps.cartocdn.com; worker-src 'self' blob:; "
+    }
+  ]
+})
 </script>
 
 <style scoped>
@@ -381,13 +450,26 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
   flex: 1;
   width: 100%;
   min-height: 0;
+  position: relative;
+  /* Performance optimizations */
+  will-change: transform;
+  contain: layout style paint;
+  /* Reduce repaints */
+  backface-visibility: hidden;
+  transform: translateZ(0);
   background: #000c1d;
   overflow: hidden;
+}
+
+/* 3D Globe performance optimizations */
+.globe-view canvas {
+  border-color: #374151;
 }
 
 [data-theme='dark'] .view-controls {
   background: rgba(31, 41, 55, 0.9);
   border-color: #374151;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme='dark'] .view-btn {
@@ -512,10 +594,15 @@ useHead({ title: 'Member Nations - nUSA United Nations' })
 [data-theme='dark'] .un-nav-link {
   color: #d1d5db;
 }
-[data-theme='dark'] .un-nav-link:hover,
+
+[data-theme='dark'] .un-nav-link:hover {
+  background: #374151;
+  color: #60a5fa;
+}
+
 [data-theme='dark'] .un-nav-link.active {
-  color: #fff;
-  background: #1e3a5f;
+  color: #60a5fa;
+  background: #1e3a8a;
 }
 [data-theme='dark'] .un-back-btn {
   background: #003e73;

@@ -23,11 +23,11 @@ export interface Conversation {
   updatedAt: number
 }
 
-const THREAD_STORAGE_KEY = 'casebot_thread_id'
-const FEEDBACK_STORAGE_KEY = 'casebot_feedback'
-const CONVERSATIONS_STORAGE_KEY = 'casebot_conversations'
+const THREAD_STORAGE_KEY = 'nusa_legal_assistant_thread_id'
+const FEEDBACK_STORAGE_KEY = 'nusa_legal_assistant_feedback'
+const CONVERSATIONS_STORAGE_KEY = 'nusa_legal_assistant_conversations'
 
-export const useCasebotStore = defineStore('casebot', {
+export const useCasebotStore = defineStore('nusa-legal-assistant', {
   state: () => ({
     messages: [] as ChatMessage[],
     threadId: null as string | null,
@@ -290,7 +290,7 @@ export const useCasebotStore = defineStore('casebot', {
       y += 8
 
       for (const msg of this.messages) {
-        const role = msg.type === 'user' ? 'You' : 'CaseBot'
+        const role = msg.type === 'user' ? 'You' : 'nUSA Legal Assistant'
         const time = msg.timestamp ? new Date(msg.timestamp).toLocaleString() : ''
 
         if (y > doc.internal.pageSize.getHeight() - 30) {
@@ -327,7 +327,7 @@ export const useCasebotStore = defineStore('casebot', {
         y += 8
       }
 
-      doc.save(`casebot-chat-${new Date().toISOString().slice(0, 10)}.pdf`)
+      doc.save(`nusa-legal-assistant-chat-${new Date().toISOString().slice(0, 10)}.pdf`)
     }
   }
 })

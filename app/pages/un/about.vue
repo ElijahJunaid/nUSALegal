@@ -9,7 +9,8 @@
             <span class="un-logo-bottom">United Nations</span>
           </div>
         </NuxtLink>
-        <div class="un-nav-links">
+        <button @click="toggleMobileMenu" class="mobile-menu-toggle">☰</button>
+        <div class="un-nav-links" :class="{ 'mobile-open': mobileMenuOpen }">
           <NuxtLink to="/un" class="un-nav-link">Home</NuxtLink>
           <NuxtLink to="/un/nations" class="un-nav-link">Member Nations</NuxtLink>
           <NuxtLink to="/un/about" class="un-nav-link active">About</NuxtLink>
@@ -63,6 +64,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, watch } from 'vue'
+import { useRoute } from '#app'
 import { useTheme } from '~/composables/useTheme'
 
 definePageMeta({
@@ -70,6 +73,20 @@ definePageMeta({
 })
 
 const { theme, toggleTheme } = useTheme()
+const mobileMenuOpen = ref(false)
+const route = useRoute()
+
+const toggleMobileMenu = () => {
+  mobileMenuOpen.value = !mobileMenuOpen.value
+}
+
+// Close mobile menu when navigating
+watch(
+  () => route.path,
+  () => {
+    mobileMenuOpen.value = false
+  }
+)
 
 useHead({ title: 'About - nUSA United Nations' })
 </script>
@@ -262,7 +279,48 @@ useHead({ title: 'About - nUSA United Nations' })
 
 @media (max-width: 768px) {
   .un-nav-links {
-    display: none;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+    z-index: 99;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .un-nav-links.mobile-open {
+    transform: translateY(0);
+  }
+
+  [data-theme='dark'] .un-nav-links {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .un-nav-link {
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.9rem;
+  }
+
+  .mobile-menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #374151;
+  }
+
+  [data-theme='dark'] .mobile-menu-toggle {
+    color: #d1d5db;
   }
 }
 
@@ -299,9 +357,15 @@ useHead({ title: 'About - nUSA United Nations' })
 [data-theme='dark'] .un-nav-link {
   color: #d1d5db;
 }
-[data-theme='dark'] .un-nav-link:hover,
+
+[data-theme='dark'] .un-nav-link:hover {
+  background: #374151;
+  color: #fff;
+}
+
 [data-theme='dark'] .un-nav-link.active {
   color: #fff;
+  background: #374151;
 }
 [data-theme='dark'] .about-page {
   background: #111827;

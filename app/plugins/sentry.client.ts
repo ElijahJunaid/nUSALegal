@@ -5,11 +5,12 @@ import { dLog, dWarn, dError } from '~/plugins/debug-logger.client'
 export default defineNuxtPlugin(nuxtApp => {
   const config = useRuntimeConfig()
 
-  if (config.public.environment === 'development') {
-    dLog('Sentry disabled in development mode')
+  // Early exit in development mode - prevent any Sentry initialization
+  if (config.public.environment === 'development' || process.env.NODE_ENV === 'development') {
+    dLog('Sentry completely disabled in development mode')
     return {
       provide: {
-        sentry: Sentry
+        sentry: null
       }
     }
   }

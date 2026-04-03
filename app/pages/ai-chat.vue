@@ -24,7 +24,7 @@
               <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
             </svg>
           </button>
-          <h1>🧑‍⚖️ CaseBot - AI Legal Assistant</h1>
+          <h1>🧑‍⚖️ nUSA Legal Assistant - AI Legal Counsel</h1>
           <p class="subtitle">Ask detailed legal questions and get comprehensive answers</p>
         </div>
         <div class="header-actions">
@@ -159,7 +159,7 @@
             <span></span>
             <span></span>
           </div>
-          <span>CaseBot is thinking...</span>
+          <span>nUSA Legal Assistant is thinking...</span>
         </div>
       </div>
 
@@ -208,7 +208,7 @@ import { useStreamingChat } from '~/composables/useStreamingChat'
 
 definePageMeta({
   title: 'AI Legal Assistant',
-  description: 'Chat with CaseBot AI for comprehensive legal assistance',
+  description: 'Chat with nUSA Legal Assistant AI for comprehensive legal assistance',
   layout: false
 })
 
@@ -244,7 +244,7 @@ const handleMobileSwitch = async (threadId: string) => {
 const newChat = () => {
   store.clearChat()
   store.addMessage({
-    text: 'Hello! I am CaseBot 🤖, your AI legal assistant. I can help you with legal questions, explain laws and procedures, and provide guidance on nUSA legal matters. What would you like to know?',
+    text: 'Hello! I am nUSA Legal Assistant 🤖, your AI legal counsel. I can help you with legal questions, explain laws and procedures, and provide guidance on nUSA legal matters. What would you like to know?',
     type: 'bot',
     isMarkdown: false
   })
@@ -294,7 +294,7 @@ onMounted(async () => {
   await store.init()
   if (store.messages.length === 0) {
     store.addMessage({
-      text: 'Hello! I am CaseBot 🤖, your AI legal assistant. I can help you with legal questions, explain laws and procedures, and provide guidance on nUSA legal matters. What would you like to know?',
+      text: 'Hello! I am nUSA Legal Assistant 🤖, your AI legal counsel. I can help you with legal questions, explain laws and procedures, and provide guidance on nUSA legal matters. What would you like to know?',
       type: 'bot',
       isMarkdown: false
     })

@@ -182,9 +182,275 @@ function calculateSentencing() {
 .tool-card {
   max-width: 700px;
   margin: 0 auto;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+  margin-bottom: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.label-text {
+  color: #1f2937;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+  color: #1f2937;
+  font-size: 0.875rem;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.select:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-color: #3b82f6;
+}
+
+.checkbox {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.checkbox:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.checkbox-primary:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.btn-primary:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin-top: 1.5rem;
+}
+
+.alert-success {
+  background-color: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #166534;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.text-blue-600 {
+  color: #2563eb;
 }
 
 .space-y-1 > * + * {
   margin-top: 0.25rem;
+}
+
+.bg-blue-50 {
+  background-color: #eff6ff;
+}
+
+.border-blue-200 {
+  border-color: #bfdbfe;
+}
+
+.text-blue-800 {
+  color: #1e40af;
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.rounded {
+  border-radius: 0.375rem;
+}
+
+.font-mono {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+}
+
+/* Dark mode improvements */
+[data-theme='dark'] .tool-card {
+  background: #1f2937;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .label-text {
+  color: #f3f4f6;
+}
+
+[data-theme='dark'] .select {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f3f4f6;
+}
+
+[data-theme='dark'] .select:focus {
+  border-color: #60a5fa;
+}
+
+[data-theme='dark'] .checkbox {
+  background-color: #374151;
+  border-color: #4b5563;
+}
+
+[data-theme='dark'] .checkbox:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+[data-theme='dark'] .alert-success {
+  background-color: #14532d;
+  border-color: #16a34a;
+  color: #86efac;
+}
+
+[data-theme='dark'] .font-bold {
+  color: #f3f4f6;
+}
+
+[data-theme='dark'] .text-blue-600 {
+  color: #60a5fa;
+}
+
+[data-theme='dark'] .bg-blue-50 {
+  background-color: #1e3a8a;
+}
+
+[data-theme='dark'] .text-blue-800 {
+  color: #93c5fd;
+}
+
+/* Light mode contrast improvements */
+@media (prefers-color-scheme: light) {
+  .tool-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+  }
+
+  .label-text {
+    color: #111827;
+  }
+
+  .select {
+    background-color: #ffffff;
+    border-color: #d1d5db;
+    color: #111827;
+  }
+
+  .checkbox {
+    background-color: #ffffff;
+    border-color: #d1d5db;
+  }
+
+  .checkbox:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+  }
+
+  .alert-success {
+    background-color: #f0fdf4;
+    border-color: #86efac;
+    color: #166534;
+  }
+
+  .text-lg {
+    color: #111827;
+  }
+
+  .text-sm {
+    color: #374151;
+  }
+
+  .text-blue-600 {
+    color: #2563eb;
+  }
 }
 </style>

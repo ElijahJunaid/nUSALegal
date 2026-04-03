@@ -1,6 +1,6 @@
 import { defineNuxtPlugin, useRouter } from '#imports'
 
-export const DEBUG = false
+export const DEBUG = true
 
 export const dLog = (...a: unknown[]) => {
   if (DEBUG) console.log(...a)
@@ -15,42 +15,42 @@ export const dError = (...a: unknown[]) => {
 export default defineNuxtPlugin(nuxtApp => {
   if (!DEBUG) return
 
-  console.log('🔷 [DEBUG] Plugin initialized')
+  dLog('🔷 [DEBUG] Plugin initialized')
 
   const router = useRouter()
 
   nuxtApp.hook('app:created', () => {
-    console.log('🔷 [DEBUG] App created')
+    dLog('🔷 [DEBUG] App created')
   })
 
   nuxtApp.hook('app:mounted', () => {
-    console.log('🔷 [DEBUG] App mounted')
+    dLog('🔷 [DEBUG] App mounted')
   })
 
   nuxtApp.hook('app:beforeMount', () => {
-    console.log('🔷 [DEBUG] App before mount')
+    dLog('🔷 [DEBUG] App before mount')
   })
 
   nuxtApp.hook('page:start', () => {
-    console.log('🔷 [DEBUG] Page start')
+    dLog('🔷 [DEBUG] Page start')
   })
 
   nuxtApp.hook('page:finish', () => {
-    console.log('🔷 [DEBUG] Page finish')
+    dLog('🔷 [DEBUG] Page finish')
   })
 
   if (process.client) {
     const originalFetch = window.fetch
     window.fetch = function (...args) {
-      console.log('🔷 [DEBUG] Fetch request:', args[0])
+      dLog('🔷 [DEBUG] Fetch request:', args[0])
       return originalFetch
         .apply(this, args)
         .then(response => {
-          console.log('🔷 [DEBUG] Fetch response:', args[0], response.status)
+          dLog('🔷 [DEBUG] Fetch response:', args[0], response.status)
           return response
         })
         .catch(error => {
-          console.error('🔷 [DEBUG] Fetch error:', args[0], error)
+          dError('🔷 [DEBUG] Fetch error:', args[0], error)
           throw error
         })
     }
@@ -58,22 +58,19 @@ export default defineNuxtPlugin(nuxtApp => {
     const OriginalWebSocket = window.WebSocket
     const WebSocketProxy = function (url: string | URL, protocols?: string | string[]) {
       const currentOrigin = window.location.origin
-      console.log(`🔷 [DEBUG] WebSocket connecting to: ${url} (Current Origin: ${currentOrigin})`)
+      dLog(`🔷 [DEBUG] WebSocket connecting to: ${url} (Current Origin: ${currentOrigin})`)
       const ws = new OriginalWebSocket(url, protocols)
 
       ws.addEventListener('open', () => {
-        console.log('✅ [DEBUG] WebSocket opened:', url)
+        dLog('✅ [DEBUG] WebSocket opened:', url)
       })
 
       ws.addEventListener('close', event => {
-        console.log(
-          `❌ [DEBUG] WebSocket closed (Code: ${event.code}, Reason: ${event.reason}):`,
-          url
-        )
+        dLog(`❌ [DEBUG] WebSocket closed (Code: ${event.code}, Reason: ${event.reason}):`, url)
       })
 
       ws.addEventListener('error', error => {
-        console.error('❌ [DEBUG] WebSocket error:', url, error)
+        dError('❌ [DEBUG] WebSocket error:', url, error)
       })
 
       return ws
@@ -100,17 +97,17 @@ export default defineNuxtPlugin(nuxtApp => {
         username?: string | null,
         password?: string | null
       ): void {
-        console.log('🔷 [DEBUG] XHR request:', method, url)
+        dLog('🔷 [DEBUG] XHR request:', method, url)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return originalOpen.call(this, method, url, async as any, username as any, password as any)
       }
 
       xhr.addEventListener('load', function () {
-        console.log('🔷 [DEBUG] XHR response:', this.status, this.responseURL)
+        dLog('🔷 [DEBUG] XHR response:', this.status, this.responseURL)
       })
 
       xhr.addEventListener('error', function () {
-        console.error('🔷 [DEBUG] XHR error:', this.responseURL)
+        dError('🔷 [DEBUG] XHR error:', this.responseURL)
       })
 
       return xhr
@@ -127,17 +124,17 @@ export default defineNuxtPlugin(nuxtApp => {
     window.XMLHttpRequest = XMLHttpRequestProxy as typeof XMLHttpRequest
 
     window.addEventListener('error', event => {
-      console.error('🔷 [DEBUG] Window error:', event.message, event.filename, event.lineno)
+      dError('🔷 [DEBUG] Window error:', event.message, event.filename, event.lineno)
     })
 
     window.addEventListener('unhandledrejection', event => {
-      console.error('🔷 [DEBUG] Unhandled promise rejection:', event.reason)
+      dError('🔷 [DEBUG] Unhandled promise rejection:', event.reason)
     })
 
     router.beforeEach((to, from) => {
-      console.log('🔷 [DEBUG] Route navigation:', from.path, '->', to.path)
+      dLog('🔷 [DEBUG] Route navigation:', from.path, '->', to.path)
     })
 
-    console.log('🔷 [DEBUG] All interceptors installed')
+    dLog('🔷 [DEBUG] All interceptors installed')
   }
 })

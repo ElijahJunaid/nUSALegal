@@ -43,7 +43,7 @@
         <div class="card">
           <div class="card-body">
             <h2 class="section-title text-center">
-              {{ selectedSection === 'congress' ? 'Congress' : 'City Council' }}
+              {{ getSectionTitle() }}
             </h2>
 
             <div class="search-filter">
@@ -81,6 +81,21 @@
                     <option value="ordinance">Ordinances</option>
                     <option value="resolution">Resolutions</option>
                   </template>
+                </select>
+              </div>
+
+              <div v-if="selectedSection === 'city-council'" class="form-control w-full md:w-32">
+                <select
+                  v-model="filterStatus"
+                  class="select select-bordered w-full"
+                  @change="searchQuery = ''"
+                >
+                  <option value="all">All Status</option>
+                  <option value="enacted">Enacted</option>
+                  <option value="pending">Pending</option>
+                  <option value="vetoed">Vetoed</option>
+                  <option value="withdrawn">Withdrawn</option>
+                  <option value="committee">In Committee</option>
                 </select>
               </div>
             </div>
@@ -135,9 +150,21 @@ definePageMeta({
 const billsStore = useBillsStore()
 
 const { setSection, fetchCongressBills } = billsStore
-const { searchQuery, selectedSection, filterType } = storeToRefs(billsStore)
+const { searchQuery, selectedSection, filterType, filterStatus } = storeToRefs(billsStore)
 
 onMounted(fetchCongressBills)
+
+// Function to get proper section titles
+const getSectionTitle = () => {
+  switch (selectedSection.value) {
+    case 'congress':
+      return 'nUSA Congress Legislation'
+    case 'city-council':
+      return 'District of Columbia City Council Bills'
+    default:
+      return 'Legislation'
+  }
+}
 
 interface PdfTokenResponse {
   token: string

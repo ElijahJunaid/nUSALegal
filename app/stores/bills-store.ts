@@ -7,13 +7,24 @@ interface Bill {
   description: string
   pdfPath: string
   type: 'hr' | 's' | 'hjres' | 'sjres' | 'hconres' | 'sconres' | 'hres' | 'sres'
+  title?: string
+  congress?: number
+  publicLaw?: string
 }
 
 interface DCBill {
+  id: string
   title: string
   description: string
   pdfPath: string
   type: 'act' | 'ordinance' | 'resolution'
+  category: 'city-council'
+  status: 'enacted' | 'pending' | 'vetoed' | 'withdrawn' | 'committee'
+  introducedDate: string
+  enactedDate?: string
+  sponsor?: string
+  billNumber?: string
+  session?: string
 }
 
 export const useBillsStore = defineStore('bills', {
@@ -21,6 +32,7 @@ export const useBillsStore = defineStore('bills', {
     selectedSection: 'congress' as 'congress' | 'city-council',
     searchQuery: '',
     filterType: 'all',
+    filterStatus: 'all' as 'all' | 'enacted' | 'pending' | 'vetoed' | 'withdrawn' | 'committee',
     congressBills: [] as Bill[],
     dcBills: [] as DCBill[],
     congressLoaded: false,
@@ -53,12 +65,17 @@ export const useBillsStore = defineStore('bills', {
       if (state.filterType !== 'all') {
         bills = bills.filter(bill => bill.type === state.filterType)
       }
+      if (state.filterStatus !== 'all') {
+        bills = bills.filter(bill => bill.status === state.filterStatus)
+      }
       if (state.searchQuery.trim()) {
         const query = state.searchQuery.toLowerCase()
         bills = bills.filter(
           bill =>
             bill.title.toLowerCase().includes(query) ||
-            bill.description.toLowerCase().includes(query)
+            bill.description.toLowerCase().includes(query) ||
+            bill.billNumber?.toLowerCase().includes(query) ||
+            bill.sponsor?.toLowerCase().includes(query)
         )
       }
 
@@ -71,6 +88,7 @@ export const useBillsStore = defineStore('bills', {
       this.selectedSection = section
       this.searchQuery = ''
       this.filterType = 'all'
+      this.filterStatus = 'all'
 
       if (section === 'congress' && !this.congressLoaded) {
         await this.fetchCongressBills()

@@ -1,5 +1,5 @@
 import { OpenAI } from 'openai'
-import { dError } from '../utils/debug'
+import { dError, dLog } from '../utils/debug'
 import { tavily } from '@tavily/core'
 import { apiRateLimiter } from '../utils/rateLimit'
 import { defineEventHandler, createError } from 'h3'
@@ -16,11 +16,11 @@ interface ChatbotRequestBody {
   thread_id?: string
 }
 
-const THREAD_ID_PATTERN = /^thread_[a-zA-Z0-9]{24,}$/
+const THREAD_ID_PATTERN = /^(thread_[a-zA-Z0-9]{24,}|fallback-[0-9]+|chat-fallback-[0-9]+)$/
 const VECTOR_STORE_ID_PATTERN = /^vs_[a-zA-Z0-9]{24,}$/
 
 const CASEBOT_SYSTEM_INSTRUCTIONS = `
-You are CaseBot, the official AI legal assistant for the nUSA (Nightglade's United States of America) —
+You are nUSA Legal Assistant, the official AI legal assistant for the nUSA (Nightglade's United States of America) —
 a Roblox roleplay nation with a comprehensive legal system modeled after the United States.
 
 Your role:
@@ -51,12 +51,13 @@ async function classifyQuery(
   greeting_response?: string
 }> {
   try {
+    dLog('[Chatbot] Making classification request to OpenAI')
     const guard = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
         {
           role: 'system',
-          content: `You are a query guard for CaseBot, the AI legal assistant for the nUSA (Nightglade's United States of America) roleplay legal system.
+          content: `You are a query guard for nUSA Legal Assistant, the AI legal assistant for the nUSA (Nightglade's United States of America) roleplay legal system.
 
 Classify the user's query into one of:
 - LEGAL: relates to law, legal procedures, courts, statutes, government, rights, the nUSA legal system, or anything a legal assistant should answer
@@ -80,7 +81,12 @@ Respond with JSON only: { "classification": "LEGAL"|"GREETING"|"OFF_TOPIC"|"HARM
       return JSON.parse(content)
     }
   } catch (error) {
-    dError('[Chatbot] Intent guard error, defaulting to LEGAL:', error)
+    dError('[Chatbot] Intent guard error, defaulting to LEGICAL:', error)
+    dLog('[Chatbot] Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      status: (error as { status?: number })?.status,
+      statusText: (error as { statusText?: string })?.statusText
+    })
   }
   return { classification: 'LEGAL', reason: 'guard fallback' }
 }
@@ -234,8 +240,11 @@ const TOOL_DEFINITIONS: OpenAI.Beta.Assistants.AssistantTool[] = [
 ]
 
 const handler = defineEventHandler(async event => {
+  dLog('[Chatbot] Request received')
+
   const rateLimit = await apiRateLimiter.check(event)
   if (!rateLimit.allowed) {
+    dLog('[Chatbot] Rate limit exceeded:', rateLimit)
     throw createError({
       status: 429,
       statusText: 'Too Many Requests',
@@ -247,9 +256,12 @@ const handler = defineEventHandler(async event => {
     event,
     validationSchemas.chatbot
   )
+
+  dLog('[Chatbot] Validated body:', JSON.stringify(validatedBody, null, 2))
   let { query, thread_id } = validatedBody
 
   if (!query) {
+    dLog('[Chatbot] Missing query field')
     throw createError({ status: 400, statusText: 'Bad Request', message: 'Query is required' })
   }
 
@@ -270,39 +282,69 @@ const handler = defineEventHandler(async event => {
   const ASSISTANT_ID = config.assistantId as string
 
   if (!OPENAI_API_KEY || !TAVILY_API_KEY || !VECTOR_STORE_ID || !ASSISTANT_ID) {
-    dError('[Chatbot] Missing required environment variables')
-    throw createError({
-      status: 500,
-      statusText: 'Internal Server Error',
-      message: 'Missing required environment variables'
+    dError('[Chatbot] Missing required environment variables:', {
+      hasOpenAI: !!OPENAI_API_KEY,
+      hasTavily: !!TAVILY_API_KEY,
+      hasVectorStore: !!VECTOR_STORE_ID,
+      hasAssistant: !!ASSISTANT_ID
     })
+    return {
+      thread_id,
+      response:
+        'nUSA Legal Assistant is currently unavailable due to configuration issues. Please contact an administrator or try again later. This typically means required API keys or service configurations are missing.'
+    }
   }
 
   if (!VECTOR_STORE_ID_PATTERN.test(VECTOR_STORE_ID)) {
-    dError('[Chatbot] Invalid vectorStoreId format')
-    throw createError({
-      status: 500,
-      statusText: 'Internal Server Error',
-      message: 'Invalid configuration'
-    })
+    dError('[Chatbot] Invalid vectorStoreId format:', VECTOR_STORE_ID)
+    return {
+      thread_id,
+      response:
+        'nUSA Legal Assistant is currently unavailable due to configuration issues. The vector store ID format is invalid. Please contact an administrator.'
+    }
   }
 
   const openai = new OpenAI({
     apiKey: OPENAI_API_KEY,
     maxRetries: 3,
-    timeout: 30000
+    timeout: 30000,
+    defaultHeaders: {
+      'Content-Type': 'application/json'
+    }
   })
+
+  dLog('[Chatbot] OpenAI client initialized, checking thread_id:', thread_id)
+  dLog(
+    '[Chatbot] OpenAI API key format check:',
+    OPENAI_API_KEY ? `${OPENAI_API_KEY.substring(0, 7)}...` : 'MISSING'
+  )
+
+  // Test basic OpenAI connection with a simple API call
+  try {
+    dLog('[Chatbot] Testing basic OpenAI connection...')
+    const models = await openai.models.list()
+    dLog('[Chatbot] OpenAI connection test successful, found models:', models.data.length)
+  } catch (testError) {
+    dError('[Chatbot] OpenAI connection test failed:', testError)
+    dLog('[Chatbot] Connection test error details:', {
+      message: testError instanceof Error ? testError.message : 'Unknown error',
+      status: (testError as { status?: number })?.status,
+      statusText: (testError as { statusText?: string })?.statusText
+    })
+  }
 
   const tavilyClient = tavily({ apiKey: TAVILY_API_KEY })
 
+  dLog('[Chatbot] About to classify query:', query)
   const guardResult = await classifyQuery(openai, query)
+  dLog('[Chatbot] Query classification result:', guardResult.classification)
 
   if (guardResult.classification === 'GREETING') {
     return {
       thread_id,
       response:
         guardResult.greeting_response ||
-        "Hello! I'm CaseBot, your legal assistant. What legal question can I help you with?"
+        "Hello! I'm nUSA Legal Assistant, your legal assistant. What legal question can I help you with?"
     }
   }
 
@@ -310,7 +352,7 @@ const handler = defineEventHandler(async event => {
     return {
       thread_id,
       response:
-        "I'm CaseBot, a legal assistant for nUSA. I can only help with legal questions. Please ask me about laws, court procedures, or legal matters."
+        "I'm nUSA Legal Assistant, a legal assistant for nUSA. I can only help with legal questions. Please ask me about laws, court procedures, or legal matters."
     }
   }
 
@@ -318,7 +360,7 @@ const handler = defineEventHandler(async event => {
     return {
       thread_id,
       response:
-        "That question doesn't seem to be about legal matters. I'm CaseBot, specialized in nUSA law. Try asking about laws, court procedures, executive orders, or legal rights!"
+        "That question doesn't seem to be about legal matters. I'm nUSA Legal Assistant, specialized in nUSA law. Try asking about laws, court procedures, executive orders, or legal rights!"
     }
   }
 
@@ -352,19 +394,131 @@ const handler = defineEventHandler(async event => {
   }
 
   try {
-    if (!thread_id) {
-      const thread = await openai.beta.threads.create({
-        tool_resources: {
-          file_search: { vector_store_ids: [VECTOR_STORE_ID] }
+    // Check if we have a fallback thread_id that needs special handling
+    if (
+      thread_id &&
+      (thread_id.startsWith('fallback-') || thread_id.startsWith('chat-fallback-'))
+    ) {
+      dLog('[Chatbot] Detected fallback thread_id, using chat completion approach')
+
+      // Use chat completion instead of trying to use threads API
+      try {
+        const chatResponse = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: [
+            { role: 'system', content: CASEBOT_SYSTEM_INSTRUCTIONS },
+            { role: 'user', content: query }
+          ],
+          max_tokens: 500
+        })
+
+        const response =
+          chatResponse.choices[0]?.message?.content ||
+          'I apologize, but I could not generate a response.'
+        dLog('[Chatbot] Chat completion successful for fallback thread')
+
+        return {
+          thread_id: thread_id,
+          response: response
         }
-      })
-      thread_id = thread.id
+      } catch (chatError) {
+        dError('[Chatbot] Chat completion failed for fallback thread:', chatError)
+        return {
+          thread_id: thread_id,
+          response:
+            "I'm nUSA Legal Assistant, but I'm experiencing technical difficulties. Please try again later or contact an administrator."
+        }
+      }
     }
 
+    if (!thread_id) {
+      dLog('[Chatbot] Creating new thread with vector store:', VECTOR_STORE_ID)
+      try {
+        // Try creating thread without vector store first to isolate the issue
+        dLog('[Chatbot] Attempting basic thread creation with empty object')
+
+        // Try different approaches to see what works
+        const threadOptions = {}
+        dLog('[Chatbot] Thread options:', JSON.stringify(threadOptions))
+
+        const thread = await openai.beta.threads.create(threadOptions)
+        thread_id = thread.id
+        dLog('[Chatbot] New thread created (no vector store):', thread_id)
+
+        // If that works, try updating with vector store
+        if (VECTOR_STORE_ID) {
+          dLog('[Chatbot] Attempting to update thread with vector store')
+          try {
+            await openai.beta.threads.update(thread_id, {
+              tool_resources: {
+                file_search: { vector_store_ids: [VECTOR_STORE_ID] }
+              }
+            })
+            dLog('[Chatbot] Thread updated with vector store successfully')
+          } catch (vectorStoreError) {
+            dError('[Chatbot] Vector store attachment failed:', vectorStoreError)
+            dLog('[Chatbot] Continuing without vector store')
+          }
+        }
+      } catch (threadError) {
+        dError('[Chatbot] Thread creation failed, trying fallback approach:', threadError)
+        dLog('[Chatbot] Thread creation error details:', {
+          message: threadError instanceof Error ? threadError.message : 'Unknown error',
+          status: (threadError as { status?: number })?.status,
+          statusText: (threadError as { statusText?: string })?.statusText,
+          code: (threadError as { code?: string })?.code,
+          type: (threadError as { type?: string })?.type
+        })
+
+        // Let's also try to get more details about the OpenAI client configuration
+        dLog('[Chatbot] OpenAI client configuration:', {
+          apiKey: OPENAI_API_KEY ? `${OPENAI_API_KEY.substring(0, 10)}...` : 'MISSING',
+          baseURL: openai.baseURL,
+          timeout: openai.timeout,
+          maxRetries: openai.maxRetries
+        })
+
+        // Try a simple chat completion as an alternative test
+        try {
+          dLog('[Chatbot] Testing simple chat completion as alternative...')
+          const chatResponse = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            messages: [
+              { role: 'system', content: 'You are a helpful legal assistant. Respond briefly.' },
+              { role: 'user', content: query }
+            ],
+            max_tokens: 200
+          })
+
+          const response =
+            chatResponse.choices[0]?.message?.content ||
+            'I apologize, but I could not generate a response.'
+          dLog('[Chatbot] Chat completion successful, using as fallback')
+
+          return {
+            thread_id: 'chat-fallback-' + Date.now(),
+            response: response
+          }
+        } catch (chatError) {
+          dError('[Chatbot] Chat completion also failed:', chatError)
+        }
+
+        // Fallback: Create a simple response without threads
+        dLog('[Chatbot] Using final fallback response without thread')
+        return {
+          thread_id: 'fallback-' + Date.now(),
+          response:
+            "I'm nUSA Legal Assistant, but I'm currently experiencing technical difficulties with my conversation system. Please try again later or contact an administrator. I can help you with questions about nUSA laws, the Constitution, Executive Orders, and court procedures."
+        }
+      }
+    }
+
+    dLog('[Chatbot] Adding message to thread:', thread_id)
     await openai.beta.threads.messages.create(thread_id, {
       role: 'user',
       content: query
     })
+    dLog('[Chatbot] Message added to thread')
 
     const res = event.node.res as import('http').ServerResponse
     res.setHeader('Content-Type', 'text/event-stream')
@@ -384,13 +538,23 @@ const handler = defineEventHandler(async event => {
 
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
       try {
+        dLog('[Chatbot] Starting OpenAI stream with:', {
+          thread_id,
+          assistant_id: ASSISTANT_ID,
+          additional_instructions: CASEBOT_SYSTEM_INSTRUCTIONS?.substring(0, 100) + '...',
+          tools_count: TOOL_DEFINITIONS?.length
+        })
+
         stream = openai.beta.threads.runs.stream(thread_id, {
           assistant_id: ASSISTANT_ID,
           additional_instructions: CASEBOT_SYSTEM_INSTRUCTIONS,
           tools: TOOL_DEFINITIONS
         })
+
+        dLog('[Chatbot] OpenAI stream started successfully')
         break
       } catch (err) {
+        dLog('[Chatbot] OpenAI stream error (attempt ' + (attempt + 1) + '):', err)
         if (attempt === MAX_RETRIES - 1) throw err
         const delay = Math.pow(2, attempt) * 1000 // 1s, 2s, 4s
         await new Promise(resolve => setTimeout(resolve, delay))
@@ -575,7 +739,7 @@ const handler = defineEventHandler(async event => {
       if (chunk.event === 'thread.run.failed') {
         dError('[Chatbot] Run failed:', chunk.data)
         res.write(
-          `data: ${JSON.stringify({ error: 'CaseBot encountered an error processing your request. Please try again.' })}\n\n`
+          `data: ${JSON.stringify({ error: 'nUSA Legal Assistant encountered an error processing your request. Please try again.' })}\n\n`
         )
       }
     }

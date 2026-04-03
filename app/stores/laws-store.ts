@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { dError } from '~/plugins/debug-logger.client'
+import { useApiToken } from '~/composables/useApiToken'
 
 interface MunicipalGroup {
   label: string
@@ -12,6 +13,7 @@ export interface Law {
   content: string
   excerp: string
   category?: string
+  section?: string
 }
 
 export const useLawsStore = defineStore('laws-rules', {
@@ -40,8 +42,47 @@ export const useLawsStore = defineStore('laws-rules', {
     },
     filterMunicipalList(state): string[] {
       const data: MunicipalGroup[] = state.municipal
-
       return data.map(d => d.label)
+    },
+    filteredFederal: state => {
+      // Group federal laws by section for hierarchical organization
+      const groupedLaws = state.federal.reduce(
+        (acc, law) => {
+          const section = law.section || 'General Provisions'
+          if (!acc[section]) {
+            acc[section] = []
+          }
+          acc[section].push(law)
+          return acc
+        },
+        {} as Record<string, Law[]>
+      )
+
+      // Convert to array format
+      let data = Object.entries(groupedLaws).map(([label, laws]) => ({
+        label,
+        data: laws
+      }))
+
+      // Filter by search query
+      if (state.searchQuery.trim()) {
+        const query = state.searchQuery.toLowerCase()
+        data = data
+          .map(group => ({
+            ...group,
+            data: group.data.filter(
+              law =>
+                law.title.toLowerCase().includes(query) ||
+                law.subtitle.toLowerCase().includes(query) ||
+                law.content.toLowerCase().includes(query) ||
+                law.excerp.toLowerCase().includes(query) ||
+                law.section.toLowerCase().includes(query)
+            )
+          }))
+          .filter(group => group.data.length > 0)
+      }
+
+      return data
     },
     filteredLaws: state => {
       let data: Law[] = state.selectedSection == 'federal' ? state.federal : state.eo
@@ -121,97 +162,75 @@ export const useLawsStore = defineStore('laws-rules', {
     },
 
     async fetchFederal() {
-      if (this.federalLoaded) {
-        return
-      }
-
-      this.loading = true
-      this.error = null
+      if (this.federalLoaded) return
 
       try {
-        const tokenResponse = await $fetch<{ token: string; expiresIn: string }>(
-          '/api/auth/token',
-          {
-            method: 'POST',
-            body: { endpoint: 'laws/federal' }
-          }
-        )
-        const data = await $fetch<Law[]>('/api/laws/federal', {
+        this.loading = true
+        this.error = null
+
+        const { getToken } = useApiToken()
+        const token = await getToken('laws/federal')
+
+        const response = await $fetch('/api/laws/federal', {
           headers: {
-            Authorization: `Bearer ${tokenResponse.token}`
+            Authorization: `Bearer ${token}`
           }
         })
-
-        this.federal = data
+        this.federal = response as Law[]
         this.federalLoaded = true
-      } catch (err: unknown) {
-        const e = err as { data?: { statusMessage?: string }; message?: string }
-        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Federal'
-        dError('Failed to fetch Federal:', err)
+      } catch (error) {
+        dError('Error fetching federal laws:', error)
+        this.error = 'Failed to fetch federal laws'
       } finally {
         this.loading = false
       }
     },
+
     async fetchEO() {
-      if (this.eoLoaded) {
-        return
-      }
-
-      this.loading = true
-      this.error = null
+      if (this.eoLoaded) return
 
       try {
-        const tokenResponse = await $fetch<{ token: string; expiresIn: string }>(
-          '/api/auth/token',
-          {
-            method: 'POST',
-            body: { endpoint: 'laws/eo' }
-          }
-        )
-        const data = await $fetch<Law[]>('/api/laws/eo', {
+        this.loading = true
+        this.error = null
+
+        const { getToken } = useApiToken()
+        const token = await getToken('laws/eo')
+
+        const response = await $fetch('/api/laws/eo', {
           headers: {
-            Authorization: `Bearer ${tokenResponse.token}`
+            Authorization: `Bearer ${token}`
           }
         })
-
-        this.eo = data
+        this.eo = response as Law[]
         this.eoLoaded = true
-      } catch (err: unknown) {
-        const e = err as { data?: { statusMessage?: string }; message?: string }
-        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch EO data'
-        dError('Failed to fetch EO data:', err)
+      } catch (error) {
+        dError('Error fetching executive orders:', error)
+        this.error = 'Failed to fetch executive orders'
       } finally {
         this.loading = false
       }
     },
-    async fetchMunicipal() {
-      if (this.municipalLoaded) {
-        return
-      }
 
-      this.loading = true
-      this.error = null
+    async fetchMunicipal() {
+      if (this.municipalLoaded) return
 
       try {
-        const tokenResponse = await $fetch<{ token: string; expiresIn: string }>(
-          '/api/auth/token',
-          {
-            method: 'POST',
-            body: { endpoint: 'laws/municipal' }
-          }
-        )
-        const data = await $fetch<MunicipalGroup[]>('/api/laws/municipal', {
+        this.loading = true
+        this.error = null
+
+        const { getToken } = useApiToken()
+        const token = await getToken('laws/municipal')
+
+        const response = await $fetch('/api/laws/municipal', {
           headers: {
-            Authorization: `Bearer ${tokenResponse.token}`
+            Authorization: `Bearer ${token}`
           }
         })
-
-        this.municipal = data
+        this.municipal = response as MunicipalGroup[]
         this.municipalLoaded = true
-      } catch (err: unknown) {
-        const e = err as { data?: { statusMessage?: string }; message?: string }
-        this.error = e?.data?.statusMessage || e?.message || 'Failed to fetch Municipal'
-        dError('Failed to fetch Municipal:', err)
+      } catch (error) {
+        dError('Error fetching municipal laws:', error)
+        this.error = 'Failed to fetch municipal laws'
       } finally {
         this.loading = false
       }

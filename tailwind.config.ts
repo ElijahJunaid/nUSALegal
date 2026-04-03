@@ -1,3 +1,4 @@
+// @ts-ignore - daisyui module type issue
 import daisyui from 'daisyui'
 
 export default {

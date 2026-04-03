@@ -36,9 +36,18 @@
 
         <div class="max-lg:hidden w-[20%]"></div>
       </div>
-      <footer class="flex flex-col gap-2 text-center py-4">
-        <p>&copy; 2024 nUSA Legal</p>
-        <p>THIS IS NOT REAL LIFE!</p>
+      <footer class="footer">
+        <div class="footer-content">
+          <div class="footer-section">
+            <p class="footer-copyright">&copy; 2024 nUSA Legal</p>
+            <p class="footer-disclaimer">THIS IS NOT REAL LIFE!</p>
+          </div>
+          <div class="footer-links">
+            <a href="/legal" class="footer-link">Legal Resources</a>
+            <a href="/game" class="footer-link">Games</a>
+            <a href="/about" class="footer-link">About</a>
+          </div>
+        </div>
       </footer>
 
       <button
@@ -208,18 +217,18 @@ const toggleTheme = () => {
 }
 
 .nav-link:hover {
-  background-color: rgba(138, 99, 255, 0.2);
-  color: #b39eff;
+  background-color: var(--color-shadow-hover);
+  color: var(--color-accent-hover);
   transform: scale(1.05);
 }
 
 [data-theme='dark'] .nav-link {
-  color: #b39eff;
+  color: var(--color-accent-hover);
 }
 
 [data-theme='dark'] .nav-link:hover {
-  color: #d4c6ff;
-  background-color: rgba(155, 127, 255, 0.3);
+  color: var(--color-accent);
+  background-color: var(--color-shadow-hover);
 }
 
 .app-name {
@@ -233,7 +242,7 @@ const toggleTheme = () => {
 }
 
 .app-name:hover {
-  color: #8a63ff;
+  color: var(--color-navbar-hover);
   text-decoration: underline;
   transform: scale(1.05);
 }
@@ -290,5 +299,122 @@ const toggleTheme = () => {
 .menu-toggle img {
   width: 28px;
   height: 28px;
+}
+
+.footer {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border-top: 1px solid #374151;
+  padding: 2rem 0;
+  margin-top: auto;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-copyright {
+  color: var(--color-text-inverse);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.footer-disclaimer {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-style: italic;
+  margin: 0;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.footer-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--color-info);
+  text-decoration: underline;
+}
+
+/* Light mode improvements */
+@media (prefers-color-scheme: light) {
+  .footer {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-top: 1px solid #cbd5e1;
+  }
+
+  .footer-copyright {
+    color: #1f2937;
+  }
+
+  .footer-disclaimer {
+    color: #64748b;
+  }
+
+  .footer-link {
+    color: #475569;
+  }
+
+  .footer-link:hover {
+    color: #2563eb;
+  }
+}
+
+/* Dark mode footer */
+[data-theme='dark'] .footer {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border-top: 1px solid #374151;
+}
+
+[data-theme='dark'] .footer-copyright {
+  color: #f3f4f6;
+}
+
+[data-theme='dark'] .footer-disclaimer {
+  color: #9ca3af;
+}
+
+[data-theme='dark'] .footer-link {
+  color: #d1d5db;
+}
+
+[data-theme='dark'] .footer-link:hover {
+  color: #60a5fa;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 </style>

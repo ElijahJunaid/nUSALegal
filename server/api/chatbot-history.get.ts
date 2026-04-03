@@ -3,7 +3,7 @@ import { defineEventHandler, createError } from 'h3'
 import { useRuntimeConfig } from '#imports'
 import { dError } from '../utils/debug'
 
-const THREAD_ID_PATTERN = /^thread_[a-zA-Z0-9]{24,}$/
+const THREAD_ID_PATTERN = /^(thread_[a-zA-Z0-9]{24,}|fallback-[0-9]+|chat-fallback-[0-9]+)$/
 
 const handler = defineEventHandler(async event => {
   const reqUrl = event.node.req.url || ''
@@ -16,6 +16,15 @@ const handler = defineEventHandler(async event => {
 
   if (!THREAD_ID_PATTERN.test(threadId)) {
     throw createError({ status: 400, message: 'Invalid thread_id format' })
+  }
+
+  // Handle fallback thread IDs - they don't have actual history in OpenAI
+  if (threadId.startsWith('fallback-') || threadId.startsWith('chat-fallback-')) {
+    // Return empty history for fallback threads since they use chat completions
+    return {
+      messages: [],
+      hasMore: false
+    }
   }
 
   const config = useRuntimeConfig()

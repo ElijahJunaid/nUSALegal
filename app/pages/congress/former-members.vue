@@ -94,7 +94,14 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
+// @ts-ignore - Nuxt module alias
 import { useCongressStore } from '~/stores/congress-store'
+
+// @ts-ignore - Nuxt auto-import
+definePageMeta({
+  layout: false
+})
+// @ts-ignore - Nuxt module alias
 import { useTheme } from '~/composables/useTheme'
 
 const { theme, toggleTheme } = useTheme()
@@ -104,7 +111,8 @@ const searchQuery = ref('')
 const filteredFormer = computed(() => {
   const former = [
     ...congressStore.formerMembers,
-    ...congressStore.members.filter(m => m.status === 'Former')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...congressStore.members.filter((m: any) => m.status === 'Former')
   ]
   const q = searchQuery.value.toLowerCase()
   if (!q) return former
@@ -121,6 +129,7 @@ onMounted(async () => {
   await congressStore.fetchFormerMembers()
 })
 
+// @ts-ignore - useHead auto-import
 useHead({
   title: 'Former Members - nUSA Library of Congress',
   meta: [
@@ -142,12 +151,12 @@ useHead({
 }
 
 .loc-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--color-shadow);
 }
 
 .loc-nav-inner {
@@ -202,28 +211,28 @@ useHead({
   padding: 0.35rem 0.85rem;
   border-radius: 0.375rem;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--color-text);
   text-decoration: none;
   transition: background 0.15s;
 }
 
 .loc-nav-link:hover {
-  background: #f3f4f6;
-  color: #1e3a5f;
+  background: #e8f0fe;
+  color: #003e73;
   text-decoration: none;
 }
 
 .loc-nav-link.active {
-  color: #1e3a5f;
+  color: #003e73;
   font-weight: 600;
-  background: #eff6ff;
+  background: #e8f0fe;
 }
 
 .loc-back-btn {
   margin-left: auto;
   padding: 0.4rem 1rem;
-  background: #1e3a5f;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
   border-radius: 0.375rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -233,9 +242,9 @@ useHead({
 }
 
 .loc-back-btn:hover {
-  background: #2d5282;
+  background: var(--color-primary-hover);
   text-decoration: none;
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 .fm-page {
@@ -459,71 +468,80 @@ useHead({
 }
 
 [data-theme='dark'] .loc-wrapper {
-  background: #111827;
+  background: var(--color-bg);
 }
 [data-theme='dark'] .loc-nav {
-  background: #1f2937;
-  border-color: #374151;
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .loc-nav-link {
-  color: #d1d5db;
+  color: var(--color-text);
 }
-[data-theme='dark'] .loc-nav-link:hover,
+[data-theme='dark'] .loc-nav-link:hover {
+  background: #374151;
+  color: #fff;
+}
 [data-theme='dark'] .loc-nav-link.active {
+  background: #374151;
   color: #fff;
 }
 [data-theme='dark'] .loc-back-btn {
-  color: #9ca3af;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+[data-theme='dark'] .loc-back-btn:hover {
+  background: var(--color-primary-hover);
+  color: var(--color-text-inverse);
 }
 [data-theme='dark'] .fm-page {
-  background: #111827;
+  background: var(--color-bg);
 }
 [data-theme='dark'] .fm-header {
-  background: #1f2937;
-  border-color: #374151;
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .fm-title {
-  color: #f3f4f6;
+  color: var(--color-info);
 }
 [data-theme='dark'] .fm-subtitle {
-  color: #9ca3af;
+  color: var(--color-text-secondary);
 }
 [data-theme='dark'] .fm-search-bar {
-  background: #1f2937;
-  border-color: #374151;
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .fm-search-input {
-  background: #1f2937;
-  color: #f3f4f6;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text);
 }
 [data-theme='dark'] .fm-search-input::placeholder {
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 [data-theme='dark'] .fm-card {
-  background: #1f2937;
-  border-color: #374151;
+  background: var(--color-bg-card);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .fm-name {
-  color: #f3f4f6;
+  color: var(--color-text);
 }
 [data-theme='dark'] .fm-role,
 [data-theme='dark'] .fm-user {
-  color: #9ca3af;
+  color: var(--color-text-secondary);
 }
 [data-theme='dark'] .fm-tag.state {
-  background: #374151;
-  color: #d1d5db;
-  border-color: #4b5563;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .fm-tag.former {
-  background: #374151;
-  color: #9ca3af;
-  border-color: #4b5563;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
 }
 [data-theme='dark'] .loc-footer {
-  background: #0a0f1a;
+  background: var(--color-bg-tertiary);
 }
 [data-theme='dark'] .loc-footer-bottom {
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 </style>

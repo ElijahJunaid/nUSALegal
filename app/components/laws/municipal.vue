@@ -39,7 +39,7 @@
           :aria-label="`View details for ${dt.title}`"
         >
           <div class="text-center">
-            <h3 class="text-center font-bold text-xl">{{ dt.title }}</h3>
+            <h3 class="text-center font-bold text-2xl">{{ dt.title }}</h3>
             <p
               class="text-center"
               v-html="

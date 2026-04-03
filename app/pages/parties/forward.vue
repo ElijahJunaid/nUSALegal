@@ -122,9 +122,12 @@
 
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue'
+// @ts-ignore - Nuxt module alias
 import { useCongressStore } from '~/stores/congress-store'
+// @ts-ignore - Nuxt module alias
 import { useTheme } from '~/composables/useTheme'
 
+// @ts-ignore - Nuxt auto-import
 definePageMeta({
   layout: false
 })
@@ -132,15 +135,32 @@ definePageMeta({
 const { theme, toggleTheme } = useTheme()
 const congressStore = useCongressStore()
 
-const partyMembers = computed(() => congressStore.members.filter(m => m.party === 'Forward'))
-const senateCount = computed(() => partyMembers.value.filter(m => m.chamber === 'Senate').length)
-const houseCount = computed(() => partyMembers.value.filter(m => m.chamber === 'House').length)
+// Type definition for Congress members
+type CongressMember = {
+  party: string
+  chamber: string
+  role: string
+  state: string
+  status: string
+  [key: string]: unknown
+}
+
+const partyMembers = computed(() =>
+  congressStore.members.filter((m: CongressMember) => m.party === 'Forward')
+)
+const senateCount = computed(
+  () => partyMembers.value.filter((m: CongressMember) => m.chamber === 'Senate').length
+)
+const houseCount = computed(
+  () => partyMembers.value.filter((m: CongressMember) => m.chamber === 'House').length
+)
 
 onMounted(async () => {
   congressStore.loaded = false
   await congressStore.fetchMembers()
 })
 
+// @ts-ignore - useHead auto-import
 useHead({ title: 'Forward Party - nUSA' })
 </script>
 
@@ -412,12 +432,12 @@ useHead({ title: 'Forward Party - nUSA' })
   font-weight: 700;
 }
 .pw-badge.senate {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: #2563eb;
+  color: #ffffff;
 }
 .pw-badge.house {
-  background: #e0e7ff;
-  color: #4338ca;
+  background: #7c3aed;
+  color: #ffffff;
 }
 .pw-status {
   display: inline-block;

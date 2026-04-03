@@ -29,18 +29,20 @@
         <div class="card-body text-center">
           <div>
             <h3 class="text-center font-bold text-xl">
-              {{
-                bill.title ||
-                `${bill.type.charAt(0).toUpperCase() + bill.type.slice(1)} Bill` ||
-                'Untitled Bill'
-              }}
+              {{ bill.title }}
             </h3>
+            <div class="bill-meta">
+              <span class="bill-number">{{ bill.billNumber }}</span>
+              <span class="bill-status" :class="getStatusClass(bill.status)">
+                {{ formatBillStatus(bill.status) }}
+              </span>
+            </div>
             <button
               @click="$emit('open-pdf', bill.pdfPath)"
               @keydown.enter="$emit('open-pdf', bill.pdfPath)"
-              @keydown.space="$emit('open-pdf', bill.pdfPath)"
+              @keydown.space.stop="$emit('open-pdf', bill.pdfPath)"
               class="btn hover:text-primary-focus"
-              :aria-label="`View PDF for ${bill.title || 'Untitled Bill'}`"
+              :aria-label="`View PDF for ${bill.title}`"
             >
               [View Bill Text]
             </button>
@@ -49,6 +51,19 @@
             <strong>Description:</strong>
             {{ bill.description }}
           </p>
+          <div class="bill-details">
+            <p class="text-center text-sm text-gray-600">
+              <strong>Sponsor:</strong>
+              {{ bill.sponsor }} |
+              <strong>Introduced:</strong>
+              {{ formatDate(bill.introducedDate) }}
+              <span v-if="bill.enactedDate">
+                |
+                <strong>Enacted:</strong>
+                {{ formatDate(bill.enactedDate) }}
+              </span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -59,8 +74,101 @@
 import { useBillsStore } from '~/stores/bills-store'
 import { storeToRefs } from 'pinia'
 
+// Helper function to format bill status
+const formatBillStatus = (status: string) => {
+  const statusMap: Record<string, string> = {
+    enacted: 'Enacted',
+    pending: 'Pending',
+    vetoed: 'Vetoed',
+    withdrawn: 'Withdrawn',
+    committee: 'In Committee'
+  }
+  return statusMap[status] || status
+}
+
+// Helper function to get status CSS class
+const getStatusClass = (status: string) => {
+  const classMap: Record<string, string> = {
+    enacted: 'status-enacted',
+    pending: 'status-pending',
+    vetoed: 'status-vetoed',
+    withdrawn: 'status-withdrawn',
+    committee: 'status-committee'
+  }
+  return classMap[status] || 'status-unknown'
+}
+
+// Helper function to format dates
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
+
 defineEmits(['open-pdf'])
 
 const billsStore = useBillsStore()
 const { loading, filteredDCBills } = storeToRefs(billsStore)
 </script>
+
+<style scoped>
+.bill-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.bill-number {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #666;
+}
+
+.bill-status {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-enacted {
+  background-color: #10b981;
+  color: white;
+}
+
+.status-pending {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.status-vetoed {
+  background-color: #ef4444;
+  color: white;
+}
+
+.status-withdrawn {
+  background-color: #6b7280;
+  color: white;
+}
+
+.status-committee {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.status-unknown {
+  background-color: #9ca3af;
+  color: white;
+}
+
+.bill-details {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+</style>

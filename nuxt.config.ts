@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@pinia/nuxt', '@nuxtjs/i18n'],
+  // @ts-ignore - i18n module type issue
   i18n: {
     defaultLocale: 'en',
     locales: [{ code: 'en', language: 'en-US' }]
@@ -78,10 +79,13 @@ export default defineNuxtConfig({
     ],
     routeRules: {
       '/**': {
-        headers: {
-          'Content-Security-Policy':
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://p.trellocdn.com https://cdn.jsdelivr.net; connect-src 'self' blob: ws: wss: https://o4510700106416128.ingest.us.sentry.io https://www.nusa.gg https://api.nusa.gg https://users.roblox.com https://www.roblox.com https://ingesteer.services-prod.nsvcs.net https://cdn.jsdelivr.net https://*.basemaps.cartocdn.com https://main.realtime.ably.net https://main.fallback.ably-realtime.com https://main.a.fallback.ably-realtime.com https://main.c.fallback.ably-realtime.com https://rest.ably.io https://realtime.ably.io; worker-src 'self' blob:; default-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://unpkg.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tr.rbxcdn.com https://www.roblox.com https://cdn.discordapp.com https://images.roblox.com; font-src 'self' data:; frame-src 'self' https: data:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
-        }
+        headers:
+          process.env.NODE_ENV === 'development'
+            ? {}
+            : {
+                'Content-Security-Policy':
+                  "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://p.trellocdn.com https://cdn.jsdelivr.net; connect-src 'self' blob: ws: wss: https://o4510700106416128.ingest.us.sentry.io https://www.nusa.gg https://api.nusa.gg https://users.roblox.com https://www.roblox.com https://ingesteer.services-prod.nsvcs.net https://cdn.jsdelivr.net https://*.basemaps.cartocdn.com https://main.realtime.ably.net https://main.fallback.ably-realtime.com https://main.a.fallback.ably-realtime.com https://main.c.fallback.ably-realtime.com https://rest.ably.io https://realtime.ably.io; worker-src 'self' blob:; default-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://unpkg.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tr.rbxcdn.com https://www.roblox.com https://cdn.discordapp.com https://images.roblox.com; font-src 'self' data:; frame-src 'self' https: data:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+              }
       }
     }
   },
@@ -99,11 +103,15 @@ export default defineNuxtConfig({
           'http-equiv': 'X-XSS-Protection',
           content: '1; mode=block'
         },
-        {
-          'http-equiv': 'Content-Security-Policy',
-          content:
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://p.trellocdn.com https://cdn.jsdelivr.net; connect-src 'self' blob: ws: wss: https://o4510700106416128.ingest.us.sentry.io https://www.nusa.gg https://api.nusa.gg https://users.roblox.com https://www.roblox.com https://ingesteer.services-prod.nsvcs.net https://cdn.jsdelivr.net https://*.basemaps.cartocdn.com https://main.realtime.ably.net https://main.fallback.ably-realtime.com https://main.a.fallback.ably-realtime.com https://main.c.fallback.ably-realtime.com https://rest.ably.io https://realtime.ably.io; worker-src 'self' blob:; default-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://unpkg.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tr.rbxcdn.com https://www.roblox.com https://cdn.discordapp.com https://images.roblox.com; font-src 'self' data:; frame-src 'self' https: data:; base-uri 'self'; form-action 'self'"
-        }
+        ...(process.env.NODE_ENV !== 'development'
+          ? [
+              {
+                'http-equiv': 'Content-Security-Policy',
+                content:
+                  "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://p.trellocdn.com https://cdn.jsdelivr.net; connect-src 'self' blob: ws: wss: https://o4510700106416128.ingest.us.sentry.io https://www.nusa.gg https://api.nusa.gg https://users.roblox.com https://www.roblox.com https://ingesteer.services-prod.nsvcs.net https://cdn.jsdelivr.net https://*.basemaps.cartocdn.com https://main.realtime.ably.net https://main.fallback.ably-realtime.com https://main.a.fallback.ably-realtime.com https://main.c.fallback.ably-realtime.com https://rest.ably.io https://realtime.ably.io; worker-src 'self' blob:; default-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://unpkg.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tr.rbxcdn.com https://www.roblox.com https://cdn.discordapp.com https://images.roblox.com; font-src 'self' data:; frame-src 'self' https: data:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+              }
+            ]
+          : [])
       ],
       link: [
         { rel: 'preconnect', href: 'https://api.openai.com' },

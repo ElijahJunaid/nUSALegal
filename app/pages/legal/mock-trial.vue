@@ -14,6 +14,18 @@
         participate in a realistic trial proceeding.
       </p>
 
+      <div class="tracking-warning" role="alert" aria-live="polite">
+        <div class="warning-content">
+          <span class="warning-icon">⚠️</span>
+          <div class="warning-text">
+            <strong>Connection Notice:</strong>
+            Multiplayer mode uses WebSocket connections for real-time communication. Some browsers
+            may block these connections due to tracking prevention. If you experience connection
+            issues, please check your browser settings or try Single Player mode.
+          </div>
+        </div>
+      </div>
+
       <div
         v-if="!showLobby && !showTrialSetup && !showSimulation"
         class="mode-selection"
@@ -675,14 +687,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick, defineAsyncComponent } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick, defineAsyncComponent } from 'vue'
+// @ts-ignore - Nuxt plugin import
 import { dLog, dError } from '~/plugins/debug-logger.client'
+// @ts-ignore - Nuxt composable import
 import { useToast } from '~/composables/useToast'
+// @ts-ignore - Nuxt composable import
 import { useLobbyConnection } from '~/composables/useLobbyConnection'
 
+// @ts-ignore - Nuxt component import
 const ToastContainer = defineAsyncComponent(() => import('~/components/ToastContainer.vue'))
+// @ts-ignore - Nuxt component import
 const ReconnectionDialog = defineAsyncComponent(() => import('~/components/ReconnectionDialog.vue'))
 
+// @ts-ignore - Nuxt auto-import
 definePageMeta({
   ssr: false,
   title: 'Mock Trial Simulator',
@@ -735,6 +753,7 @@ const showTrialInterface = ref(false)
 const isSinglePlayer = ref(false)
 const isLoading = ref(false)
 const lobbyCodeError = ref('')
+const isInLobby = ref(false) // Track if user is actually in a lobby
 
 const lobbyCodeInput = ref('')
 const lobbyCode = ref('')
@@ -825,6 +844,7 @@ async function createLobby() {
   if (connected) {
     isLobbyLeader.value = true
     showLobby.value = true
+    isInLobby.value = true // User is now in a lobby
 
     players.value = [
       {
@@ -871,6 +891,7 @@ async function joinLobby() {
   if (connected) {
     isLobbyLeader.value = false
     showLobby.value = true
+    isInLobby.value = true // User is now in a lobby
 
     players.value = [
       { name: 'Host', role: null, isLeader: true },
@@ -889,15 +910,22 @@ function leaveLobby() {
   lobbyConnection.disconnect()
 
   showLobby.value = false
+  isInLobby.value = false // User is no longer in a lobby
   lobbyCode.value = ''
+
+  // Clear trial state
+  showTrialSetup.value = false
+  showSimulation.value = false
+  selectedCase.value = null
+  setupRole.value = null
+  players.value = []
+
+  // Only show lobby leave message if actually leaving a lobby
+  info('You have left the lobby. Thank you for participating!')
   lobbyCodeInput.value = ''
   selectedCaseType.value = null
-  selectedCase.value = null
   availableCases.value = []
-  players.value = []
   availableRoles.value.forEach((role: AvailableRole) => (role.claimedBy = null))
-
-  info('Left the lobby')
 }
 
 function generateLobbyCode(): string {
@@ -910,6 +938,7 @@ async function selectCaseType(type: 'criminal' | 'civil') {
   availableCases.value = []
 
   try {
+    // @ts-ignore - Nuxt $fetch auto-import
     const response = (await $fetch('/api/mock-trial/cases?type=' + type)) as {
       success: boolean
       caseType: string
@@ -989,6 +1018,7 @@ function startTrialFromLobby() {
 
   setTimeout(() => {
     showLobby.value = false
+    isInLobby.value = false // User is no longer in lobby, now in trial
     showTrialInterface.value = true
     showSimulation.value = true
     isLoading.value = false
@@ -1016,6 +1046,7 @@ async function confirmSetup() {
   isLoading.value = true
 
   try {
+    // @ts-ignore - Nuxt $fetch auto-import
     const response = (await $fetch(`/api/mock-trial/random-case?type=${setupCaseType.value}`)) as {
       success: boolean
       case: {
@@ -1115,12 +1146,14 @@ function generateCaseDetailsHtml(caseData: TrialCase, role: string, caseType: st
 async function initializeCourtroomScene() {
   if (courtroomScene.value) {
     dLog('[COURTROOM] Scene already initialized, cleaning up...')
+    // @ts-ignore - dispose method exists on courtroom scene
     courtroomScene.value.dispose()
     courtroomScene.value = null
   }
 
   try {
     dLog('[COURTROOM] importing useCourtroomScene…')
+    // @ts-ignore - Dynamic import of composable
     const { useCourtroomScene } = await import('~/composables/useCourtroomScene')
     const scene = useCourtroomScene()
     courtroomScene.value = scene
@@ -1140,17 +1173,20 @@ async function initializeCourtroomScene() {
         isLocal: true
       })
     }
-    dLog('[COURTROOM] Scene created and avatar added')
+    dLog('[COURTROOM] Scene created and avatar added, starting render loop...')
+    scene.run() // CRITICAL: Start the render loop!
+    dLog('[COURTROOM] Render loop started')
     success('Courtroom scene initialized successfully')
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('[COURTROOM] Failed to initialize scene:', error)
+    // @ts-ignore - error function from useToast composable
     error('Failed to initialize courtroom scene')
     courtroomScene.value = null
   }
 }
 
 function handleReconnectCancel() {
-  lobbyConnection.disconnect()
+  lobbyConnection.disconnect(false) // Don't show message during cancellation
   showLobby.value = false
   showTrialSetup.value = false
   showSimulation.value = false
@@ -1344,6 +1380,7 @@ function endTrial() {
   showSimulation.value = false
   showTrialSetup.value = false
   showLobby.value = false
+  isInLobby.value = false // Reset lobby state
 
   setupCaseType.value = null
   setupRole.value = null
@@ -1355,6 +1392,9 @@ function endTrial() {
   verdictVotes.value = {}
   finalVerdict.value = null
   currentTurn.value = null
+
+  // Disconnect from lobby if still connected
+  lobbyConnection.disconnect()
 
   // if (courtroomScene) {
   //   courtroomScene.dispose()
@@ -1401,6 +1441,32 @@ onMounted(() => {
   const chatSendBtn = document.getElementById('chat-send')
   if (chatSendBtn) {
     chatSendBtn.addEventListener('click', sendChatMessage)
+  }
+})
+
+onUnmounted(() => {
+  // Handle page navigation - only disconnect if actually in a lobby
+  if (isInLobby.value) {
+    lobbyConnection.disconnect(false) // Don't show message during page cleanup
+    dLog('[MOCK-TRIAL] User navigated away while in lobby, disconnecting...')
+  }
+
+  // Clean up event listeners
+  const chatInputEl = document.getElementById('chat-input')
+  if (chatInputEl) {
+    chatInputEl.removeEventListener('keypress', handleChatKeypress)
+  }
+
+  const chatSendBtn = document.getElementById('chat-send')
+  if (chatSendBtn) {
+    chatSendBtn.removeEventListener('click', sendChatMessage)
+  }
+
+  // Clean up courtroom scene
+  if (courtroomScene.value) {
+    // @ts-ignore - cleanup method exists on courtroom scene
+    courtroomScene.value.cleanup()
+    courtroomScene.value = null
   }
 })
 </script>
@@ -2934,5 +3000,70 @@ main h3 {
 
 [data-theme='dark'] .case-list::-webkit-scrollbar-track {
   background: rgba(0, 212, 255, 0.1);
+}
+
+/* Tracking Prevention Warning */
+.tracking-warning {
+  background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.warning-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.warning-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.warning-text {
+  flex: 1;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #92400e;
+}
+
+.warning-text strong {
+  color: #78350f;
+  font-weight: 600;
+}
+
+/* Dark mode warning */
+[data-theme='dark'] .tracking-warning {
+  background: linear-gradient(135deg, #451a03 0%, #78350f 100%);
+  border-color: #d97706;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .warning-text {
+  color: #fed7aa;
+}
+
+[data-theme='dark'] .warning-text strong {
+  color: #fbbf24;
+}
+
+/* Responsive warning */
+@media (max-width: 768px) {
+  .warning-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .warning-icon {
+    align-self: flex-start;
+  }
+
+  .warning-text {
+    font-size: 0.8rem;
+  }
 }
 </style>
