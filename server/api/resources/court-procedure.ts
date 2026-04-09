@@ -1,4 +1,4 @@
-import { courtProcedures } from '../../data/court-procedures'
+import { districtCourtArchive } from '../../data/court-procedures'
 import { defineEventHandler, createError } from 'h3'
 import { validateApiAccess } from '../../utils/validateApiAccess'
 import { dError } from '../../utils/debug'
@@ -7,7 +7,7 @@ export default defineEventHandler(async event => {
   validateApiAccess(event, 'resources/court-procedure')
 
   try {
-    return courtProcedures.map(p => p.description)
+    return districtCourtArchive.map(p => p.description)
   } catch (error) {
     dError('Error fetching court procedures:', error)
     throw createError({
