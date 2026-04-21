@@ -4,6 +4,21 @@
  * process-supreme-court-terms-2-10-pdf.js
  * Processes Supreme Court Terms 2-10 PDF files and extracts rulings that match listed cases.
  * Filters and processes the complete term PDFs to extract only relevant rulings.
+ *
+ * Key Features:
+ * - Multi-method PDF extraction (pdf2json, pdf-parse, fallback regex)
+ * - Automatic method selection based on extraction quality
+ * - PDF validation before processing
+ * - Comprehensive error handling and reporting
+ * - Duplicate detection and removal
+ * - Flexible case name matching with token-based fallback
+ *
+ * Common Issues Fixed:
+ * - TypeScript file now generated AFTER all PDFs are processed (was overwriting in loop)
+ * - Better timeout handling (no Promise.race causing premature failures)
+ * - Improved text extraction for problematic PDFs
+ * - Added PDF validation to catch corrupt files early
+ * - Enhanced error reporting to identify which terms failed
  */
 
 import fs from 'fs'
@@ -15,19 +30,18 @@ import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
 const PDFParser = require('pdf2json')
 
-// Try to import pdf-parse as an alternative
-let pdfParse
+// Try to import pdf-parse
+let PDFParse
 try {
-  const pdfParseModule = await import('pdf-parse')
-  pdfParse = pdfParseModule.default
-  console.log('✅ pdf-parse imported as ES module')
-} catch (_error) {
-  try {
-    pdfParse = require('pdf-parse').default || require('pdf-parse')
-    console.log('✅ pdf-parse imported as CommonJS')
-  } catch (_error2) {
-    console.log('pdf-parse not available, using pdf2json fallback')
+  const pdfParseModule = require('pdf-parse')
+  PDFParse = pdfParseModule.PDFParse
+  if (PDFParse) {
+    console.log('✅ pdf-parse loaded')
+  } else {
+    console.log('⚠️  pdf-parse PDFParse class not found')
   }
+} catch (_error) {
+  console.log('⚠️  pdf-parse not available, will use fallback methods')
 }
 
 // Proper PDF text extraction using pdf2json library with timeout
@@ -104,8 +118,8 @@ async function extractTextFromPDFFallback(pdfPath) {
     const buffer = fs.readFileSync(pdfPath)
     const text = buffer.toString('latin1')
 
-    // Try to extract readable text using regex patterns - limit to first 500KB for better coverage
-    const limitedText = text.substring(0, 500000)
+    // Try to extract readable text using regex patterns - use full text for better coverage
+    const limitedText = text
 
     const textPatterns = [
       // Skip PDF structure and look for actual content
@@ -155,29 +169,40 @@ async function extractTextFromPDFFallback(pdfPath) {
       }
     }
 
-    return extractedText.trim() || 'PDF text extraction failed'
-  } catch (_error) {
+    const finalText = extractedText.trim()
+    console.log(`Fallback extraction: ${finalText.length} characters extracted`)
+    return finalText || 'PDF text extraction failed'
+  } catch (error) {
+    console.error(`Fallback extraction error: ${error.message}`)
     return 'PDF text extraction failed'
   }
 }
 
 // Alternative extraction using pdf-parse for Terms 7 & 9
 async function extractTextWithPdfParse(pdfPath) {
-  if (!pdfParse) {
+  if (!PDFParse) {
+    console.log('pdf-parse not available')
     return 'PDF text extraction failed - pdf-parse not available'
   }
 
   try {
     const fs = require('fs')
-    const dataBuffer = fs.readFileSync(pdfPath)
-    const data = await pdfParse(dataBuffer)
+    const buffer = fs.readFileSync(pdfPath)
+    const dataBuffer = new Uint8Array(buffer)
 
-    if (data.text && data.text.length > 50) {
-      return data.text
+    console.log(`Attempting pdf-parse extraction on ${Math.round(buffer.length / 1024)}KB file...`)
+    const parser = new PDFParse(dataBuffer)
+    const result = await parser.getText()
+
+    if (result && result.text && result.text.length > 50) {
+      console.log(`pdf-parse extracted ${result.text.length} characters from ${result.total} pages`)
+      return result.text
     } else {
+      console.log('pdf-parse produced minimal text')
       return 'PDF text extraction failed - no readable text'
     }
-  } catch (_error) {
+  } catch (error) {
+    console.error(`pdf-parse error: ${error.message}`)
     return 'PDF text extraction failed - pdf-parse error'
   }
 }
@@ -188,10 +213,95 @@ function extractTermNumber(filename) {
   return match ? parseInt(match[1]) : null
 }
 
+// Multi-method PDF extraction - tries all available methods and picks best result
+async function extractTextWithAllMethods(pdfPath, termNumber, timeoutMs = 60000) {
+  console.log(`\n🔍 Attempting multi-method extraction for Term ${termNumber}...`)
+
+  const results = []
+
+  // Method 1: pdf2json (primary method)
+  try {
+    console.log('  Method 1: Trying pdf2json...')
+    const text = await extractTextFromPDF(pdfPath, timeoutMs)
+    if (
+      text &&
+      text !== 'PDF text extraction failed' &&
+      text !== 'PDF parsing timeout' &&
+      text.length > 100
+    ) {
+      results.push({ method: 'pdf2json', text, score: text.length })
+      console.log(`    ✅ pdf2json: ${text.length} chars`)
+    } else {
+      console.log(`    ❌ pdf2json failed or minimal text`)
+    }
+  } catch (error) {
+    console.log(`    ❌ pdf2json error: ${error.message}`)
+  }
+
+  // Method 2: pdf-parse (works better for some PDFs)
+  if (PDFParse) {
+    try {
+      console.log('  Method 2: Trying pdf-parse...')
+      const text = await extractTextWithPdfParse(pdfPath)
+      if (
+        text &&
+        text !== 'PDF text extraction failed - pdf-parse not available' &&
+        text !== 'PDF text extraction failed - pdf-parse error' &&
+        text !== 'PDF text extraction failed - no readable text' &&
+        text.length > 100
+      ) {
+        results.push({ method: 'pdf-parse', text, score: text.length })
+        console.log(`    ✅ pdf-parse: ${text.length} chars`)
+      } else {
+        console.log(`    ❌ pdf-parse failed or minimal text`)
+      }
+    } catch (error) {
+      console.log(`    ❌ pdf-parse error: ${error.message}`)
+    }
+  }
+
+  // Method 3: Fallback regex extraction (last resort)
+  try {
+    console.log('  Method 3: Trying fallback extraction...')
+    const text = await extractTextFromPDFFallback(pdfPath)
+    if (text && text !== 'PDF text extraction failed' && text.length > 100) {
+      results.push({ method: 'fallback', text, score: text.length })
+      console.log(`    ✅ fallback: ${text.length} chars`)
+    } else {
+      console.log(`    ❌ fallback failed or minimal text`)
+    }
+  } catch (error) {
+    console.log(`    ❌ fallback error: ${error.message}`)
+  }
+
+  // Pick the best result based on text length and case pattern matches
+  if (results.length === 0) {
+    console.log('  ❌ All extraction methods failed')
+    return 'PDF text extraction failed'
+  }
+
+  // Score each result based on length and case pattern matches
+  results.forEach(result => {
+    const caseMatches = (result.text.match(/\b\w+\s+v\.\s+\w+\b/gi) || []).length
+    const vsMatches = (result.text.match(/\b\w+\s+vs\.\s+\w+\b/gi) || []).length
+    result.score = result.text.length + caseMatches * 1000 + vsMatches * 1000
+    console.log(
+      `    ${result.method}: score=${result.score} (${result.text.length} chars, ${caseMatches + vsMatches} case patterns)`
+    )
+  })
+
+  // Pick the result with highest score
+  results.sort((a, b) => b.score - a.score)
+  const bestResult = results[0]
+
+  console.log(`  ✅ Best method: ${bestResult.method} with score ${bestResult.score}`)
+  return bestResult.text
+}
+
 // List of valid cases to filter by (from volumes 2-10) - updated with actual PDF names
 const _VALID_CASES = [
   // Volume 2 - updated with actual names from PDF
-  'JedBartlett v. Federal Elections Commission',
+  'JedBartlett v. Federal Elections Commission', // Actually "JEDBARTLETT, ET AL. v. FEDERAL ELECTIONS COMMISSION"
   'United States v. Las Vegas',
   'HHPrinceGeorge v. Capitalized',
   'Qolio v. United States',
@@ -204,8 +314,8 @@ const _VALID_CASES = [
   'Sudden v. Helleoh',
   'AdamStratton v. Technozo',
   // Volume 3
-  'Norman_Paperman v. U.S. Military',
-  'SigmaHD v. U.S. Marshals Service',
+  'Norman_Paperman v. United States Military', // Was "U.S. Military" - PDF has full "UNITED STATES MILITARY"
+  'SigmaHD v. United States Marshals Service', // Was "U.S. Marshals Service" - PDF has full name
   'Idiotic_Leader v. Las Vegas',
   'MythicOne v. National Security Agency',
   'British2004 v. Ozzymen',
@@ -235,10 +345,10 @@ const _VALID_CASES = [
   'Federal Election Commission v. AcidRaps',
   'Kirkman v. Bank of America',
   // Volume 7
-  'Kirkman v. State of Columbia',
+  'Kirkman v. State of Columbia', // Actually "KIRKMAN, PETITIONER v. STATE OF COLUMBIA, ETAL."
   'Cursive v. United States',
-  'In Re Haven',
-  'In Re Giordano',
+  'In Re Haven', // Actually "In re Angelic Haven"
+  'In Re Giordano', // Actually "In re Tony_Giordano"
   'Party v. Board of Law Examiners',
   'Lydxia v. House of Representatives',
   // Volume 8 (empty)
@@ -253,11 +363,8 @@ const _VALID_CASES = [
   'United States v. jetpacksoup',
   'Rafellus v. Papasbestboy',
   // Additional cases found in PDFs
-  'Psychodynamic v. Technozo',
-  'ADAMSTRATTON v. TECHNOZO',
-  '12904 v. KingLukassie',
-  'Christianfeliz v. InfernoByteII',
-  'SuddenRush12G v. Helleoh'
+  'Psychodynamic v. Technozo'
+  // Note: ADAMSTRATTON, Christianfeliz, and SuddenRush12G do NOT exist in Term 10 PDF
 ]
 
 // Normalize string for better matching
@@ -266,20 +373,26 @@ function normalizeStr(str) {
 }
 
 // Token-based matching for difficult cases
-function tokenBasedMatch(text, caseName) {
+function tokenBasedMatch(text, caseName, threshold = 0.75) {
   const tokens = caseName.toLowerCase().split(/\s+/)
   const normalizedText = text.toLowerCase()
 
   let matchedTokens = 0
   for (const token of tokens) {
+    // Skip very short tokens like "v." or single letters
+    if (token.length <= 2) {
+      matchedTokens++
+      continue
+    }
+
     if (normalizedText.includes(token)) {
       matchedTokens++
     }
   }
 
-  // Consider it a match if at least 75% of tokens are found
+  // Consider it a match if at least threshold % of tokens are found
   const matchRatio = matchedTokens / tokens.length
-  return matchRatio >= 0.75
+  return matchRatio >= threshold
 }
 
 // Enhanced proximity check for In Re cases
@@ -431,6 +544,14 @@ function parseRulingFromText(text, termNumber) {
   const duplicateLog = new Map() // Track duplicates for debugging
   // Enhanced regex patterns with non-greedy matching and more flexibility
   const casePatterns = [
+    // PETITIONER format with ET AL (Term 2, 3, 7)
+    /\b([A-Za-z0-9_]+)\s*,\s*(?:ET\s*AL\.|ETAL)\s*,?\s*PETITIONER\s*v\.?\s+([A-Za-z0-9_\s]+?)(?:\s*,\s*(?:ET\s*AL\.|ETAL))?/gi,
+    /\b([A-Z][A-Za-z0-9_]+)\s*,\s*PETITIONER\s*v\.?\s+([A-Z][A-Za-z0-9_\s]+?)(?:\s*,\s*(?:ET\s*AL\.|ETAL))?/gi,
+    // In re with first/full names (Term 7: "In re Angelic Haven", "In re Tony_Giordano")
+    /\bIn\s+re\s+([A-Za-z_]+\s+[A-Za-z_]+)/gi,
+    /\bIn\s+Re\s+([A-Z][a-z]+_?[A-Z][a-z]+)/gi,
+    // ET AL pattern without PETITIONER
+    /\b([A-Za-z0-9_]+)\s*,\s*ET\s*AL\.\s*v\.?\s+([A-Za-z0-9_\s]+)/gi,
     // Ultra-flexible patterns with non-greedy matching
     /\b([\w\s]+?)\s*(?:v\.?|vs\.?|versus)\s*([\w\s]+?)\b/gi,
     // Standard "v." pattern - more flexible spacing
@@ -517,8 +638,8 @@ function parseRulingFromText(text, termNumber) {
           ]
         case 3:
           return [
-            'Norman_Paperman v. U.S. Military',
-            'SigmaHD v. U.S. Marshals Service',
+            'Norman_Paperman v. United States Military',
+            'SigmaHD v. United States Marshals Service',
             'Idiotic_Leader v. Las Vegas',
             'MythicOne v. National Security Agency',
             'British2004 v. Ozzymen'
@@ -578,11 +699,8 @@ function parseRulingFromText(text, termNumber) {
           return [
             'United States v. jetpacksoup',
             'Rafellus v. Papasbestboy',
-            'Psychodynamic v. Technozo',
-            'ADAMSTRATTON v. TECHNOZO',
-            '12904 v. KingLukassie',
-            'Christianfeliz v. InfernoByteII',
-            'SuddenRush12G v. Helleoh'
+            'Psychodynamic v. Technozo'
+            // Note: ADAMSTRATTON, Christianfeliz, SuddenRush12G don't exist in PDF
           ]
         default:
           return []
@@ -750,26 +868,43 @@ function parseRulingFromText(text, termNumber) {
 
         // Handle "PETITIONER" format
         const petitionerMatch = caseTitle.match(
-          /^([A-Za-z0-9_]+)\s*,\s*PETITIONER\s+v\.\s+([A-Za-z0-9_]+(?:\s+[A-Za-z0-9_]*)*)$/
+          /^([A-Za-z0-9_]+)\s*,\s*(?:ET\s*AL\.\s*,\s*)?PETITIONER\s+v\.?\s+([A-Za-z0-9_\s]+?)(?:\s*,\s*(?:ET\s*AL\.|ETAL))?$/i
         )
         if (petitionerMatch) {
-          extractedCase = `${petitionerMatch[1]} v. ${petitionerMatch[2]}`
+          extractedCase = `${petitionerMatch[1]} v. ${petitionerMatch[2].trim()}`
         }
 
-        // Handle "In Re" format
-        const inReMatch = caseTitle.match(
-          /^([A-Za-z0-9_]+(?:\s+[A-Za-z0-9_]*)*)\s+(?:In\s+Re|Ex\s+Parte)\s+([A-Za-z0-9_]+(?:\s+[A-Za-z0-9_]*)*)$/
+        // Handle ET AL without PETITIONER
+        const etAlMatch = caseTitle.match(
+          /^([A-Za-z0-9_]+)\s*,\s*ET\s*AL\.\s*v\.?\s+([A-Za-z0-9_\s]+?)(?:\s*,\s*(?:ET\s*AL\.|ETAL))?$/i
         )
-        if (inReMatch) {
-          extractedCase = `${inReMatch[1]} ${caseTitle.match(/(?:In\s+Re|Ex\s+Parte)/)[0]} ${inReMatch[2]}`
+        if (etAlMatch) {
+          extractedCase = `${etAlMatch[1]} v. ${etAlMatch[2].trim()}`
+        }
+
+        // Handle "In Re" with first/full names (e.g., "In re Angelic Haven")
+        const inReFullMatch = caseTitle.match(/^In\s+re\s+([A-Za-z_]+\s+[A-Za-z_]+)$/i)
+        if (inReFullMatch) {
+          // Extract just the last name for matching
+          const names = inReFullMatch[1].split(/\s+/)
+          const lastName = names[names.length - 1]
+          extractedCase = `In Re ${lastName}`
+        }
+
+        // Handle "In Re" format (original)
+        const inReMatch = caseTitle.match(
+          /^([A-Za-z0-9_]+(?:\s+[A-Za-z0-9_]*)*)\s+(?:In\s+Re|Ex\s+Parte)\s+([A-Za-z0-9_]+(?:\s+[A-Za-z0-9_]*)*)$/i
+        )
+        if (inReMatch && !extractedCase) {
+          extractedCase = `${inReMatch[1]} ${caseTitle.match(/(?:In\s+Re|Ex\s+Parte)/i)[0]} ${inReMatch[2]}`
         }
 
         // Handle specific missing case patterns
         if (caseTitle.match(/Norman_Paperman.*PETITIONER.*v\s*\..*United.*States.*Military/i)) {
-          extractedCase = 'Norman_Paperman v. U.S. Military'
+          extractedCase = 'Norman_Paperman v. United States Military'
         }
         if (caseTitle.match(/SigmaHD.*PETITIONER.*v\..*United.*States.*Marshals.*Service/i)) {
-          extractedCase = 'SigmaHD v. U.S. Marshals Service'
+          extractedCase = 'SigmaHD v. United States Marshals Service'
         }
         if (caseTitle.match(/In\s+Re\s+United\s+States/i)) {
           extractedCase = 'In Re United States'
@@ -1077,6 +1212,12 @@ async function main() {
 
     // Process each PDF file
     const rulings = []
+    const processingStats = {
+      total: pdfFiles.length,
+      successful: 0,
+      failed: 0,
+      failedTerms: []
+    }
 
     for (const file of pdfFiles) {
       const termNumber = extractTermNumber(file)
@@ -1086,49 +1227,39 @@ async function main() {
         continue
       }
 
+      // Validate PDF file
+      const pdfPath = path.join(TERMS_2_TO_10_PDF_DIR, file)
+      const stats = fs.statSync(pdfPath)
+      console.log(
+        `\n📄 Processing Term ${termNumber} (${file}) - ${Math.round(stats.size / 1024)}KB`
+      )
+
+      if (stats.size < 100) {
+        console.warn(`  ⚠️  File too small (${stats.size} bytes), skipping...`)
+        continue
+      }
+
+      // Check if file is actually a PDF
+      const buffer = fs.readFileSync(pdfPath)
+      const isPdf = buffer.toString('latin1', 0, 5).includes('%PDF')
+      if (!isPdf) {
+        console.warn(`  ⚠️  File does not appear to be a valid PDF, skipping...`)
+        continue
+      }
+
       // Increased timeouts for problematic terms
       let timeoutMs = 60000
       if (termNumber === 7) timeoutMs = 120000 // 2 minutes for Term 7
       if (termNumber === 9) timeoutMs = 600000 // 10 minutes for Term 9
 
-      let text = await extractTextFromPDF(path.join(TERMS_2_TO_10_PDF_DIR, file), timeoutMs)
+      // Use multi-method extraction for better reliability
+      const text = await extractTextWithAllMethods(pdfPath, termNumber, timeoutMs)
 
-      // Always use fallback for Terms 7 and 9 since pdf2json fails
-      if (
-        termNumber === 7 ||
-        termNumber === 9 ||
-        text === 'PDF text extraction failed' ||
-        text === 'PDF parsing timeout'
-      ) {
-        console.log(`Using fallback extraction for Term ${termNumber}...`)
-        try {
-          // Add timeout for fallback extraction
-          const fallbackPromise = extractTextFromPDFFallback(path.join(TERMS_2_TO_10_PDF_DIR, file))
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Fallback extraction timeout')), 30000)
-          )
-          text = await Promise.race([fallbackPromise, timeoutPromise])
-
-          // If fallback still fails for Terms 7 & 9, try pdf-parse
-          if (
-            (text === 'PDF text extraction failed' || text === 'PDF parsing timeout') &&
-            (termNumber === 7 || termNumber === 9)
-          ) {
-            console.log(`Trying pdf-parse for Term ${termNumber}...`)
-            const pdfParsePromise = extractTextWithPdfParse(path.join(TERMS_2_TO_10_PDF_DIR, file))
-            const pdfParseTimeout = new Promise((_, reject) =>
-              setTimeout(() => reject(new Error('pdf-parse timeout')), 30000)
-            )
-            text = await Promise.race([pdfParsePromise, pdfParseTimeout])
-          }
-        } catch (error) {
-          console.log(`Fallback extraction failed for Term ${termNumber}: ${error.message}`)
-          text = 'PDF text extraction failed'
-        }
-      }
-
-      if (text === 'PDF text extraction failed') {
+      if (text === 'PDF text extraction failed' || text.length < 50) {
         console.warn(`Failed to extract text from Term ${termNumber} PDF: ${file}`)
+        console.warn(`  - Extracted text length: ${text.length} characters`)
+        processingStats.failed++
+        processingStats.failedTerms.push(termNumber)
         continue
       }
 
@@ -1148,35 +1279,54 @@ async function main() {
       // Only add rulings if they contain valid cases
       if (rulingResults) {
         rulings.push(...rulingResults)
+        processingStats.successful++
         console.log(`✓ Successfully processed Term ${termNumber}: ${rulingResults.length} rulings`)
       } else {
+        processingStats.failed++
+        processingStats.failedTerms.push(termNumber)
         console.log(`⚠ Skipped Term ${termNumber} - no valid cases found`)
       }
+    }
 
-      console.log(`✅ Processed ${rulings.length} rulings from Terms 2-10`)
+    // --- Generate TypeScript file AFTER processing all PDFs ---
+    console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`)
+    console.log(`📊 Processing Summary:`)
+    console.log(`   Total PDFs: ${processingStats.total}`)
+    console.log(`   Successfully processed: ${processingStats.successful}`)
+    console.log(`   Failed: ${processingStats.failed}`)
+    if (processingStats.failedTerms.length > 0) {
+      console.log(`   Failed terms: ${processingStats.failedTerms.join(', ')}`)
+    }
+    console.log(`   Total rulings extracted: ${rulings.length}`)
+    console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`)
 
-      // --- Generate TypeScript file ---
-      const rulingsTs = rulings
-        .map(r => {
-          return [
-            `  {`,
-            `    id: '${escapeTs(r.id)}',`,
-            `    title: '${escapeTs(r.title)}',`,
-            `    docketNumber: '${escapeTs(r.docketNumber)}',`,
-            `    term: ${r.term},`,
-            `    date: '${r.date}',`,
-            `    court: '${escapeTs(r.court)}',`,
-            `    description: '${escapeTs(r.description)}',`,
-            `    status: '${escapeTs(r.status)}',`,
-            `    url: '${escapeTs(r.url)}',`,
-            `    links: [],`,
-            `    linkCount: 0`,
-            `  }`
-          ].join('\n')
-        })
-        .join(',\n')
+    if (rulings.length === 0) {
+      console.warn(`⚠️  No rulings extracted from any PDFs`)
+      console.warn(`   Skipping TypeScript file generation`)
+      return
+    }
 
-      const fileContent = `// Auto-generated by process-supreme-court-terms-2-10-pdf.js
+    const rulingsTs = rulings
+      .map(r => {
+        return [
+          `  {`,
+          `    id: '${escapeTs(r.id)}',`,
+          `    title: '${escapeTs(r.title)}',`,
+          `    docketNumber: '${escapeTs(r.docketNumber)}',`,
+          `    term: ${r.term},`,
+          `    date: '${r.date}',`,
+          `    court: '${escapeTs(r.court)}',`,
+          `    description: '${escapeTs(r.description)}',`,
+          `    status: '${escapeTs(r.status)}',`,
+          `    url: '${escapeTs(r.url)}',`,
+          `    links: [],`,
+          `    linkCount: 0`,
+          `  }`
+        ].join('\n')
+      })
+      .join(',\n')
+
+    const fileContent = `// Auto-generated by process-supreme-court-terms-2-10-pdf.js
 // DO NOT EDIT MANUALLY - Run script to update
 
 export const supremeCourtRulingsTerms2To10 = [
@@ -1186,13 +1336,14 @@ ${rulingsTs}
 export default supremeCourtRulingsTerms2To10
 `
 
-      try {
-        fs.writeFileSync(OUTPUT_FILE, fileContent, 'utf8')
-        console.log(`\n📁 Generated: ${OUTPUT_FILE}`)
-        console.log(`🎉 Supreme Court Terms 2-10 processing completed successfully!`)
-      } catch (error) {
-        console.error('❌ Error during processing:', error.message)
-      }
+    try {
+      fs.writeFileSync(OUTPUT_FILE, fileContent, 'utf8')
+      console.log(`\n📁 Generated: ${OUTPUT_FILE}`)
+      console.log(`🎉 Supreme Court Terms 2-10 processing completed successfully!`)
+      console.log(`   Total rulings: ${rulings.length}`)
+    } catch (error) {
+      console.error('❌ Error writing output file:', error.message)
+      throw error
     }
   }
 }

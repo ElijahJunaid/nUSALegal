@@ -22,13 +22,13 @@ export default defineEventHandler(async event => {
         case_ =>
           case_.title.toLowerCase().includes(searchLower) ||
           case_.docketNumber.toLowerCase().includes(searchLower) ||
-          case_.summary.toLowerCase().includes(searchLower)
+          (case_.description && case_.description.toLowerCase().includes(searchLower))
       )
     }
 
-    // Case type filter (using category field)
+    // Case type filter
     if (caseType) {
-      filteredCases = filteredCases.filter(case_ => case_.category === caseType)
+      filteredCases = filteredCases.filter(case_ => case_.caseType === caseType)
     }
 
     // Date range filter
@@ -49,7 +49,7 @@ export default defineEventHandler(async event => {
     const paginatedCases = filteredCases.slice(startIndex, endIndex)
 
     // Get unique case types for filtering
-    const caseTypes = [...new Set(districtCourtArchive.map(case_ => case_.category))]
+    const caseTypes = [...new Set(districtCourtArchive.map(case_ => case_.caseType))]
 
     return {
       success: true,

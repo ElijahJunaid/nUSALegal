@@ -30,6 +30,8 @@ logs
 .fleet
 .idea
 DEP_COMMANDS.md
+.vs
+minecraft*
 
 # Local env files
 .env
@@ -67,3 +69,6 @@ scripts/sync-news-orgs.js
 
 # Reports
 reports/
+scripts/analyze-quiz-questions.js
+scripts/test-pdf-extraction.js
+scripts/renumber-quiz-questions.js

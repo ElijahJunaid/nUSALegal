@@ -52,7 +52,7 @@ const TARGET_LISTS = [
 ]
 const KEY = process.env.TRELLO_API_KEY
 const TOKEN = process.env.TRELLO_TOKEN
-const OUTPUT_FILE = path.join(__dirname, '../server/data/supreme-court-rulings.ts')
+const OUTPUT_FILE = path.join(__dirname, '../server/data/supreme-court-rulings-terms-9-14.ts')
 
 if (!KEY || !TOKEN) {
   console.error('❌ Missing TRELLO_API_KEY or TRELLO_TOKEN in .env')

@@ -1,5 +1,5 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
-import supremeCourtData from '../../data/supreme-court-rulings.js'
+import { supremeCourtRulingsTerms2To10 } from '../../data/supreme-court-rulings'
 
 export default defineEventHandler(async event => {
   try {
@@ -13,10 +13,10 @@ export default defineEventHandler(async event => {
     const dateTo = (query.dateTo as string) || ''
 
     // Combine all ruling data from different sources
+    // Terms 2-10 are always available
     const allRulings = [
-      ...(supremeCourtData.supremeCourtRulingsTerms2To10 || []),
-      ...(supremeCourtData.supremeCourtRulingsTerms9To14 || []),
-      ...(supremeCourtData.supremeCourtRulingsTerms15To18 || [])
+      ...(supremeCourtRulingsTerms2To10 || [])
+      // Note: Terms 9-14 and 15-18 will be added when those scripts are run
     ]
 
     // Filter cases based on query parameters

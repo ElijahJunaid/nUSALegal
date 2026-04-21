@@ -59,9 +59,10 @@ export default defineEventHandler(async event => {
         .map(q => transformQuestionForClient(q, sessionToken))
       dLog('📊 [QUIZ] Returning', questions.length, 'questions for difficulty:', difficulty)
     } else {
-      const randomQuestions = getRandomQuestions(Math.min(count, 100))
-      questions = randomQuestions.map(q => transformQuestionForClient(q, sessionToken))
-      dLog('📊 [QUIZ] Returning', questions.length, 'random questions')
+      // Get questions in sequential order (like The Impossible Quiz)
+      const sequentialQuestions = getRandomQuestions(Math.min(count, 110))
+      questions = sequentialQuestions.map(q => transformQuestionForClient(q, sessionToken))
+      dLog('📊 [QUIZ] Returning', questions.length, 'questions in sequential order')
     }
 
     // Add security headers

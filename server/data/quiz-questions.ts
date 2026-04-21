@@ -76,7 +76,7 @@ export const quizQuestions: QuizQuestion[] = [
     hints: ['Try the classic gaming code', 'Up Up Down Down Left Right Left Right B A']
   },
   {
-    id: 6,
+    id: 100,
     type: 'click-target',
     text: 'Click the word "NOT" in this sentence: The Constitution is NOT a living document.',
     answer: 'not',
@@ -84,7 +84,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'trick'
   },
   {
-    id: 7,
+    id: 47,
     type: 'time-bomb',
     text: 'Quick! What year was the Constitution ratified? (You have 10 seconds!)',
     options: ['1776', '1787', '1789', '1791'],
@@ -94,7 +94,7 @@ export const quizQuestions: QuizQuestion[] = [
     timeBomb: true
   },
   {
-    id: 8,
+    id: 10,
     type: 'move-button',
     text: 'Can you catch me? Click the correct answer about the Bill of Rights.',
     options: ['First 10 Amendments', 'First 5 Amendments', 'First 15 Amendments', 'All Amendments'],
@@ -104,7 +104,7 @@ export const quizQuestions: QuizQuestion[] = [
     moveButton: true
   },
   {
-    id: 9,
+    id: 40,
     type: 'trick',
     text: 'Which of these is NOT in the Constitution?',
     options: ['Freedom of Speech', 'Right to Bear Arms', 'Right to Internet', 'Due Process'],
@@ -113,7 +113,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'constitution'
   },
   {
-    id: 10,
+    id: 14,
     type: 'fourth-wall',
     text: 'What browser are you using to take this quiz?',
     options: ['Chrome', 'Firefox', 'Safari', "I'm not using a browser"],
@@ -124,7 +124,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   // Laws Questions (21-40)
   {
-    id: 21,
+    id: 41,
     type: 'multiple-choice',
     text: 'What does 18 U.S.C. § 1111 cover?',
     options: ['Murder', 'Assault', 'Theft', 'Drug Possession'],
@@ -133,7 +133,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'laws'
   },
   {
-    id: 22,
+    id: 93,
     type: 'trick',
     text: 'If a law is unconstitutional, what happens to it?',
     options: [
@@ -147,7 +147,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'laws'
   },
   {
-    id: 23,
+    id: 98,
     type: 'text-input',
     text: 'What is the term for laws passed by local governments?',
     answer: 'ordinances',
@@ -157,7 +157,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   // Congress Questions (41-60)
   {
-    id: 41,
+    id: 39,
     type: 'multiple-choice',
     text: 'How many Senators are in the nUSA Senate?',
     options: ['100', '50', '12', '25'],
@@ -166,7 +166,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'congress'
   },
   {
-    id: 42,
+    id: 56,
     type: 'trick',
     text: 'What happens if the President vetoes a bill?',
     options: [
@@ -180,7 +180,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'congress'
   },
   {
-    id: 43,
+    id: 54,
     type: 'secret',
     text: 'What is the secret meeting room called where Congress discusses sensitive matters?',
     answer: 'executive session',
@@ -191,7 +191,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   // Court System Questions (61-80)
   {
-    id: 61,
+    id: 16,
     type: 'multiple-choice',
     text: 'What is the highest court in the nUSA?',
     options: ['Supreme Court', 'District Court', 'Circuit Court', 'Municipal Court'],
@@ -200,7 +200,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'court'
   },
   {
-    id: 62,
+    id: 43,
     type: 'trick',
     text: 'Can you appeal a Supreme Court decision?',
     options: [
@@ -214,7 +214,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'court'
   },
   {
-    id: 63,
+    id: 9,
     type: 'text-input',
     text: 'What is the legal term for "beyond reasonable doubt"?',
     answer: 'reasonable doubt',
@@ -223,7 +223,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   // History Questions (81-100)
   {
-    id: 81,
+    id: 45,
     type: 'multiple-choice',
     text: 'When was the nUSA Constitution established?',
     options: ['1776', '1787', '2024', '2020'],
@@ -232,7 +232,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'history'
   },
   {
-    id: 82,
+    id: 106,
     type: 'trick',
     text: 'Who was the first President of the nUSA?',
     options: [
@@ -247,7 +247,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   // Impossible Quiz Style Questions (101-200)
   {
-    id: 101,
+    id: 21,
     type: 'click-target',
     text: 'Click the red word in this sentence: The Constitution is BLUE.',
     answer: 'Constitution',
@@ -256,7 +256,7 @@ export const quizQuestions: QuizQuestion[] = [
     fourthWall: true
   },
   {
-    id: 102,
+    id: 26,
     type: 'trick',
     text: 'What is 2 + 2 x 2?',
     options: ['8', '6', '4', 'Fish'],
@@ -266,7 +266,7 @@ export const quizQuestions: QuizQuestion[] = [
     hints: ['Order of operations matters', 'PEMDAS']
   },
   {
-    id: 103,
+    id: 55,
     type: 'fourth-wall',
     text: 'Look behind you! What do you see?',
     options: ['My computer screen', 'A wall', 'The answer is "look behind you"', 'Nothing'],
@@ -276,7 +276,7 @@ export const quizQuestions: QuizQuestion[] = [
     fourthWall: true
   },
   {
-    id: 104,
+    id: 102,
     type: 'time-bomb',
     text: 'Quick! What amendment guarantees freedom of speech? (10 seconds)',
     options: ['First Amendment', 'Second Amendment', 'Fifth Amendment', 'Fourth Amendment'],
@@ -286,7 +286,7 @@ export const quizQuestions: QuizQuestion[] = [
     timeBomb: true
   },
   {
-    id: 105,
+    id: 38,
     type: 'move-button',
     text: "Don't touch that button!",
     options: ['Click here', "Don't click here", 'Maybe click here', "Definitely don't click here"],
@@ -296,7 +296,7 @@ export const quizQuestions: QuizQuestion[] = [
     moveButton: true
   },
   {
-    id: 106,
+    id: 37,
     type: 'secret',
     text: 'Enter the Konami code (↑↑↓↓←→←→BA)',
     answer: '↑↑↓↓←→←→BA',
@@ -306,7 +306,7 @@ export const quizQuestions: QuizQuestion[] = [
     hints: ['Classic gaming code', 'Up Up Down Down Left Right Left Right B A']
   },
   {
-    id: 107,
+    id: 75,
     type: 'changes-based-on-answers',
     text: 'Remember your answer to question #1',
     options: ['Legislative', 'Executive', 'Judicial', 'I forgot'],
@@ -317,7 +317,7 @@ export const quizQuestions: QuizQuestion[] = [
     requiresPreviousAnswers: [1]
   },
   {
-    id: 108,
+    id: 88,
     type: 'trick',
     text: 'Which of these is NOT a real government branch?',
     options: ['Executive', 'Legislative', 'Judicial', 'Chocolate'],
@@ -326,7 +326,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'trick'
   },
   {
-    id: 109,
+    id: 29,
     type: 'text-input',
     text: 'Spell "constitution" backwards',
     answer: 'noitutitsnoc',
@@ -334,18 +334,18 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'trick'
   },
   {
-    id: 110,
+    id: 64,
     type: 'fourth-wall',
     text: 'How many questions are in this quiz?',
-    options: ['100', '110', 'Infinite', 'The answer is 100'],
-    answer: 'The answer is 100',
+    options: ['100', '110', 'Infinite', 'The answer is 110'],
+    answer: 'The answer is 110',
     difficulty: 'impossible',
     category: 'trick',
     fourthWall: true
   },
   // Extended Questions (111-500) - Constitution Deep Dive
   {
-    id: 111,
+    id: 51,
     type: 'multiple-choice',
     text: 'What does Article II establish?',
     options: ['Executive Branch', 'Legislative Branch', 'Judicial Branch', 'Military'],
@@ -354,7 +354,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'constitution'
   },
   {
-    id: 112,
+    id: 84,
     type: 'trick',
     text: 'How many articles are in the nUSA Constitution?',
     options: ['7', '27', '21', 'The answer is not listed'],
@@ -363,7 +363,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'constitution'
   },
   {
-    id: 113,
+    id: 8,
     type: 'text-input',
     text: 'What is the term for changing the Constitution?',
     answer: 'amendment',
@@ -371,7 +371,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'constitution'
   },
   {
-    id: 114,
+    id: 34,
     type: 'time-bomb',
     text: 'Quick! What article establishes the judiciary? (8 seconds)',
     options: ['Article I', 'Article II', 'Article III', 'Article IV'],
@@ -381,7 +381,7 @@ export const quizQuestions: QuizQuestion[] = [
     timeBomb: true
   },
   {
-    id: 115,
+    id: 66,
     type: 'secret',
     text: 'What is the secret amendment number?',
     answer: '42',
@@ -392,7 +392,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   // Laws Extended (116-200)
   {
-    id: 116,
+    id: 70,
     type: 'multiple-choice',
     text: 'What does "stare decisis" mean?',
     options: [
@@ -406,7 +406,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'laws'
   },
   {
-    id: 117,
+    id: 87,
     type: 'trick',
     text: 'Can a President be arrested?',
     options: [
@@ -421,7 +421,7 @@ export const quizQuestions: QuizQuestion[] = [
     fourthWall: true
   },
   {
-    id: 22,
+    id: 95,
     type: 'trick',
     text: 'If a law is unconstitutional, what happens to it?',
     options: ['It becomes void', 'It gets modified', 'It stays the same', 'It goes to vote'],
@@ -430,7 +430,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'laws'
   },
   {
-    id: 23,
+    id: 81,
     type: 'secret',
     text: 'Type "CLASSIFIED" to access the executive session',
     answer: 'CLASSIFIED',
@@ -440,7 +440,7 @@ export const quizQuestions: QuizQuestion[] = [
     hints: ['Think like a government official', 'What do you call secret information?']
   },
   {
-    id: 24,
+    id: 44,
     type: 'click-target',
     text: 'Find and click the hidden "justice" in: JUSTICEICEJUSJUSTICE',
     answer: 'justice',
@@ -448,7 +448,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'trick'
   },
   {
-    id: 25,
+    id: 86,
     type: 'changes-based-on-answers',
     text: 'How many branches did you say there were in question 2?',
     options: ['Two', 'Three', 'Four', 'Five'],
@@ -459,7 +459,7 @@ export const quizQuestions: QuizQuestion[] = [
     changesBasedOnAnswers: true
   },
   {
-    id: 26,
+    id: 94,
     type: 'time-bomb',
     text: 'Emergency! What\'s the legal term for "beyond reasonable doubt"? (5 seconds!)',
     options: ['Reasonable Doubt', 'Clear and Convincing', 'Preponderance', 'Probable Cause'],
@@ -469,7 +469,7 @@ export const quizQuestions: QuizQuestion[] = [
     timeBomb: true
   },
   {
-    id: 27,
+    id: 17,
     type: 'fourth-wall',
     text: 'How many questions have you answered so far?',
     options: ['26', '27', 'This question', 'I lost count'],
@@ -479,7 +479,7 @@ export const quizQuestions: QuizQuestion[] = [
     fourthWall: true
   },
   {
-    id: 28,
+    id: 109,
     type: 'trick',
     text: 'Which law enforcement agency has "Federal" in its name?',
     options: ['FBI', 'CIA', 'NSA', 'All of them'],
@@ -488,7 +488,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'laws'
   },
   {
-    id: 29,
+    id: 67,
     type: 'move-button',
     text: 'Catch me if you can! What amendment protects against unreasonable searches?',
     options: ['Fourth Amendment', 'First Amendment', 'Second Amendment', 'Fifth Amendment'],
@@ -509,7 +509,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   // Congress Extended (201-300)
   {
-    id: 201,
+    id: 77,
     type: 'multiple-choice',
     text: 'What is a filibuster?',
     options: ['A prolonged speech', 'A type of bill', 'A voting method', 'A committee meeting'],
@@ -518,7 +518,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'congress'
   },
   {
-    id: 202,
+    id: 105,
     type: 'move-button',
     text: 'Which chamber has the power of the purse?',
     options: ['House of Representatives', 'Senate', 'Both', 'Neither'],
@@ -528,7 +528,7 @@ export const quizQuestions: QuizQuestion[] = [
     moveButton: true
   },
   {
-    id: 41,
+    id: 73,
     type: 'multiple-choice',
     text: 'How many senators does each state have?',
     options: ['1', '2', '3', '4'],
@@ -537,7 +537,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'congress'
   },
   {
-    id: 42,
+    id: 101,
     type: 'trick',
     text: 'What do you call a bill that the President vetoed?',
     options: ['Vetoed Bill', 'Dead Bill', 'Returned Bill', 'Rejected Bill'],
@@ -546,7 +546,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'congress'
   },
   {
-    id: 43,
+    id: 32,
     type: 'click-target',
     text: 'Click the word "HOUSE" in: SENATEHOUSEHOUSESENATE',
     answer: 'HOUSE',
@@ -554,7 +554,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'trick'
   },
   {
-    id: 44,
+    id: 90,
     type: 'fourth-wall',
     text: 'Are you enjoying this quiz?',
     options: ['Yes', 'No', 'Maybe', 'This is a trick question'],
@@ -564,7 +564,7 @@ export const quizQuestions: QuizQuestion[] = [
     fourthWall: true
   },
   {
-    id: 45,
+    id: 61,
     type: 'time-bomb',
     text: 'Quick! How many voting members in the House? (8 seconds!)',
     options: ['435', '100', '535', '270'],
@@ -574,7 +574,7 @@ export const quizQuestions: QuizQuestion[] = [
     timeBomb: true
   },
   {
-    id: 46,
+    id: 110,
     type: 'secret',
     text: 'Type "SPEAKER" to unlock the secret chamber',
     answer: 'SPEAKER',
@@ -584,7 +584,7 @@ export const quizQuestions: QuizQuestion[] = [
     hints: ['Who leads the House?', 'Think about congressional leadership']
   },
   {
-    id: 47,
+    id: 28,
     type: 'move-button',
     text: "Can't catch me! What is the minimum age for a senator?",
     options: ['25', '30', '35', '40'],
@@ -594,7 +594,7 @@ export const quizQuestions: QuizQuestion[] = [
     moveButton: true
   },
   {
-    id: 48,
+    id: 72,
     type: 'trick',
     text: 'Which chamber is known as the "upper chamber"?',
     options: ['Senate', 'House', 'Both', 'Neither'],
@@ -603,7 +603,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'congress'
   },
   {
-    id: 49,
+    id: 48,
     type: 'changes-based-on-answers',
     text: 'Remember your answer to question 1? What branch was that?',
     options: ['Legislative', 'Executive', 'Judicial', 'I forgot'],
@@ -614,7 +614,7 @@ export const quizQuestions: QuizQuestion[] = [
     changesBasedOnAnswers: true
   },
   {
-    id: 50,
+    id: 63,
     type: 'fourth-wall',
     text: 'What time is it right now?',
     options: ['Quiz time', 'Time to answer', 'Computer time', 'Look at your clock'],
@@ -625,7 +625,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   // Court Extended (301-400)
   {
-    id: 301,
+    id: 60,
     type: 'multiple-choice',
     text: 'How many Supreme Court justices are there?',
     options: ['9', '12', '7', 'It varies'],
@@ -634,7 +634,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'court'
   },
   {
-    id: 302,
+    id: 85,
     type: 'multiple-choice',
     text: 'What is the "Elastic Clause"?',
     options: [
@@ -648,7 +648,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'constitution'
   },
   {
-    id: 702,
+    id: 24,
     type: 'trick',
     text: 'Can you sue the government?',
     options: ['No, sovereign immunity', 'Yes, always', 'Only with permission', 'Only on Tuesdays'],
@@ -658,7 +658,7 @@ export const quizQuestions: QuizQuestion[] = [
     fourthWall: true
   },
   {
-    id: 703,
+    id: 18,
     type: 'move-button',
     text: 'What is "gerrymandering"?',
     options: ['Drawing districts unfairly', 'A type of fish', 'A legal term', 'A dance move'],
@@ -668,7 +668,7 @@ export const quizQuestions: QuizQuestion[] = [
     moveButton: true
   },
   {
-    id: 704,
+    id: 36,
     type: 'time-bomb',
     text: 'What does "habeas corpus" mean? (7 seconds)',
     options: ['You shall have the body', 'A type of corpus', 'Legal document', 'Latin phrase'],
@@ -678,7 +678,7 @@ export const quizQuestions: QuizQuestion[] = [
     timeBomb: true
   },
   {
-    id: 705,
+    id: 13,
     type: 'secret',
     text: 'What is the secret legal principle?',
     answer: 'ignorantia juris non excusat',
@@ -689,7 +689,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   // Ultimate Challenge Questions (901-1000)
   {
-    id: 901,
+    id: 89,
     type: 'fourth-wall',
     text: 'Are you enjoying this quiz?',
     options: ['Yes', 'No', 'Maybe', 'The answer is "yes"'],
@@ -699,7 +699,7 @@ export const quizQuestions: QuizQuestion[] = [
     fourthWall: true
   },
   {
-    id: 902,
+    id: 7,
     type: 'click-target',
     text: 'Click the invisible word: Click here to win',
     answer: 'here',
@@ -708,7 +708,7 @@ export const quizQuestions: QuizQuestion[] = [
     hints: ['The word is literally "here"', 'Trust me']
   },
   {
-    id: 903,
+    id: 6,
     type: 'trick',
     text: 'If a plane crashes on the border between nUSA and Canada, where do they bury the survivors?',
     options: ['nUSA', 'Canada', 'Both', "You don't bury survivors"],
@@ -717,7 +717,7 @@ export const quizQuestions: QuizQuestion[] = [
     category: 'trick'
   },
   {
-    id: 904,
+    id: 79,
     type: 'time-bomb',
     text: 'What is the meaning of life? (3 seconds)',
     options: ['42', 'Love', 'Happiness', 'The answer is 42'],
@@ -727,7 +727,7 @@ export const quizQuestions: QuizQuestion[] = [
     timeBomb: true
   },
   {
-    id: 905,
+    id: 97,
     type: 'secret',
     text: 'What is the ultimate secret?',
     answer: 'there is no spoon',
@@ -737,18 +737,18 @@ export const quizQuestions: QuizQuestion[] = [
     hints: ['Think about reality', 'Red pill or blue pill']
   },
   {
-    id: 906,
+    id: 57,
     type: 'changes-based-on-answers',
-    text: 'What was your answer to question #102?',
+    text: 'What was your answer to question #26?',
     options: ['8', '6', '4', 'Fish'],
     answer: 'Fish',
     difficulty: 'impossible',
     category: 'trick',
     changesBasedOnAnswers: true,
-    requiresPreviousAnswers: [102]
+    requiresPreviousAnswers: [26]
   },
   {
-    id: 907,
+    id: 19,
     type: 'move-button',
     text: 'Final question: Are you ready?',
     options: ['Yes', 'No', 'Maybe', 'The answer is "yes"'],
@@ -758,17 +758,17 @@ export const quizQuestions: QuizQuestion[] = [
     moveButton: true
   },
   {
-    id: 908,
+    id: 11,
     type: 'fourth-wall',
     text: 'How many questions have you answered?',
-    options: ['907', '908', 'All of them', 'The answer is "all of them"'],
+    options: ['100', '109', 'All of them', 'The answer is "all of them"'],
     answer: 'The answer is "all of them"',
     difficulty: 'impossible',
     category: 'trick',
     fourthWall: true
   },
   {
-    id: 909,
+    id: 49,
     type: 'secret',
     text: 'Enter the final secret code',
     answer: 'IMPOSSIBLEQUIZMASTER',
@@ -778,7 +778,7 @@ export const quizQuestions: QuizQuestion[] = [
     hints: ['You are the master', 'Congratulations']
   },
   {
-    id: 910,
+    id: 52,
     type: 'trick',
     text: 'Did you enjoy this quiz?',
     options: ['Yes', 'No', 'Maybe', 'The answer is "yes"'],
@@ -786,6 +786,344 @@ export const quizQuestions: QuizQuestion[] = [
     difficulty: 'impossible',
     category: 'trick',
     hints: ['Of course you did!', 'Thank you for playing']
+  },
+  // Additional Questions to reach 110 (76-110)
+  {
+    id: 22,
+    type: 'multiple-choice',
+    text: 'What does "amendment" mean?',
+    options: ['Change', 'Add', 'Remove', 'All of the above'],
+    answer: 'All of the above',
+    difficulty: 'medium',
+    category: 'constitution'
+  },
+  {
+    id: 103,
+    type: 'trick',
+    text: 'Can the Constitution be changed?',
+    options: ['Yes, with amendments', 'No, never', 'Only by the President', 'Only during war'],
+    answer: 'Yes, with amendments',
+    difficulty: 'easy',
+    category: 'constitution'
+  },
+  {
+    id: 92,
+    type: 'time-bomb',
+    text: 'Quick! How many amendments are in the Bill of Rights? (5 seconds)',
+    options: ['5', '10', '15', '27'],
+    answer: '10',
+    difficulty: 'medium',
+    category: 'constitution',
+    timeBomb: true
+  },
+  {
+    id: 23,
+    type: 'fourth-wall',
+    text: 'What device are you using right now?',
+    options: ['Phone', 'Computer', 'Tablet', 'All of the above'],
+    answer: 'All of the above',
+    difficulty: 'impossible',
+    category: 'trick',
+    fourthWall: true
+  },
+  {
+    id: 12,
+    type: 'move-button',
+    text: 'Try to click the right answer: What is due process?',
+    options: ['Fair legal proceedings', 'Quick trial', 'Jury duty', 'Court fees'],
+    answer: 'Fair legal proceedings',
+    difficulty: 'hard',
+    category: 'court',
+    moveButton: true
+  },
+  {
+    id: 33,
+    type: 'secret',
+    text: 'Enter the password for admin access',
+    answer: 'ADMIN',
+    difficulty: 'impossible',
+    category: 'secret',
+    secretCode: 'ADMIN',
+    hints: ['Think simple', 'What do administrators use?']
+  },
+  {
+    id: 74,
+    type: 'trick',
+    text: 'What comes after the 49th state?',
+    options: ['50th state', '51st state', 'Puerto Rico', 'The answer is 50th state'],
+    answer: 'The answer is 50th state',
+    difficulty: 'medium',
+    category: 'history'
+  },
+  {
+    id: 71,
+    type: 'click-target',
+    text: 'Find the word LAW in: LAWLESSNESSLAWLAW',
+    answer: 'LAW',
+    difficulty: 'easy',
+    category: 'trick'
+  },
+  {
+    id: 31,
+    type: 'multiple-choice',
+    text: 'What is the capital of the nUSA?',
+    options: ['Washington D.C.', 'New York', 'San Andreas', 'Los Santos'],
+    answer: 'San Andreas',
+    difficulty: 'easy',
+    category: 'history'
+  },
+  {
+    id: 104,
+    type: 'time-bomb',
+    text: 'What is checks and balances? (8 seconds)',
+    options: ['System to prevent power abuse', 'Banking term', 'Legal concept', 'All of above'],
+    answer: 'System to prevent power abuse',
+    difficulty: 'medium',
+    category: 'constitution',
+    timeBomb: true
+  },
+  {
+    id: 69,
+    type: 'fourth-wall',
+    text: 'How do you feel right now?',
+    options: ['Good', 'Confused', 'Tired', 'The answer is confused'],
+    answer: 'The answer is confused',
+    difficulty: 'impossible',
+    category: 'trick',
+    fourthWall: true
+  },
+  {
+    id: 91,
+    type: 'secret',
+    text: 'What is the secret society called?',
+    answer: 'ILLUMINATI',
+    difficulty: 'impossible',
+    category: 'secret',
+    secretCode: 'ILLUMINATI',
+    hints: ['Think conspiracy', 'All-seeing eye']
+  },
+  {
+    id: 68,
+    type: 'move-button',
+    text: 'Catch this! What is impeachment?',
+    options: ['Removing official from office', 'Arrest', 'Trial', 'Conviction'],
+    answer: 'Removing official from office',
+    difficulty: 'medium',
+    category: 'congress',
+    moveButton: true
+  },
+  {
+    id: 42,
+    type: 'trick',
+    text: 'How many fingers am I holding up?',
+    options: ['None', 'Two', 'Five', 'You have no fingers'],
+    answer: 'You have no fingers',
+    difficulty: 'impossible',
+    category: 'trick'
+  },
+  {
+    id: 35,
+    type: 'text-input',
+    text: 'What does SCOTUS stand for?',
+    answer: 'supreme court of the united states',
+    difficulty: 'hard',
+    category: 'court',
+    hints: ['Acronym for the highest court', 'Supreme Court...']
+  },
+  {
+    id: 20,
+    type: 'time-bomb',
+    text: 'Name the first amendment right! (4 seconds)',
+    options: ['Speech', 'Guns', 'Search', 'Voting'],
+    answer: 'Speech',
+    difficulty: 'easy',
+    category: 'constitution',
+    timeBomb: true
+  },
+  {
+    id: 25,
+    type: 'fourth-wall',
+    text: 'Is this question number 92?',
+    options: ['Yes', 'No', 'Maybe', 'The answer is yes'],
+    answer: 'The answer is yes',
+    difficulty: 'impossible',
+    category: 'trick',
+    fourthWall: true
+  },
+  {
+    id: 65,
+    type: 'click-target',
+    text: 'Click VOTE in: VOTERVOTERVOTE',
+    answer: 'VOTE',
+    difficulty: 'medium',
+    category: 'trick'
+  },
+  {
+    id: 62,
+    type: 'multiple-choice',
+    text: 'What is federalism?',
+    options: [
+      'Power shared between national and state',
+      'Federal crimes',
+      'FBI jurisdiction',
+      'National anthem'
+    ],
+    answer: 'Power shared between national and state',
+    difficulty: 'hard',
+    category: 'constitution'
+  },
+  {
+    id: 107,
+    type: 'secret',
+    text: 'Enter the nuclear codes',
+    answer: '00000000',
+    difficulty: 'impossible',
+    category: 'secret',
+    secretCode: 'NUCLEAR',
+    hints: ['Eight zeros', 'Surprisingly simple']
+  },
+  {
+    id: 27,
+    type: 'move-button',
+    text: 'What is probable cause?',
+    options: ['Reasonable belief crime occurred', 'Maybe', 'Definitely', 'Police hunch'],
+    answer: 'Reasonable belief crime occurred',
+    difficulty: 'hard',
+    category: 'laws',
+    moveButton: true
+  },
+  {
+    id: 96,
+    type: 'trick',
+    text: 'What color is a stop sign?',
+    options: ['Red', 'Blue', 'Yellow', 'Octagon'],
+    answer: 'Octagon',
+    difficulty: 'impossible',
+    category: 'trick'
+  },
+  {
+    id: 58,
+    type: 'time-bomb',
+    text: 'Electoral college votes needed to win? (6 seconds)',
+    options: ['270', '271', '300', '538'],
+    answer: '270',
+    difficulty: 'hard',
+    category: 'history',
+    timeBomb: true
+  },
+  {
+    id: 83,
+    type: 'fourth-wall',
+    text: 'Are you almost done?',
+    options: ['Yes', 'No', 'Almost', 'The answer is almost'],
+    answer: 'The answer is almost',
+    difficulty: 'impossible',
+    category: 'trick',
+    fourthWall: true
+  },
+  {
+    id: 15,
+    type: 'multiple-choice',
+    text: 'What is jurisdiction?',
+    options: ['Legal authority over area', 'Judge powers', 'Court location', 'All of above'],
+    answer: 'Legal authority over area',
+    difficulty: 'medium',
+    category: 'court'
+  },
+  {
+    id: 53,
+    type: 'click-target',
+    text: 'Find BILL in: BILLOFRIGHTSISBILL',
+    answer: 'BILL',
+    difficulty: 'easy',
+    category: 'trick'
+  },
+  {
+    id: 50,
+    type: 'secret',
+    text: 'What is the password to democracy?',
+    answer: 'FREEDOM',
+    difficulty: 'impossible',
+    category: 'secret',
+    secretCode: 'DEMOCRACY',
+    hints: ['What America values most', 'Liberty and...']
+  },
+  {
+    id: 108,
+    type: 'move-button',
+    text: 'What is a caucus?',
+    options: ['Political party meeting', 'Type of vote', 'Campaign event', 'Debate'],
+    answer: 'Political party meeting',
+    difficulty: 'hard',
+    category: 'congress',
+    moveButton: true
+  },
+  {
+    id: 46,
+    type: 'trick',
+    text: 'If you have 3 apples and take away 2, how many do you have?',
+    options: ['1', '2', '3', '5'],
+    answer: '2',
+    difficulty: 'medium',
+    category: 'trick'
+  },
+  {
+    id: 99,
+    type: 'time-bomb',
+    text: 'Miranda rights include right to? (5 seconds)',
+    options: ['Remain silent', 'Call family', 'Leave', 'Fight back'],
+    answer: 'Remain silent',
+    difficulty: 'medium',
+    category: 'laws',
+    timeBomb: true
+  },
+  {
+    id: 82,
+    type: 'fourth-wall',
+    text: 'What question number is this?',
+    options: ['105', '106', '107', 'The answer is 106'],
+    answer: 'The answer is 106',
+    difficulty: 'impossible',
+    category: 'trick',
+    fourthWall: true
+  },
+  {
+    id: 80,
+    type: 'text-input',
+    text: 'What is the supreme law of the land?',
+    answer: 'constitution',
+    difficulty: 'easy',
+    category: 'constitution'
+  },
+  {
+    id: 78,
+    type: 'multiple-choice',
+    text: 'What is a veto?',
+    options: ['Presidential rejection of bill', 'Vote', 'Law', 'Amendment'],
+    answer: 'Presidential rejection of bill',
+    difficulty: 'easy',
+    category: 'congress'
+  },
+  {
+    id: 76,
+    type: 'secret',
+    text: 'Enter the master code',
+    answer: 'MASTER',
+    difficulty: 'impossible',
+    category: 'secret',
+    secretCode: 'MASTER',
+    hints: ['You are the master', 'Simple password']
+  },
+  {
+    id: 59,
+    type: 'fourth-wall',
+    text: 'Final question! Did you make it?',
+    options: ['Yes!', 'No', 'Maybe', 'The answer is yes!'],
+    answer: 'The answer is yes!',
+    difficulty: 'impossible',
+    category: 'trick',
+    fourthWall: true,
+    hints: ['Congratulations!', 'You completed the impossible quiz!']
   }
 ]
 
@@ -942,8 +1280,10 @@ export function getQuestionsByDifficulty(difficulty: string): QuizQuestion[] {
 }
 
 export function getRandomQuestions(count: number): QuizQuestion[] {
-  const shuffled = [...quizQuestions].sort(() => Math.random() - 0.5)
-  return shuffled.slice(0, count)
+  // Return questions in sequential order by ID (like The Impossible Quiz)
+  // Sort by ID to ensure consistent order (1, 2, 3, 4, ...)
+  const sorted = [...quizQuestions].sort((a, b) => a.id - b.id)
+  return sorted.slice(0, count)
 }
 
 export function checkSecretCode(code: string): QuizQuestion | undefined {

@@ -678,11 +678,11 @@ const checkForAchievements = () => {
     })
   }
 
-  if (questionsAnswered.value === 75) {
+  if (questionsAnswered.value === 100) {
     unlockAchievement({
       id: 'gold_completion',
       name: 'Gold Scholar',
-      description: 'Complete 75 questions',
+      description: 'Complete 100 questions',
       category: 'progress',
       rarity: 'rare',
       icon: '🥇',
